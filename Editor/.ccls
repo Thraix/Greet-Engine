@@ -1,0 +1,11 @@
+clang
+
+-I../../deps/includes/
+-I../../Greet-core/src/
+-D_DEBUG
+-D_GREET_HOTSWAP
+-D_USE_MATH_DEFINES
+%cpp -std=c++17
+
+%h -x
+%h c++-header

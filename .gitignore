@@ -9,5 +9,6 @@ deps/libs/*
 installation/glfw*
 core
 .ycm_extra_conf.py
+.ccls
 *.gobj
 Makefile

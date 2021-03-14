@@ -1,2 +1,0 @@
-./freetypeInstall.sh
-./glfwInstall.sh
