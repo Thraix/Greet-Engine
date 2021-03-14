@@ -44,6 +44,7 @@ namespace Greet
       static void SetClearColor(const Color& clearColor);
       static const Color& GetClearColor();
       static void Clear();
+      static void ClearDepthBuffer();
 
       static void EnableCulling(bool enabled);
       static void SetCullFace(CullFaceDirection face);

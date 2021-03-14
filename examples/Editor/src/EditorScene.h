@@ -1,7 +1,10 @@
 #include <Greet.h>
 
+#include "graphics/TranslateArrowsRenderer.h"
+
 class EditorScene : public Greet::ECSScene
 {
+  TranslateArrowsRenderer translateArrows;
   Greet::Ref<Greet::Shader> lineShader;
   Greet::Ref<Greet::Mesh> lineMesh;
 

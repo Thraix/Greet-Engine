@@ -71,7 +71,7 @@ void Editor::SetupGUI(Frame* frame)
       Entity entity = scene->AddEntity("Entity#" + std::to_string(entityId));
       selected->AddChildNode(TreeNode{"Entity#" + std::to_string(entityId)});
       entity.AddComponent<Transform3DComponent>(Mat4::Translate({entityId * 1.5f, 0, 0}));
-      MeshData data = MeshFactory::Cube({0,0,0}, {1,1,1});
+      MeshData data = MeshFactory::Cube({0,0,0}, {1,2,1.5});
       entity.AddComponent<MeshComponent>(NewRef<Mesh>(data));
       entity.AddComponent<MaterialComponent>(NewRef<Material>(ShaderFactory::Shader3D()));
       entityId++;

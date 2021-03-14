@@ -15,7 +15,7 @@ out vec3 vToCameraVector;
 out float vVisibility;
 
 uniform vec3 uCameraPos;
-uniform mat4 uTransformationMatrix;
+uniform mat4 uTransformationMatrix = mat4(1);
 uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
 uniform vec3 uLightPosition = vec3(30.0, 20.0, 40.0);
