@@ -3,6 +3,7 @@
 #include <graphics/buffers/Buffer.h>
 #include <graphics/buffers/VertexArray.h>
 #include <graphics/models/MeshData.h>
+#include <utils/BoundingBox.h>
 
 #include <map>
 
@@ -23,6 +24,8 @@ namespace Greet {
       bool m_culling = true;
       bool m_clockwise = false;
       bool wireframe = false;
+
+      BoundingBox boundingBox;
 
     public:
       Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint32_t>& indices);
@@ -47,6 +50,8 @@ namespace Greet {
 
       void SetDefaultAttribute4f(uint32_t location, const Vec4f& data);
       void SetDefaultAttribute3f(uint32_t location, const Vec3f& data);
+
+      const BoundingBox& GetBoundingBox() const { return boundingBox; }
     private:
       bool HasVBO(uint32_t location) const;
   };

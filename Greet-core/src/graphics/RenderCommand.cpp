@@ -143,6 +143,11 @@ namespace Greet
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   }
 
+  void RenderCommand::ClearDepthBuffer()
+  {
+    GLCall(glClear(GL_DEPTH_BUFFER_BIT));
+  }
+
   void RenderCommand::EnableCulling(bool enabled)
   {
     if(enabled) { GLCall(glEnable (GL_CULL_FACE)); }

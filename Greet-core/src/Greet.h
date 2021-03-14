@@ -142,6 +142,7 @@
 #include <scripting/NativeScript.h>
 #include <scripting/NativeScriptHandler.h>
 #include <utils/AABBUtils.h>
+#include <utils/BoundingBox.h>
 #include <utils/ColorUtils.h>
 #include <utils/ErrorHandle.h>
 #include <utils/FileUtils.h>

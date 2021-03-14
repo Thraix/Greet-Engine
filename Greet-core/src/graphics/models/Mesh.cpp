@@ -9,7 +9,7 @@
 namespace Greet {
 
   Mesh::Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint32_t>& indices)
-    : m_clockwise(false)
+    : m_clockwise(false), boundingBox{vertices}
   {
     m_drawMode = DrawType::TRIANGLES;
     m_vertexCount = vertices.Size();
