@@ -24,79 +24,82 @@ EditorScene::EditorScene()
 void EditorScene::Render3D() const
 {
   ECSScene::Render3D();
+  Entity camera = GetCameraEntity();
+  DrawBoundingBoxes(camera.GetComponent<Camera3DComponent>());
   if(selectedEntity)
   {
-    Entity camera{manager.get()};
-    bool foundPrimary = false;
-    manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
-    {
-      if(cam.active)
-      {
-        if(foundPrimary)
-          Log::Warning("More than one primary 3D camera in scene");
-        foundPrimary = true;
-        camera.SetID(id);
-      }
-    });
-
-    if(!foundPrimary)
-    {
-      Log::Warning("No camera in scene");
-      return;
-    }
     const BoundingBox& boundingBox = selectedEntity.GetComponent<MeshComponent>().mesh->GetBoundingBox();
-    const Mat4& transform = selectedEntity.GetComponent<Transform3DComponent>().transform;
+    const Transform3DComponent& transformComponent = selectedEntity.GetComponent<Transform3DComponent>();
     glLineWidth(3);
     lineShader->Enable();
     Camera3DComponent& cameraComponent = camera.GetComponent<Camera3DComponent>();
     cameraComponent.SetShaderUniforms(lineShader);
     lineShader->SetUniformColor4("uMaterialColor", Color{0.8, 0.2, 0.8});
-    lineShader->SetUniformMat4("uTransformationMatrix", transform * Mat4::Translate(boundingBox.GetPosition()- 0.01) * Mat4::Scale(boundingBox.GetSize() + 0.02));
+    lineShader->SetUniformMat4("uTransformationMatrix", transformComponent.transform * Mat4::Translate(boundingBox.GetPosition() - 0.01) * Mat4::Scale(boundingBox.GetSize() + 0.02));
     lineMesh->Bind();
     lineMesh->Render();
     lineMesh->Unbind();
     lineShader->Disable();
     glLineWidth(1);
     RenderCommand::ClearDepthBuffer();
-    translateArrows.Render(cameraComponent, transform * boundingBox.GetCenter());
+    translateArrows.Render(cameraComponent);
   }
+}
+
+void EditorScene::DrawBoundingBoxes(const Camera3DComponent& cameraComponent) const
+{
+  lineShader->Enable();
+  cameraComponent.SetShaderUniforms(lineShader);
+  lineMesh->Bind();
+  manager->Each<Transform3DComponent, MaterialComponent, MeshComponent>([&](EntityID id, const Transform3DComponent& transform, const MaterialComponent&, const MeshComponent& mesh)
+  {
+    lineShader->SetUniformColor4("uMaterialColor", Color{0.2, 0.2, 0.2});
+    const BoundingBox& boundingBox = mesh.mesh->GetBoundingBox();
+    lineShader->SetUniformMat4("uTransformationMatrix", transform.transform * Mat4::Translate(boundingBox.GetPosition()- 0.01) * Mat4::Scale(boundingBox.GetSize() + 0.02));
+    lineMesh->Render();
+  });
+  lineMesh->Unbind();
+  lineShader->Disable();
 }
 
 void EditorScene::OnEvent(Event& event)
 {
   ECSScene::OnEvent(event);
+  Entity camera = GetCameraEntity();
+
+  if(!camera)
+  {
+    Log::Warning("No camera in scene");
+    return;
+  }
+  Camera3DComponent& component = camera.GetComponent<Camera3DComponent>();
+
+  if(selectedEntity)
+  {
+    Transform3DComponent& transform = selectedEntity.GetComponent<Transform3DComponent>();
+    translateArrows.position = transform.GetPosition();
+    bool handled = translateArrows.OnEvent(event, component);
+    if(handled)
+    {
+      transform.SetPosition(translateArrows.position);
+      return;
+    }
+  }
+
   if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
   {
+
     MousePressEvent e = static_cast<MousePressEvent&>(event);
     if(e.GetButton() != GREET_MOUSE_1)
       return;
-    Entity camera{manager.get()};
-    bool foundPrimary = false;
-    manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
-    {
-      if(cam.active)
-      {
-        if(foundPrimary)
-          Log::Warning("More than one primary 3D camera in scene");
-        foundPrimary = true;
-        camera.SetID(id);
-      }
-    });
-
-    if(!foundPrimary)
-    {
-      Log::Warning("No camera in scene");
-      return;
-    }
 
     int i = 0;
     float distance = 100; // Limit
     Entity collisionEntity{manager.get()};
-    Camera3DComponent& component = camera.GetComponent<Camera3DComponent>();
     manager->Each<Transform3DComponent, MeshComponent, MaterialComponent>([&](EntityID id, Transform3DComponent& transform, MeshComponent& mesh, MaterialComponent& material)
     {
       Line line = component.GetScreenToWorldCoordinate(Mat4::Inverse(transform.transform), e.GetPosition());
-      std::pair<bool, float> collision = mesh.mesh->GetBoundingBox().LineIntersects(line, 100);
+      std::pair<bool, float> collision = mesh.mesh->GetBoundingBox().LineIntersects(line, distance);
       if(collision.first && collision.second < distance)
       {
         collisionEntity.SetID(id);
@@ -108,4 +111,27 @@ void EditorScene::OnEvent(Event& event)
       Log::Info("selected entity");
   }
 
+}
+
+Entity EditorScene::GetCameraEntity() const
+{
+  Entity camera{manager.get()};
+  bool foundPrimary = false;
+  manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
+  {
+    if(cam.active)
+    {
+      if(foundPrimary)
+        Log::Warning("More than one primary 3D camera in scene");
+      foundPrimary = true;
+      camera.SetID(id);
+    }
+  });
+
+  if(!foundPrimary)
+  {
+    Log::Warning("No camera in scene");
+    return {};
+  }
+  return camera;
 }

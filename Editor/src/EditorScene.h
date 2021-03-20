@@ -15,4 +15,7 @@ class EditorScene : public Greet::ECSScene
 
     void OnEvent(Greet::Event& event) override;
     void Render3D() const override;
+    void DrawBoundingBoxes(const Greet::Camera3DComponent& cameraComponent) const;
+
+    Greet::Entity GetCameraEntity() const;
 };
