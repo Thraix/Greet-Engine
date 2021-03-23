@@ -2,9 +2,9 @@
 
 #include <Greet.h>
 
-enum class SelectedArrow
+enum class InputType
 {
-  X = 0, Y = 1, Z = 2, None
+  XAxis = 0, YAxis = 1, ZAxis = 2, XPlane= 3, YPlane = 4, ZPlane = 5, FreeMove = 6, None
 };
 
 class TranslateArrowsRenderer
@@ -12,40 +12,110 @@ class TranslateArrowsRenderer
   public:
     Greet::Vec3f position;
   private:
-    Greet::Ref<Greet::Mesh> mesh;
+    Greet::Ref<Greet::Mesh> axisMesh;
+    Greet::Ref<Greet::Mesh> planeMesh;
+    Greet::Ref<Greet::Mesh> cubeMesh;
     Greet::Ref<Greet::Shader> shader;
 
-    SelectedArrow selectedArrow = SelectedArrow::None;
+    InputType inputType = InputType::None;
     Greet::Vec3f pressedEntityPos;
     Greet::Vec3f pressedTranslationPos;
 
+    std::vector<std::pair<Greet::BoundingBox, InputType>> boundingBoxes;
 
   public:
 
     TranslateArrowsRenderer()
     {
-      mesh = Greet::NewRef<Greet::Mesh>(Greet::OBJUtils::LoadObj("res/objs/translate_arrow.obj"));
-      shader = Greet::ShaderFactory::Shader3D();
-      Greet::Log::Info(mesh->GetBoundingBox());
+      axisMesh = Greet::NewRef<Greet::Mesh>(Greet::OBJUtils::LoadObj("res/objs/axis.obj"));
+      planeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Plane({0.5,0,0.5}, {0.4}));
+      cubeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Cube({0,0,0}, {0.2}));
+      planeMesh->SetEnableCulling(false);
+      shader = Greet::Shader::FromFile("res/shaders/directional_light.shader");
+      Greet::Log::Info(axisMesh->GetBoundingBox());
+
+      // Axis bounding boxes
+      Greet::BoundingBox boxYAxis = axisMesh->GetBoundingBox();
+      Greet::BoundingBox boxXAxis = axisMesh->GetBoundingBox();
+      std::swap(boxXAxis.boundingBoxMax.x, boxXAxis.boundingBoxMax.y);
+      std::swap(boxXAxis.boundingBoxMin.x, boxXAxis.boundingBoxMin.y);
+      Greet::BoundingBox boxZAxis = axisMesh->GetBoundingBox();
+      std::swap(boxZAxis.boundingBoxMax.z, boxZAxis.boundingBoxMax.y);
+      std::swap(boxZAxis.boundingBoxMin.z, boxZAxis.boundingBoxMin.y);
+
+      boundingBoxes.emplace_back(boxXAxis, InputType::XAxis);
+      boundingBoxes.emplace_back(boxYAxis, InputType::YAxis);
+      boundingBoxes.emplace_back(boxZAxis, InputType::ZAxis);
+
+      // Plane bounding boxes
+      Greet::BoundingBox boxYPlane = planeMesh->GetBoundingBox();
+      Greet::BoundingBox boxXPlane = planeMesh->GetBoundingBox();
+      std::swap(boxXPlane.boundingBoxMax.x, boxXPlane.boundingBoxMax.y);
+      std::swap(boxXPlane.boundingBoxMin.x, boxXPlane.boundingBoxMin.y);
+      Greet::BoundingBox boxZPlane = planeMesh->GetBoundingBox();
+      std::swap(boxZPlane.boundingBoxMax.z, boxZPlane.boundingBoxMax.y);
+      std::swap(boxZPlane.boundingBoxMin.z, boxZPlane.boundingBoxMin.y);
+
+      boundingBoxes.emplace_back(boxXPlane, InputType::XPlane);
+      boundingBoxes.emplace_back(boxYPlane, InputType::YPlane);
+      boundingBoxes.emplace_back(boxZPlane, InputType::ZPlane);
+
+      // Free move bounding box
+      boundingBoxes.emplace_back(cubeMesh->GetBoundingBox(), InputType::FreeMove);
     }
 
     void Render(const Greet::Camera3DComponent& camera) const
     {
       shader->Enable();
       camera.SetShaderUniforms(shader);
+      shader->SetUniform1f("uSpecularStrength", 0.0f);
+      shader->SetUniform1f("uAmbient", 0.7f);
       shader->SetUniformBoolean("uHasTexture", false);
-        shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2));
+      RenderCube();
+      RenderArrows();
+      RenderPlanes();
+    }
+
+    void RenderArrows() const
+    {
+      axisMesh->Bind();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2));
       shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position));
-      mesh->Bind();
-      mesh->Render();
-        shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8));
+      axisMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8));
       shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateX(M_PI / 2));
-      mesh->Render();
-        shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2));
+      axisMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2));
       shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateZ(-M_PI / 2));
-      mesh->Render();
-      mesh->Unbind();
-      shader->Disable();
+      axisMesh->Render();
+    }
+
+    void RenderPlanes() const
+    {
+      planeMesh->Bind();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2, 0.5));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position));
+      planeMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8, 0.5));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateX(-M_PI / 2));
+      planeMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2, 0.5));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateZ(M_PI / 2));
+      planeMesh->Render();
+    }
+
+    void RenderCube() const
+    {
+      cubeMesh->Bind();
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.8,0.8, 1.0));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position));
+      cubeMesh->Render();
     }
 
     bool OnEvent(Greet::Event& event, const Greet::Camera3DComponent& cameraComponent)
@@ -55,61 +125,87 @@ class TranslateArrowsRenderer
         Greet::MousePressEvent e = static_cast<Greet::MousePressEvent&>(event);
         if(e.GetButton() != GREET_MOUSE_1)
           return false;
-        Greet::BoundingBox boxY = mesh->GetBoundingBox();
-        Greet::BoundingBox boxX = mesh->GetBoundingBox();
-        std::swap(boxX.boundingBoxMax.x, boxX.boundingBoxMax.y);
-        std::swap(boxX.boundingBoxMin.x, boxX.boundingBoxMin.y);
-        Greet::BoundingBox boxZ = mesh->GetBoundingBox();
-        std::swap(boxZ.boundingBoxMax.z, boxZ.boundingBoxMax.y);
-        std::swap(boxZ.boundingBoxMin.z, boxZ.boundingBoxMin.y);
+
         Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(Greet::Mat4::Translate(-position), e.GetPosition());
-        if(boxX.LineIntersects(line, 100).first)
+        int minDistance = 100;
+        inputType = InputType::None;
+        for(auto&& boundingBox : boundingBoxes)
         {
-          selectedArrow = SelectedArrow::X;
-          pressedEntityPos = position;
-          pressedTranslationPos = Greet::Line{{0,0,0}, {1, 0, 0}}.PointClosestFromLine(line);
-          return true;
+          std::pair<bool, float> collision = boundingBox.first.LineIntersects(line, minDistance);
+          if(collision.first)
+          {
+            minDistance = collision.second;
+            inputType = boundingBox.second;
+            pressedEntityPos = position;
+          }
         }
-        else if(boxY.LineIntersects(line, 100).first)
-        {
-          selectedArrow = SelectedArrow::Y;
-          pressedEntityPos = position;
-          pressedTranslationPos = Greet::Line{{0,0,0}, {0, 1, 0}}.PointClosestFromLine(line);
-          return true;
-        }
-        else if(boxZ.LineIntersects(line, 100).first)
-        {
-          selectedArrow = SelectedArrow::Z;
-          pressedEntityPos = position;
-          pressedTranslationPos = Greet::Line{{0,0,0}, {0, 0, 1}}.PointClosestFromLine(line);
-          return true;
-        }
-        else
-        {
-          selectedArrow = SelectedArrow::None;
-        }
+        if(IsInputTypeAxis(inputType))
+          pressedTranslationPos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
+        else if(IsInputTypePlane(inputType))
+          pressedTranslationPos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
+        Greet::Log::Info(pressedTranslationPos);
       }
       else if(EVENT_IS_TYPE(event, Greet::EventType::MOUSE_MOVE))
       {
-        if(selectedArrow == SelectedArrow::None)
-          return false;
         Greet::MouseMoveEvent e = static_cast<Greet::MouseMoveEvent&>(event);
         Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(Greet::Mat4::Translate(-pressedEntityPos), e.GetPosition());
-        Greet::Vec3f arrowDir{0};
-        arrowDir[(int)selectedArrow] = 1;
-        Greet::Vec3f translationPos = Greet::Line{{0,0,0}, arrowDir}.PointClosestFromLine(line);
-        position = pressedEntityPos + (translationPos - pressedTranslationPos);
-        return true;
+        switch(inputType)
+        {
+          case InputType::XAxis:
+          case InputType::YAxis:
+          case InputType::ZAxis: {
+            Greet::Vec3f translationPos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
+            position = pressedEntityPos + (translationPos - pressedTranslationPos);
+            return true;
+          }
+          case InputType::XPlane:
+          case InputType::YPlane:
+          case InputType::ZPlane: {
+            Greet::Vec3f translationPos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
+            position = pressedEntityPos + (translationPos - pressedTranslationPos);
+            return true;
+          }
+          case InputType::FreeMove:
+          case InputType::None:
+            break;
+          default:
+            Greet::Log::Warning("Input type not specified in switch statement");
+
+        }
       }
       else if(EVENT_IS_TYPE(event, Greet::EventType::MOUSE_RELEASE))
       {
-        if(selectedArrow != SelectedArrow::None)
+        if(inputType != InputType::None)
         {
-          selectedArrow = SelectedArrow::None;
+          inputType = InputType::None;
           return true;
         }
       }
 
       return false;
+    }
+
+
+    bool IsInputTypeAxis(InputType type)
+    {
+      return type == InputType::XAxis || type == InputType::YAxis || type == InputType::ZAxis;
+    }
+
+    Greet::Vec3f GetAxisVector(InputType type)
+    {
+      if(type == InputType::XAxis || type == InputType::XPlane)
+        return {1, 0, 0};
+      else if(type == InputType::YAxis || type == InputType::YPlane)
+        return {0, 1, 0};
+      else if(type == InputType::ZAxis || type == InputType::ZPlane)
+        return {0, 0, 1};
+
+      Greet::Log::Warning("GetAxisVector called with invalid InputType");
+      return {0,0,0};
+    }
+
+    bool IsInputTypePlane(InputType type)
+    {
+      return type == InputType::XPlane || type == InputType::YPlane || type == InputType::ZPlane;
     }
 };

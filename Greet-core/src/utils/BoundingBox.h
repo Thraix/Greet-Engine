@@ -34,7 +34,6 @@ namespace Greet
 
     std::pair<bool, float> LineIntersects(const Line& line, float distanceLimit) const
     {
-      Log::Info(boundingBoxMin, " ", boundingBoxMax);
       std::vector<Vec3f> points =
       {
         Plane{Vec3f{1, 0, 0}, Vec3f{boundingBoxMax.x, 0, 0}}.LineIntersection(line),
