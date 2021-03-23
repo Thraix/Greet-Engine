@@ -80,7 +80,7 @@ namespace Greet
 
     friend std::ostream& operator<<(std::ostream& stream, const BoundingBox& boundingBox)
     {
-      return stream << boundingBox.boundingBoxMax << " - " << boundingBox.boundingBoxMax;
+      return stream << boundingBox.boundingBoxMin << " - " << boundingBox.boundingBoxMax;
     }
   };
 }

@@ -42,7 +42,7 @@ void EditorScene::Render3D() const
     lineShader->Disable();
     glLineWidth(1);
     RenderCommand::ClearDepthBuffer();
-    translateArrows.Render(cameraComponent);
+    translationGizmo.Render(cameraComponent);
   }
 }
 
@@ -77,11 +77,11 @@ void EditorScene::OnEvent(Event& event)
   if(selectedEntity)
   {
     Transform3DComponent& transform = selectedEntity.GetComponent<Transform3DComponent>();
-    translateArrows.position = transform.GetPosition();
-    bool handled = translateArrows.OnEvent(event, component);
+    translationGizmo.position = transform.GetPosition();
+    bool handled = translationGizmo.OnEvent(event, component);
     if(handled)
     {
-      transform.SetPosition(translateArrows.position);
+      transform.SetPosition(translationGizmo.position);
       return;
     }
   }

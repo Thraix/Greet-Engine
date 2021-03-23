@@ -1,10 +1,10 @@
 #include <Greet.h>
 
-#include "graphics/TranslateArrowsRenderer.h"
+#include "gizmos/TranslationGizmo.h"
 
 class EditorScene : public Greet::ECSScene
 {
-  TranslateArrowsRenderer translateArrows;
+  TranslationGizmo translationGizmo;
   Greet::Ref<Greet::Shader> lineShader;
   Greet::Ref<Greet::Mesh> lineMesh;
 
