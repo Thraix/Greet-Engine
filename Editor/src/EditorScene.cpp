@@ -107,10 +107,7 @@ void EditorScene::OnEvent(Event& event)
       }
     });
     selectedEntity = collisionEntity;
-    if(selectedEntity)
-      Log::Info("selected entity");
   }
-
 }
 
 Entity EditorScene::GetCameraEntity() const

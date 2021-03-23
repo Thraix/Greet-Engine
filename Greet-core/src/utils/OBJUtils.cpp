@@ -22,6 +22,10 @@ namespace Greet {
     std::vector<uint32_t> indices;
 
     std::ifstream input(filename);
+    if(!input.is_open())
+    {
+      Log::Error("Obj File not found: ", filename);
+    }
     std::map<std::string, uint32_t> verticesMap;
 
     // These are the same length.
