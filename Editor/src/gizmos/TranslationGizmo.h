@@ -7,7 +7,7 @@ enum class InputType
   XAxis = 0, YAxis = 1, ZAxis = 2, XPlane= 3, YPlane = 4, ZPlane = 5, FreeMove = 6, None
 };
 
-class TranslateArrowsRenderer
+class TranslationGizmo
 {
   public:
     Greet::Vec3f position;
@@ -25,14 +25,14 @@ class TranslateArrowsRenderer
 
   public:
 
-    TranslateArrowsRenderer()
+    TranslationGizmo()
     {
       axisMesh = Greet::NewRef<Greet::Mesh>(Greet::OBJUtils::LoadObj("res/objs/axis.obj"));
       planeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Plane({0.5,0,0.5}, {0.4}));
-      cubeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Cube({0,0,0}, {0.2}));
+      cubeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Cube({0,0,0}, {0.4}));
       planeMesh->SetEnableCulling(false);
+      axisMesh->SetEnableCulling(false);
       shader = Greet::Shader::FromFile("res/shaders/directional_light.shader");
-      Greet::Log::Info(axisMesh->GetBoundingBox());
 
       // Axis bounding boxes
       Greet::BoundingBox boxYAxis = axisMesh->GetBoundingBox();
@@ -67,46 +67,52 @@ class TranslateArrowsRenderer
     void Render(const Greet::Camera3DComponent& camera) const
     {
       shader->Enable();
+      Greet::Mat4 mirrorMatrix = Greet::Mat4::Scale({
+          camera.GetPosition().x > position.x ? 1.0f : -1.0f,
+          camera.GetPosition().y > position.y ? 1.0f : -1.0f,
+          camera.GetPosition().z > position.z ? 1.0f : -1.0f
+      });
       camera.SetShaderUniforms(shader);
       shader->SetUniform1f("uSpecularStrength", 0.0f);
       shader->SetUniform1f("uAmbient", 0.7f);
       shader->SetUniformBoolean("uHasTexture", false);
+      shader->SetUniform3f("uLightDirection", mirrorMatrix * Greet::Vec3f{1,1,1});
       RenderCube();
-      RenderArrows();
-      RenderPlanes();
+      RenderArrows(mirrorMatrix);
+      RenderPlanes(mirrorMatrix);
     }
 
-    void RenderArrows() const
+    void RenderArrows(const Greet::Mat4& mirrorMatrix) const
     {
       axisMesh->Bind();
 
       shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix);
       axisMesh->Render();
 
       shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateX(M_PI / 2));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateX(M_PI / 2));
       axisMesh->Render();
 
       shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateZ(-M_PI / 2));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateZ(-M_PI / 2));
       axisMesh->Render();
     }
 
-    void RenderPlanes() const
+    void RenderPlanes(const Greet::Mat4& mirrorMatrix) const
     {
       planeMesh->Bind();
 
       shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2, 0.5));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix);
       planeMesh->Render();
 
       shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8, 0.5));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateX(-M_PI / 2));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateX(-M_PI / 2));
       planeMesh->Render();
 
       shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2, 0.5));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * Greet::Mat4::RotateZ(M_PI / 2));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateZ(M_PI / 2));
       planeMesh->Render();
     }
 
@@ -126,13 +132,19 @@ class TranslateArrowsRenderer
         if(e.GetButton() != GREET_MOUSE_1)
           return false;
 
-        Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(Greet::Mat4::Translate(-position), e.GetPosition());
+        Greet::Mat4 mirrorMatrix = Greet::Mat4::Scale({
+            cameraComponent.GetPosition().x > position.x ? 1.0f : -1.0f,
+            cameraComponent.GetPosition().y > position.y ? 1.0f : -1.0f,
+            cameraComponent.GetPosition().z > position.z ? 1.0f : -1.0f
+        });
+        Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(mirrorMatrix * Greet::Mat4::Translate(-position), e.GetPosition());
         int minDistance = 100;
         inputType = InputType::None;
         for(auto&& boundingBox : boundingBoxes)
         {
-          std::pair<bool, float> collision = boundingBox.first.LineIntersects(line, minDistance);
-          if(collision.first)
+          std::pair<bool, float> collision = boundingBox.first.LineIntersects(line, 100);
+          Greet::Log::Info((int)boundingBox.second, " ", collision.second);
+          if(collision.first && (minDistance > collision.second || (boundingBox.second == InputType::FreeMove && IsInputTypeAxis(inputType))))
           {
             minDistance = collision.second;
             inputType = boundingBox.second;
@@ -143,31 +155,36 @@ class TranslateArrowsRenderer
           pressedTranslationPos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
         else if(IsInputTypePlane(inputType))
           pressedTranslationPos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
-        Greet::Log::Info(pressedTranslationPos);
+        return inputType != InputType::None;
       }
       else if(EVENT_IS_TYPE(event, Greet::EventType::MOUSE_MOVE))
       {
         Greet::MouseMoveEvent e = static_cast<Greet::MouseMoveEvent&>(event);
-        Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(Greet::Mat4::Translate(-pressedEntityPos), e.GetPosition());
+        Greet::Mat4 mirrorMatrix = Greet::Mat4::Scale({
+            cameraComponent.GetPosition().x > pressedEntityPos.x ? 1.0f : -1.0f,
+            cameraComponent.GetPosition().y > pressedEntityPos.y ? 1.0f : -1.0f,
+            cameraComponent.GetPosition().z > pressedEntityPos.z ? 1.0f : -1.0f
+        });
+        Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(mirrorMatrix * Greet::Mat4::Translate(-pressedEntityPos), e.GetPosition());
         switch(inputType)
         {
           case InputType::XAxis:
           case InputType::YAxis:
           case InputType::ZAxis: {
             Greet::Vec3f translationPos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
-            position = pressedEntityPos + (translationPos - pressedTranslationPos);
+            position = pressedEntityPos + mirrorMatrix * (translationPos - pressedTranslationPos);
             return true;
           }
           case InputType::XPlane:
           case InputType::YPlane:
           case InputType::ZPlane: {
             Greet::Vec3f translationPos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
-            position = pressedEntityPos + (translationPos - pressedTranslationPos);
+            position = pressedEntityPos + mirrorMatrix * (translationPos - pressedTranslationPos);
             return true;
           }
           case InputType::FreeMove:
           case InputType::None:
-            break;
+            return false;
           default:
             Greet::Log::Warning("Input type not specified in switch statement");
 
