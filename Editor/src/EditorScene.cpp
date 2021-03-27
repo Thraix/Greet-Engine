@@ -28,38 +28,31 @@ void EditorScene::Render3D() const
   DrawBoundingBoxes(camera.GetComponent<Camera3DComponent>());
   if(selectedEntity)
   {
-    const BoundingBox& boundingBox = selectedEntity.GetComponent<MeshComponent>().mesh->GetBoundingBox();
-    const Transform3DComponent& transformComponent = selectedEntity.GetComponent<Transform3DComponent>();
-    glLineWidth(3);
-    lineShader->Enable();
-    Camera3DComponent& cameraComponent = camera.GetComponent<Camera3DComponent>();
-    cameraComponent.SetShaderUniforms(lineShader);
-    lineShader->SetUniformColor4("uMaterialColor", Color{0.8, 0.2, 0.8});
-    lineShader->SetUniformMat4("uTransformationMatrix", transformComponent.transform * Mat4::Translate(boundingBox.GetPosition() - 0.01) * Mat4::Scale(boundingBox.GetSize() + 0.02));
-    lineMesh->Bind();
-    lineMesh->Render();
-    lineMesh->Unbind();
-    lineShader->Disable();
-    glLineWidth(1);
     RenderCommand::ClearDepthBuffer();
+    Camera3DComponent& cameraComponent = camera.GetComponent<Camera3DComponent>();
     translationGizmo.Render(cameraComponent);
   }
 }
 
 void EditorScene::DrawBoundingBoxes(const Camera3DComponent& cameraComponent) const
 {
+    glLineWidth(2);
   lineShader->Enable();
   cameraComponent.SetShaderUniforms(lineShader);
   lineMesh->Bind();
   manager->Each<Transform3DComponent, MaterialComponent, MeshComponent>([&](EntityID id, const Transform3DComponent& transform, const MaterialComponent&, const MeshComponent& mesh)
   {
-    lineShader->SetUniformColor4("uMaterialColor", Color{0.2, 0.2, 0.2});
+    if(id == selectedEntity.GetID())
+      lineShader->SetUniformColor4("uMaterialColor", Color{0.8, 0.2, 0.8});
+    else
+      lineShader->SetUniformColor4("uMaterialColor", Color{0.2, 0.2, 0.2});
     const BoundingBox& boundingBox = mesh.mesh->GetBoundingBox();
-    lineShader->SetUniformMat4("uTransformationMatrix", transform.transform * Mat4::Translate(boundingBox.GetPosition()- 0.01) * Mat4::Scale(boundingBox.GetSize() + 0.02));
+    lineShader->SetUniformMat4("uTransformationMatrix", transform.transform *  Mat4::Scale(boundingBox.GetSize()) * Mat4::Translate(-0.5));
     lineMesh->Render();
   });
   lineMesh->Unbind();
   lineShader->Disable();
+    glLineWidth(1);
 }
 
 void EditorScene::OnEvent(Event& event)
@@ -78,10 +71,12 @@ void EditorScene::OnEvent(Event& event)
   {
     Transform3DComponent& transform = selectedEntity.GetComponent<Transform3DComponent>();
     translationGizmo.position = transform.GetPosition();
+    translationGizmo.scale = transform.GetScale();
     bool handled = translationGizmo.OnEvent(event, component);
     if(handled)
     {
       transform.SetPosition(translationGizmo.position);
+      transform.SetScale(translationGizmo.scale);
       return;
     }
   }
@@ -98,15 +93,22 @@ void EditorScene::OnEvent(Event& event)
     Entity collisionEntity{manager.get()};
     manager->Each<Transform3DComponent, MeshComponent, MaterialComponent>([&](EntityID id, Transform3DComponent& transform, MeshComponent& mesh, MaterialComponent& material)
     {
-      Line line = component.GetScreenToWorldCoordinate(Mat4::Inverse(transform.transform), e.GetPosition());
-      std::pair<bool, float> collision = mesh.mesh->GetBoundingBox().LineIntersects(line, distance);
+      Line line = component.GetScreenToWorldCoordinate(e.GetPosition());
+      std::pair<bool, float> collision = mesh.mesh->GetBoundingBox().LineIntersects(transform.transform, line);
       if(collision.first && collision.second < distance)
       {
         collisionEntity.SetID(id);
         distance = collision.second;
       }
+      i++;
     });
     selectedEntity = collisionEntity;
+    if(selectedEntity)
+    {
+      Transform3DComponent& transform = selectedEntity.GetComponent<Transform3DComponent>();
+      translationGizmo.position = transform.GetPosition();
+      translationGizmo.scale = transform.GetScale();
+    }
   }
 }
 

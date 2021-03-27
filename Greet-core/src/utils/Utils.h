@@ -5,6 +5,7 @@
 
 #define BIT(x) (1 << (x))
 #define BIND_MEMBER_FUNC(fn) [this](auto&&... args){ this->fn(std::forward<decltype(args)>(args)...); }
+#define BIND_MEMBER_FUNC0(fn) [this](){ this->fn(); }
 #define BIND_GLOBAL_FUNC(fn) &fn
 
 namespace Greet {

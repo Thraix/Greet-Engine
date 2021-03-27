@@ -1,10 +1,11 @@
 #include <Greet.h>
 
 #include "gizmos/TranslationGizmo.h"
+#include "gizmos/ScaleGizmo.h"
 
 class EditorScene : public Greet::ECSScene
 {
-  TranslationGizmo translationGizmo;
+  ScaleGizmo translationGizmo;
   Greet::Ref<Greet::Shader> lineShader;
   Greet::Ref<Greet::Mesh> lineMesh;
 

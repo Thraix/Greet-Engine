@@ -81,4 +81,5 @@ void main()
 
 	fColor *= vec4((uAmbient + (uDiffuse + uSpecular) * uLightColor), 1.0f);
   fColor = mix(vec4(uFogColor.xyz, fColor.a), vec4(fColor), vVisibility);
+  fColor = vColor;
 }
