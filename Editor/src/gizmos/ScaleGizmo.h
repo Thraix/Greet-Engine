@@ -2,9 +2,9 @@
 
 #include <Greet.h>
 
-class TranslationGizmo
-{
 
+class ScaleGizmo
+{
   enum class InputType
   {
     XAxis = 0, YAxis = 1, ZAxis = 2, XPlane= 3, YPlane = 4, ZPlane = 5, FreeMove = 6, None
@@ -12,6 +12,7 @@ class TranslationGizmo
 
   public:
     Greet::Vec3f position;
+    Greet::Vec3f scale;
   private:
     Greet::Ref<Greet::Mesh> axisMesh;
     Greet::Ref<Greet::Mesh> planeMesh;
@@ -19,17 +20,17 @@ class TranslationGizmo
     Greet::Ref<Greet::Shader> shader;
 
     InputType inputType = InputType::None;
-    Greet::Vec3f pressedEntityPos;
-    Greet::Vec3f pressedTranslationPos;
+    Greet::Vec3f pressedScale;
+    Greet::Vec3f pressedScalePos;
 
     std::vector<std::pair<Greet::BoundingBox, InputType>> boundingBoxes;
 
   public:
 
-    TranslationGizmo()
+    ScaleGizmo()
     {
       axisMesh = Greet::NewRef<Greet::Mesh>(Greet::OBJUtils::LoadObj("res/objs/axis.obj"));
-      planeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Plane({0.5,0,0.5}, {0.4}));
+      planeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Plane({0.8,0,0.8}, {0.2}));
       cubeMesh = Greet::NewRef<Greet::Mesh>(Greet::MeshFactory::Cube({0,0,0}, {0.4}));
       planeMesh->SetEnableCulling(false);
       axisMesh->SetEnableCulling(false);
@@ -149,38 +150,39 @@ class TranslationGizmo
           {
             minDistance = d;
             inputType = boundingBox.second;
-            pressedEntityPos = position;
+            pressedScale = scale;
           }
         }
         if(IsInputTypeAxis(inputType))
-          pressedTranslationPos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
+          pressedScalePos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
         else if(IsInputTypePlane(inputType))
-          pressedTranslationPos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
+          pressedScalePos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
         return inputType != InputType::None;
       }
       else if(EVENT_IS_TYPE(event, Greet::EventType::MOUSE_MOVE))
       {
         Greet::MouseMoveEvent e = static_cast<Greet::MouseMoveEvent&>(event);
         Greet::Mat4 mirrorMatrix = Greet::Mat4::Scale({
-            cameraComponent.GetPosition().x > pressedEntityPos.x ? 1.0f : -1.0f,
-            cameraComponent.GetPosition().y > pressedEntityPos.y ? 1.0f : -1.0f,
-            cameraComponent.GetPosition().z > pressedEntityPos.z ? 1.0f : -1.0f
+            cameraComponent.GetPosition().x > position.x ? 1.0f : -1.0f,
+            cameraComponent.GetPosition().y > position.y ? 1.0f : -1.0f,
+            cameraComponent.GetPosition().z > position.z ? 1.0f : -1.0f
         });
-        Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(mirrorMatrix * Greet::Mat4::Translate(-pressedEntityPos), e.GetPosition());
+        Greet::Line line = cameraComponent.GetScreenToWorldCoordinate(mirrorMatrix * Greet::Mat4::Translate(-position), e.GetPosition());
         switch(inputType)
         {
           case InputType::XAxis:
           case InputType::YAxis:
           case InputType::ZAxis: {
-            Greet::Vec3f translationPos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
-            position = pressedEntityPos + mirrorMatrix * (translationPos - pressedTranslationPos);
+            Greet::Vec3f scalePos = Greet::Line{{0,0,0}, GetAxisVector(inputType)}.PointClosestFromLine(line);
+            scale[(int)inputType] = (pressedScale / pressedScalePos * scalePos)[(int)inputType];
             return true;
           }
           case InputType::XPlane:
           case InputType::YPlane:
           case InputType::ZPlane: {
-            Greet::Vec3f translationPos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
-            position = pressedEntityPos + mirrorMatrix * (translationPos - pressedTranslationPos);
+            Greet::Vec3f scalePos = Greet::Plane{GetAxisVector(inputType), {0,0,0}}.LineIntersection(line);
+            scale = pressedScale / pressedScalePos.Length() * scalePos.Length();
+            scale[(int)inputType - (int)InputType::XPlane] = pressedScale[(int)inputType - (int)InputType::XPlane];
             return true;
           }
           case InputType::FreeMove:

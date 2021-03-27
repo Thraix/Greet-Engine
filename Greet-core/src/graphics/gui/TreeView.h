@@ -58,6 +58,7 @@ namespace Greet
 
       bool HasSelectedNode() const;
       TreeNode* GetSelectedNode() const;
+      TreeNode* GetRootTreeNode() const { return tree; };
 
       void SetOnNodeSelectedCallback(OnNodeSelected callback);
       void SetOnNodeFlowChangedCallback(OnNodeFlowChanged callback);

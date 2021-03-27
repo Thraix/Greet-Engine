@@ -39,6 +39,11 @@ namespace Greet
       float t = ((Vec::Dot(pos, dir) - Vec::Dot(dir, line.pos)) * Vec::Dot(line.dir, line.dir) / (d1d2 * d1d2) + (Vec::Dot(line.dir, line.pos) - Vec::Dot(line.dir, pos)) / d1d2) / (1 - Vec::Dot(dir, dir) * Vec::Dot(line.dir, line.dir) / (d1d2 * d1d2));
       return pos + dir * t;
     }
+
+    friend std::ostream& operator<<(std::ostream& stream, const Line& line)
+    {
+      return stream << "pos" << line.pos << " dir" << line.dir;
+    }
   };
 }
 

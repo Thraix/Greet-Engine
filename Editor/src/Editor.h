@@ -28,6 +28,8 @@ class Editor : public Greet::App
     void Destruct() override;
     void SetupGUI(Greet::Frame* frame);
 
+    void CreateEntity();
+
     void Tick() override;
     void Update(float timeElapsed) override;
     void Render() override;

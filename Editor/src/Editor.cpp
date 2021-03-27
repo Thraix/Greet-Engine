@@ -1,6 +1,6 @@
 #include "Editor.h"
 
-#include "CameraController.h"
+#include "scripts/CameraController.h"
 
 using namespace Greet;
 
@@ -54,34 +54,39 @@ void Editor::SetupGUI(Frame* frame)
   Entity camera = scene->AddEntity("Camera3D");
   camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90, 0.01, 1000, true);
   camera.AddComponent<Environment3DComponent>(shaderSkybox, cubeMapSkybox);
-  camera.AddComponent<NativeScriptComponent>(NewRef<NativeScriptHandler>(new CameraControllerScript()));
+  camera.AddComponent<NativeScriptComponent>(NewRef<NativeScriptHandler>(new CameraControllerScript({0,0,0}, {M_PI / 4,M_PI / 4,0})));
 
   scenes.emplace(name, scene);
   sceneTree->AddChildNode(TreeNode{name});
   sceneView->GetSceneManager().Add3DScene(scene, name);
 
-  addEntityButton->SetOnPressCallback([&](Component* component)
-  {
-    if(sceneTreeView->HasSelectedNode())
-    {
-      static int entityId = 0;
-      TreeNode* selected = sceneTreeView->GetSelectedNode();
-      TreeNode* sceneNode = GetRootSceneTreeNode(selected);
-      Ref<ECSScene> scene = scenes.find(sceneNode->GetName())->second;
-      Entity entity = scene->AddEntity("Entity#" + std::to_string(entityId));
-      selected->AddChildNode(TreeNode{"Entity#" + std::to_string(entityId)});
-      entity.AddComponent<Transform3DComponent>(Vec3f{entityId * 1.5f, 0, 0}, Vec3f{1,1,1}, Vec3f{0,0,0});
-      MeshData data = MeshFactory::Cube({0,0,0}, {1,2,1.5});
-      entity.AddComponent<MeshComponent>(NewRef<Mesh>(data));
-      entity.AddComponent<MaterialComponent>(NewRef<Material>(ShaderFactory::Shader3D()));
-      entityId++;
-    }
-  });
+  addEntityButton->SetOnPressCallback([this](Component* component) { CreateEntity(); } );
+
+  // TODO: Remove debug stuff
+  CreateEntity();
+  CreateEntity();
+  CreateEntity();
 }
 
 void Editor::Destruct()
 {
   GlobalSceneManager::GetSceneManager().Remove2DScene("gui");
+}
+
+void Editor::CreateEntity()
+{
+  static int entityId = 0;
+  TreeNode* selected = sceneTreeView->GetRootTreeNode();
+  if(sceneTreeView->HasSelectedNode())
+    selected = sceneTreeView->GetSelectedNode();
+
+  Entity entity = scene->AddEntity("Entity#" + std::to_string(entityId));
+  selected->AddChildNode(TreeNode{"Entity#" + std::to_string(entityId)});
+  entity.AddComponent<Transform3DComponent>(Vec3f{entityId * 1.5f, 0, 0}, Vec3f{1,1,1}, Vec3f{0,0,0});
+  MeshData data = MeshFactory::Cube({0,0,0}, {1,2,1.5});
+  entity.AddComponent<MeshComponent>(NewRef<Mesh>(data));
+  entity.AddComponent<MaterialComponent>(NewRef<Material>(ShaderFactory::Shader3D()));
+  entityId++;
 }
 
 TreeNode* Editor::GetRootSceneTreeNode(TreeNode* node) const

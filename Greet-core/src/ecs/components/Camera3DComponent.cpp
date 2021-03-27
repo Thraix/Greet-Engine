@@ -26,9 +26,25 @@ namespace Greet
     invPVMatrix{~(projectionMatrix * viewMatrix)}
   {}
 
-  const Vec3f& Camera3DComponent::GetPosition() const { return cameraPos; }
-  const Mat4& Camera3DComponent::GetViewMatrix() const { return viewMatrix; }
-  const Mat4& Camera3DComponent::GetProjectionMatrix() const { return projectionMatrix; }
+  const Vec3f& Camera3DComponent::GetPosition() const
+  {
+    return cameraPos;
+  }
+
+  const Mat4& Camera3DComponent::GetViewMatrix() const
+  {
+    return viewMatrix;
+  }
+
+  const Mat4& Camera3DComponent::GetProjectionMatrix() const
+  {
+    return projectionMatrix;
+  }
+
+  const Mat4& Camera3DComponent::GetInvPVMatrix() const
+  {
+    return invPVMatrix;
+  }
 
   void Camera3DComponent::SetProjectionMatrix(const Mat4& amProjectionMatrix)
   {

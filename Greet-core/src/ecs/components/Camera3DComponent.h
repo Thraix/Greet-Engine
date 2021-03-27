@@ -31,6 +31,7 @@ namespace Greet
       const Vec3f& GetPosition() const;
       const Mat4& GetViewMatrix() const;
       const Mat4& GetProjectionMatrix() const;
+      const Mat4& GetInvPVMatrix() const;
       void SetProjectionMatrix(const Mat4& amProjectionMatrix);
       void SetViewMatrix(const Mat4& amViewMatrix);
       void SetShaderUniforms(const Ref<Shader>& shader) const;
