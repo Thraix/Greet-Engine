@@ -24,3 +24,6 @@ entitypath=res/entities/camera2d.meta
 
 [Entity]
 entitypath=res/entities/glowcube.meta
+
+[Entity]
+entitypath=res/entities/model.meta

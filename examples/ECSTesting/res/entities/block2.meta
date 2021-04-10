@@ -5,7 +5,7 @@ tag=Block
 scale=10 10 10
 
 [MeshComponent]
-type=cube
+mesh=cube
 
 [MaterialComponent]
 shadertype=shader3d

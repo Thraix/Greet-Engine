@@ -11,7 +11,7 @@ far=1000
 
 [Environment3DComponent]
 skybox-texture=res/textures/skybox.meta
-lightPos=30 20 40
+lightPos=-40 40 40
 lightColor=1.0 0.96 0.9;
 fogNearDistance=1000
 fogFarDistance=1000

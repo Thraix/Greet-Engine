@@ -68,7 +68,7 @@ class Core : public App
 
       TextureManager::AddTexture2D("noise", Texture2D::Create(imageData, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
 
-      FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
+      FontManager::Add("noto", FontContainer("../res/fonts/NotoSansUI-Regular.ttf"));
 
       Ref<GUIScene> guiScene = NewRef<GUIScene>();
       Frame* frame = FrameFactory::GetFrame("res/guis/header.xml");
@@ -76,14 +76,14 @@ class Core : public App
 
       //camera = new TPCamera3D(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
 
-      Ref<Skybox> skybox = NewRef<Skybox>(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
+      Ref<Skybox> skybox = NewRef<Skybox>(TextureManager::LoadCubeMap("../res/textures/skybox.meta"));
       renderer3d = NewRef<BatchRenderer3D>();
       waterRenderer = NewRef<BatchRenderer3D>();
 
 
       modelMaterial = NewRef<Material>(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/debugtexture.meta"));
       flatMaterial = NewRef<Material>(Shader::FromFile("res/shaders/flat3d.glsl"));
-      stallMaterial = NewRef<Material>(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/stall.meta"));
+      stallMaterial = NewRef<Material>(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("../res/textures/viking_room.meta"));
       modelMaterial->SetSpecularStrength(1.0)->SetSpecularExponent(10)->SetDiffuseStrength(0.5);
 
       {
@@ -129,18 +129,18 @@ class Core : public App
       MeshData tetrahedronMesh = MeshFactory::Tetrahedron({0, 0, 0}, 10);
       tetrahedron = NewRef<EntityModel>(NewRef<Mesh>(tetrahedronMesh), modelMaterial, Vec3f(30, 0, 10), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
 
-      MeshData stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
+      MeshData stallMeshData = OBJUtils::LoadObj("../res/objs/viking_room.obj");
       //
       Ref<Mesh> stallMesh = NewRef<Mesh>(stallMeshData);
       stallMaterial->SetSpecularStrength(0.1)->SetSpecularExponent(1);
-      stall = NewRef<EntityModel>(stallMesh, stallMaterial, Vec3f(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
+      stall = NewRef<EntityModel>(stallMesh, stallMaterial, Vec3f(0.0f, 0.0f, -80), Vec3(30.0f, 30.0f, 30.0f), Vec3f(-M_PI / 2, 0, -M_PI / 2));
 
       // MEMORY LEAK WITH MESHDATA
       //MeshData data = MeshData::ReadFromFile("res/objs/dragon.gobj");
-      MeshData data = OBJUtils::LoadObj("res/objs/dragon.obj");
+      MeshData data = OBJUtils::LoadObj("../res/objs/dragon.obj");
       data = *data.LowPolify();
       data.GenerateNormals();
-      data.WriteToFile("res/objs/dragon.gobj");
+      /* data.WriteToFile("res/objs/dragon.gobj"); */
       Ref<Mesh> dragonMesh = NewRef<Mesh>(data);
       dragon = NewRef<EntityModel>(dragonMesh, flatMaterial, Vec3f(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 

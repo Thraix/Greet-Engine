@@ -1,0 +1,15 @@
+[TagComponent]
+tag=Model
+
+[Transform3DComponent]
+position=10 10 10
+scale=10 10 10
+rotation=-90 0 90
+
+[MeshComponent]
+mesh=model
+mesh-path=../res/objs/viking_room.obj
+
+[MaterialComponent]
+shadertype=shader3d
+texture=../res/textures/viking_room.meta
