@@ -45,6 +45,12 @@
         <Container name="container" width="fill_parent" height="fill_parent" padding="10">
           <Label font="noto:18">Frame header</Label>
           <Divider/>
+          <Container width="1w" vertical="false">
+            <Image width="50" height="100" padding="10" image="res/textures/folder.meta" format="fill"/>
+            <Image width="50" height="100" image="res/textures/folder.meta" format="fit"/>
+            <Image width="50" height="100" image="res/textures/folder.meta" format="stretch"/>
+            <Image width="25" height="100" backgroundColor="#00000000" image="res/textures/settings.meta"/>
+        </Container>
           <Label font="noto:16">Radio Buttons</Label>
           <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
             <Container vertical="false" spacing="5">

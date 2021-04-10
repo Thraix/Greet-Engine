@@ -156,7 +156,6 @@ namespace Greet
 
   void GUIRenderer::DrawLine(const Vec2f& pos, float length, float width, bool vertical, const Color& color, bool isHsv)
   {
-
     DrawRect(pos, Vec2f(vertical ? width : length, vertical ? length : width), color,isHsv);
   }
 
@@ -179,6 +178,17 @@ namespace Greet
     AppendQuad(pos, size, Vec2f(0, 0), Vec2f(1, 1), 0, color1, color2, color3, color4, isHsv);
   }
 
+  void GUIRenderer::DrawRect(const Vec2f& pos, const Vec2f& size, const Ref<Texture>& texture, const Color& color, bool isHsv)
+  {
+    float texID = GetTextureSlot(texture->GetTexId());
+    AppendQuad(pos, size, {0, 0}, {1, 1}, texID, color, isHsv);
+  }
+
+  void GUIRenderer::DrawRect(const Vec2f& pos, const Vec2f& size, const Ref<Texture>& texture, const Vec2f& texCoordPos, const Vec2f& texCoordSize, const Color& color, bool isHsv)
+  {
+    float texID = GetTextureSlot(texture->GetTexId());
+    AppendQuad(pos, size, texCoordPos, texCoordPos + texCoordSize, texID, color, isHsv);
+  }
 
   void GUIRenderer::DrawText(const std::string& text, const Vec2f& position, const Font& font, const Color& color, bool isHsv)
   {

@@ -34,6 +34,11 @@ backgroundColor=$gray-2
 font=noto:12
 textColor=$textPrimaryColor
 
+[Image]
+imageColor=$textPrimaryColor
+hover-imageColor=#D0D0D0
+backgroundColor=$primaryColor
+
 [TreeView]
 width=fill_parent
 height=fill_parent

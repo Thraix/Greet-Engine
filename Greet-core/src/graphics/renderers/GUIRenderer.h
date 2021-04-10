@@ -61,6 +61,9 @@ namespace Greet
       void DrawRect(const Vec2f& pos, const Vec2f& size, const Color& color, bool isHsv = true);
       void DrawRoundedRect(const Vec2f& pos, const Vec2f& size, const Color& color, float radius, uint32_t precision, bool isHsv = true);
       void DrawRect(const Vec2f& pos, const Vec2f& size, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv = true);
+      void DrawRect(const Vec2f& pos, const Vec2f& size, const Ref<Texture>& texture, const Color& color, bool isHsv = true);
+      void DrawRect(const Vec2f& pos, const Vec2f& size, const Ref<Texture>& texture, const Vec2f& texCoordPos, const Vec2f& texCoordSize, const Color& color, bool isHsv = true);
+      void DrawRect(const Vec2f& pos, const Vec2f& size, const Ref<Texture>& texture, const Vec2f& texCoordTL, const Vec2f& texCoordTR, const Vec2f& texCoordBL, const Vec2f& texCoordBR, const Color& color, bool isHsv = true);
 
       void PushViewport(const Vec2f& pos, const Vec2f& size, bool overwrite=false);
       void PopViewport();
