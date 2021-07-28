@@ -51,7 +51,10 @@ namespace Greet {
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,  (uint)params.wrap));
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (uint)params.wrap));
     }
-    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)params.internalFormat, width, height, 0, (uint)params.internalFormat, GL_UNSIGNED_BYTE, bits.data()));
+    uint format = (uint)params.internalFormat;
+    if(format == GL_RGB32F) format = GL_RGB;
+    if(format == GL_RGBA32F) format = GL_RGBA;
+    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)params.internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, bits.data()));
     Disable();
   }
 

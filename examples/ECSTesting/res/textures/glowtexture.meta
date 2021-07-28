@@ -1,0 +1,4 @@
+[texture2d]
+filepath=res/textures/glowtexture.png
+filter=nearest
+wrap=clampEdge

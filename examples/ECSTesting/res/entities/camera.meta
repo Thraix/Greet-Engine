@@ -10,7 +10,6 @@ near=0.01
 far=100
 
 [Environment3DComponent]
-skybox-shader=skybox
 skybox-texture=res/textures/skybox.meta
 lightPos=30 20 40
 lightColor=1.0 0.96 0.9;

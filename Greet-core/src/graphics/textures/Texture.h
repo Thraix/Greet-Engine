@@ -29,7 +29,9 @@ namespace Greet {
     DEPTH_STENCIL = 0x84F9,   // GL_DEPTH_STENCIL
     RED = 0x1903,             // GL_RED
     RGB = 0x1907,             // GL_RGB
-    RGBA = 0x1908             // GL_RGBA
+    RGBA = 0x1908,            // GL_RGBA
+    RGB32 = 0x8815,           // GL_RGB32F
+    RGBA32 = 0x8814,          // GL_RGBA32F
   };
 
   struct TextureParams

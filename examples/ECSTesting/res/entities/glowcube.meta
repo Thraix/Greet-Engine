@@ -1,0 +1,14 @@
+[TagComponent]
+tag=GlowCube
+
+[Transform3DComponent]
+position=20 20 20
+scale=10 10 10
+rotation=0 45 0
+
+[MeshComponent]
+type=cube
+
+[MaterialComponent]
+shadertype=shader3d
+texture=res/textures/glowtexture.meta

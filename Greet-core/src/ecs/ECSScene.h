@@ -5,6 +5,8 @@
 #include <graphics/Skybox.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/renderers/BatchRenderer.h>
+#include <graphics/Framebuffer.h>
+#include <graphics/postprocess/Bloom.h>
 #include <utils/MetaFile.h>
 
 namespace Greet
@@ -14,10 +16,13 @@ namespace Greet
     protected:
       Ref<ECSManager> manager;
       Ref<BatchRenderer> renderer2d;
+      Ref<Framebuffer> framebuffer;
+      Ref<Bloom> bloom;
 
     public:
       ECSScene();
       ECSScene(const std::string& scenePath);
+      void Init();
       virtual ~ECSScene();
 
       void LoadEntity(const MetaFile& meta);

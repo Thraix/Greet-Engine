@@ -27,6 +27,8 @@ namespace Greet {
     m_shader->SetUniform1f("uSpecularStrength", specularStrength);
     m_shader->SetUniform1f("uSpecularExponent", specularExponent);
     m_shader->SetUniform1f("uDiffuseStrength", diffuseStrength);
+    m_shader->SetUniform1f("uAmbient", ambient);
+    m_shader->SetUniform1f("uIntensity", intensity);
     m_shader->SetUniformColor4("uMaterialColor", color);
     if(m_texture)
       m_texture->Enable();

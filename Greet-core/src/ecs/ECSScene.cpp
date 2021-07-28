@@ -7,13 +7,13 @@
 namespace Greet
 {
   ECSScene::ECSScene()
-    : manager{new ECSManager()}, renderer2d{new BatchRenderer(ShaderFactory::Shader2D())}
   {
+    Init();
   }
 
   ECSScene::ECSScene(const std::string& scenePath)
-    : manager{new ECSManager()}, renderer2d{new BatchRenderer(ShaderFactory::Shader2D())}
   {
+    Init();
     MetaFile meta{scenePath};
     const std::vector<MetaFileClass>& entities = meta.GetMetaClass("Entity");
     for(auto&& entity : entities)
@@ -21,6 +21,14 @@ namespace Greet
       if(entity.HasValue("entitypath"))
         LoadEntity(MetaFile{entity.GetValue("entitypath")});
     }
+  }
+
+  void ECSScene::Init()
+  {
+    manager = NewRef<ECSManager>();
+    renderer2d = NewRef<BatchRenderer>(ShaderFactory::Shader2D());
+    framebuffer = NewRef<Framebuffer>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), true);
+    bloom = NewRef<Bloom>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), 3);
   }
 
   ECSScene::~ECSScene()
@@ -145,6 +153,7 @@ namespace Greet
       return;
     }
 
+    framebuffer->Bind();
     Entity environment{manager.get()};
     manager->Each<Environment3DComponent>([&](EntityID id, Environment3DComponent& env)
     {
@@ -175,6 +184,8 @@ namespace Greet
       mesh.mesh->Unbind();
       material.material->Unbind();
     });
+    framebuffer->Unbind();
+    bloom->Render(framebuffer->GetColorTexture());
   }
 
   void ECSScene::Update(float timeElapsed)
@@ -198,11 +209,13 @@ namespace Greet
     if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
     {
       ViewportResizeEvent& e = static_cast<ViewportResizeEvent&>(event);
+      framebuffer->Resize(e.GetWidth(), e.GetHeight());
+      bloom->Resize(e.GetWidth(), e.GetHeight());
       manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
       {
         cam.ViewportResize(e);
       });
-  manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
+      manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
       {
         cam.ViewportResize(e);
       });

@@ -21,3 +21,6 @@ entitypath=res/entities/rectangle.meta
 
 [Entity]
 entitypath=res/entities/camera2d.meta
+
+[Entity]
+entitypath=res/entities/glowcube.meta

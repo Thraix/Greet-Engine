@@ -4,20 +4,31 @@
 
 namespace Greet {
 
-  const char* ShaderFactory::shader2d=
+  const char* shader2d =
 #include "factory/shader2d.glsl"
     ;
 
-  const char* ShaderFactory::shader3d =
+  const char* shader3d =
 #include "factory/shader3d.glsl"
     ;
 
-  const char* ShaderFactory::shaderGUI =
+  const char* shaderGUI =
 #include "factory/shaderGUI.glsl"
     ;
 
-  const char* ShaderFactory::shaderSkybox =
+  const char* shaderSkybox =
 #include "factory/shaderSkybox.glsl"
+    ;
+
+  // Bloom shaders
+  const char* shaderThreshold =
+#include "factory/shaderThreshold.glsl"
+    ;
+  const char* shaderBlur =
+#include "factory/shaderBlur.glsl"
+    ;
+  const char* shaderAdditive =
+#include "factory/shaderAdditive.glsl"
     ;
 
   const char* ShaderFactory::shaderErrorVert =
@@ -45,6 +56,21 @@ namespace Greet {
   Ref<Shader> ShaderFactory::ShaderSkybox()
   {
     return Shader::FromSource(shaderSkybox);
+  }
+
+  Ref<Shader> ShaderFactory::ShaderThreshold()
+  {
+    return Shader::FromSource(shaderThreshold);
+  }
+
+  Ref<Shader> ShaderFactory::ShaderBlur()
+  {
+    return Shader::FromSource(shaderBlur);
+  }
+
+  Ref<Shader> ShaderFactory::ShaderAdditive()
+  {
+    return Shader::FromSource(shaderAdditive);
   }
 
   Ref<Shader> ShaderFactory::ShaderError()

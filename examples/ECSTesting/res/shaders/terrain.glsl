@@ -37,13 +37,13 @@ uniform float uFogFarDistance = 140;
 vec3 GetColorFromHeight(float y)
 {
   if (y < 0.48)
-    return vec3(0.94, 0.89, 0.64);
+    return vec3(0.91, 0.83, 0.38);
   else if (y < 0.58)
-    return vec3(0.48, 0.83, 0.38);
+    return vec3(0.62, 0.90, 0.35);
   else if (y < pow(0.07, 0.6) + 0.58)
-    return vec3(0.71, 0.69, 0.65);
+    return vec3(0.76, 0.71, 0.63);
   else
-    return vec3(0.86, 0.94, 0.94);
+    return vec3(0.88, 0.95, 0.97);
 }
 
 float GetFogVisibility(vec3 positionRelativeToCamera)

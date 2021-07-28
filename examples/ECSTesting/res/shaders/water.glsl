@@ -69,7 +69,7 @@ void main()
   vec3 normal = normalize(cross(pos[1] - pos[0], pos[2] - pos[0]));
   for(int i = 0; i < 3; i++)
   {
-    gColor = vec4(0.5, 0.9, 1, 0.5);
+    gColor = vec4(0.32, 0.91, 0.96, 0.5);
     vec4 worldPosition = vec4(pos[i], 1.0);
     vec4 positionRelativeToCamera = uViewMatrix * worldPosition;
     gl_Position = uProjectionMatrix * positionRelativeToCamera;

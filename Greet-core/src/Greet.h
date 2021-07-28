@@ -33,7 +33,7 @@
 #include <event/WindowEvent.h>
 #include <graphics/Animation.h>
 #include <graphics/Color.h>
-#include <graphics/FrameBufferObject.h>
+#include <graphics/Framebuffer.h>
 #include <graphics/GlobalSceneManager.h>
 #include <graphics/Light.h>
 #include <graphics/ParticlePool.h>
@@ -97,6 +97,7 @@
 #include <graphics/models/Mesh.h>
 #include <graphics/models/MeshData.h>
 #include <graphics/models/MeshFactory.h>
+#include <graphics/postprocess/Bloom.h>
 #include <graphics/renderers/BatchRenderer.h>
 #include <graphics/renderers/BatchRenderer3D.h>
 #include <graphics/renderers/GUIRenderer.h>
@@ -150,6 +151,7 @@
 #include <utils/json/JSONArray.h>
 #include <utils/json/JSONLoader.h>
 #include <utils/json/JSONObject.h>
+#include <utils/random/Random.h>
 #include <utils/xml/XML.h>
 #include <utils/xml/XMLException.h>
 #include <utils/xml/XMLObject.h>

@@ -11,7 +11,18 @@ class ECSSceneExt : public ECSScene
   public:
     ECSSceneExt(const std::string& scenePath)
       : ECSScene{scenePath}
-    {}
+    {
+      manager->Each<Greet::TagComponent, Greet::MaterialComponent>(
+        [&](EntityID tagEntity, Greet::TagComponent& tagComponent, Greet::MaterialComponent& materialComponent)
+        {
+        Log::Info(tagComponent.tag);
+          if(tagComponent.tag == "GlowCube")
+          {
+            materialComponent.material->SetAmbient(1.0)->SetIntensity(0.6);
+          }
+        }
+      );
+    }
 
     virtual ~ECSSceneExt()
     {}
