@@ -18,6 +18,8 @@ namespace Greet
       Ref<Framebuffer> framebuffer;
       Ref<Bloom> bloom;
 
+      Environment3DComponent defaultEnv{};
+
     public:
       ECSScene();
       ECSScene(const std::string& scenePath);
@@ -37,6 +39,8 @@ namespace Greet
       virtual void Update(float timeElapsed) override;
       virtual void UpdateAfter(float timeElapsed) {}
       virtual void OnEvent(Event& event) override;
+      const ECSManager* GetManager() const { return manager.get(); }
+      ECSManager* GetManager() { return manager.get(); }
 
     private:
       template <typename T>

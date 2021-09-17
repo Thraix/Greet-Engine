@@ -127,6 +127,43 @@ namespace Greet
         }
       }
 
+      template <typename Component, typename... Components, typename Func>
+      EntityID Find(Func function)
+      {
+        auto pool = GetComponentPool<Component>();
+        if(pool)
+        {
+          size_t i = 0;
+          for(auto entity : pool->GetEntities())
+          {
+            if(HasComponents<Components...>(entity))
+            {
+              if(std::apply(function, std::forward_as_tuple(entity, pool->At(i), GetComponent<Components>(entity)...)))
+                return entity;
+            }
+            i++;
+          }
+        }
+        return 0;
+      }
+
+      template <typename Component>
+      EntityID Find(std::function<bool(EntityID, Component&)> function)
+      {
+        auto pool = GetComponentPool<Component>();
+        if(pool)
+        {
+          size_t i = 0;
+          for(auto e : pool->GetEntities())
+          {
+            if(function(e, pool->At(i)))
+              return e;
+            i++;
+          }
+        }
+        return 0;
+      }
+
       template <typename T>
       std::type_index GetComponentId()
       {

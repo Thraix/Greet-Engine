@@ -4,7 +4,7 @@
 
 namespace Greet
 {
-  MaterialComponent::MaterialComponent(const Ref<Material>& material)
+  MaterialComponent::MaterialComponent(const Material& material)
     : material{material}
   {}
 

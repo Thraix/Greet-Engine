@@ -39,7 +39,7 @@ namespace Greet
     manager = NewRef<ECSManager>();
     renderer2d = NewRef<BatchRenderer>(ShaderFactory::Shader2D());
     framebuffer = NewRef<Framebuffer>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), true);
-    bloom = NewRef<Bloom>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), 3);
+    bloom = NewRef<Bloom>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), 6);
   }
 
   ECSScene::~ECSScene()
@@ -146,19 +146,13 @@ namespace Greet
   void ECSScene::Render3D() const
   {
     Entity camera{manager.get()};
-    bool foundPrimary = false;
-    manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
-    {
-      if(cam.active)
+    camera = manager->Find<Camera3DComponent>(
+      [&](EntityID id, Camera3DComponent& cam)
       {
-        if(foundPrimary)
-          Log::Warning("More than one primary 3D camera in scene");
-        foundPrimary = true;
-        camera.SetID(id);
-      }
-    });
+        return cam.active;
+      });
 
-    if(!foundPrimary)
+    if(!camera)
     {
       Log::Warning("No camera in scene");
       return;
@@ -166,37 +160,35 @@ namespace Greet
 
     framebuffer->Bind();
     Entity environment{manager.get()};
-    manager->Each<Environment3DComponent>([&](EntityID id, Environment3DComponent& env)
-    {
-      if(environment)
-        Log::Warning("More than one environment in 3D scene");
-      environment.SetID(id);
-    });
+    environment = manager->Find<Environment3DComponent>(
+      [&](EntityID id, Environment3DComponent& env)
+      {
+        return true;
+      });
+
     Camera3DComponent& cam = camera.GetComponent<Camera3DComponent>();
-
-    Environment3DComponent* env = nullptr;
+    const Environment3DComponent* env = &defaultEnv;
     if(environment)
-    {
       env = &environment.GetComponent<Environment3DComponent>();
-      env->Skybox(cam);
-    }
+    env->Skybox(cam);
 
-    manager->Each<Transform3DComponent, MeshComponent, MaterialComponent>([&](EntityID id, Transform3DComponent& transform, MeshComponent& mesh, MaterialComponent& material)
-    {
-      material.material->Bind();
-      cam.SetShaderUniforms(material.material->GetShader());
-      material.material->GetShader()->SetUniformMat4("uTransformationMatrix", transform.transform);
-      material.material->GetShader()->SetUniform3f("uLightPosition", Vec3f(30.0f, 50.0f, 40.0f));
-      material.material->GetShader()->SetUniform3f("uLightColor", Vec3f(0.7, 0.7, 0.7));
-      if(env)
-        env->SetShaderUniforms(material.material->GetShader());
-      mesh.mesh->Bind();
-      mesh.mesh->Render();
-      mesh.mesh->Unbind();
-      material.material->Unbind();
-    });
+    manager->Each<Transform3DComponent, MeshComponent, MaterialComponent>(
+      [&](EntityID id, Transform3DComponent& transform, MeshComponent& mesh, MaterialComponent& material)
+      {
+        material.material.Bind();
+        cam.SetShaderUniforms(material.material.GetShader());
+        material.material.GetShader()->SetUniformMat4("uTransformationMatrix", transform.transform);
+        material.material.GetShader()->SetUniform3f("uLightPosition", Vec3f(30.0f, 50.0f, 40.0f));
+        material.material.GetShader()->SetUniform3f("uLightColor", Vec3f(0.7, 0.7, 0.7));
+        env->SetShaderUniforms(material.material.GetShader());
+        mesh.mesh->Bind();
+        mesh.mesh->Render();
+        mesh.mesh->Unbind();
+        material.material.Unbind();
+      });
+
     framebuffer->Unbind();
-    bloom->Render(framebuffer->GetColorTexture());
+    bloom->Render(framebuffer->GetColorTexture(), *env);
   }
 
   void ECSScene::Update(float timeElapsed)

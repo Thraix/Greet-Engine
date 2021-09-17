@@ -30,6 +30,9 @@ namespace Greet {
   const char* shaderAdditive =
 #include "factory/shaderAdditive.glsl"
     ;
+  const char* shaderTonemapping=
+#include "factory/shaderTonemapping.glsl"
+    ;
 
   const char* ShaderFactory::shaderErrorVert =
 #include "factory/shaderError.vert"
@@ -71,6 +74,11 @@ namespace Greet {
   Ref<Shader> ShaderFactory::ShaderAdditive()
   {
     return Shader::FromSource(shaderAdditive);
+  }
+
+  Ref<Shader> ShaderFactory::ShaderTonemapping()
+  {
+    return Shader::FromSource(shaderTonemapping);
   }
 
   Ref<Shader> ShaderFactory::ShaderError()

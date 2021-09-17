@@ -20,14 +20,16 @@ in vec2 vTexCoord;
 out vec4 fColor;
 
 uniform sampler2D uTexture;
-uniform float uThreshold = 0.7;
 
 void main()
 {
-  vec4 texColor = texture(uTexture, vTexCoord);
-  float brightness = max(texColor.r, max(texColor.g, texColor.b));
-  float contribution = max(0, brightness - uThreshold) / max(brightness, 0.00001);
+  vec3 color = texture(uTexture, vTexCoord).rgb;
+  const float a = 2.51;
+  const float b = 0.03;
+  const float c = 2.43;
+  const float d = 0.59;
+  const float e = 0.14;
 
-  fColor = texColor * contribution;
+  fColor = vec4(clamp((color * (a * color + b)) / (color * (c * color + d) + e), 0.0, 1.0), 1.0);
 }
 )"

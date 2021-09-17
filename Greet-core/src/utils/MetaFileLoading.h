@@ -27,6 +27,6 @@ namespace Greet
     static Ref<Shader> LoadShader(const MetaFileClass& metaClass, const std::string& defaultShader = "shader3d", const std::string& prefix = "");
     static Ref<Texture2D> LoadTexture2D(const MetaFileClass& metaClass);
     static Ref<CubeMap> LoadCubeMap(const MetaFileClass& metaClass, const std::string& key);
-    static Ref<Material> LoadMaterial(const MetaFileClass& metaClass);
+    static Material LoadMaterial(const MetaFileClass& metaClass);
   };
 }

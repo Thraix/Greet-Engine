@@ -17,10 +17,6 @@ namespace Greet {
     UpdateTexture();
   }
 
-  Material::~Material()
-  {
-  }
-
   void Material::Bind() const
   {
     m_shader->Enable();

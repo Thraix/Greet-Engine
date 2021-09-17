@@ -15,13 +15,12 @@ namespace Greet {
       float specularStrength = 0.5;
       float diffuseStrength = 0.5;
       float ambient = 0.3;
-      float intensity = 0.0;
+      float intensity = 1.0;
       Color color;
 
     public:
       Material(const Ref<Shader>& shader, const Ref<Texture2D>& texture);
       Material(const Ref<Shader>& shader);
-      virtual ~Material();
 
       void Bind() const;
       void Unbind() const;

@@ -20,6 +20,8 @@ namespace Greet
       float fogNearDistance = 100;
       float fogFarDistance = 140;
       Color fogColor = Color{0.125f, 0.125f, 0.125f};
+      float bloomThreshold = 1.0;
+      float bloomFalloff = 1.0;
 
       Environment3DComponent(const Ref<Shader>& skybox, const Ref<CubeMap>& skyboxTexture, const Vec3f& lightPos, const Color& lightColor, float fogNearDistance, float fogFarDistance, const Color& fogColor);
       Environment3DComponent(const Ref<Shader>& skybox, const Ref<CubeMap>& skyboxTexture);
@@ -28,7 +30,7 @@ namespace Greet
       Environment3DComponent();
       Environment3DComponent(const MetaFileClass& metaClass);
 
-      void Skybox(Camera3DComponent& camera);
-      void SetShaderUniforms(const Ref<Shader>& shader);
+      void Skybox(Camera3DComponent& camera) const;
+      void SetShaderUniforms(const Ref<Shader>& shader) const;
   };
 }

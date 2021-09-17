@@ -16,6 +16,7 @@ namespace Greet {
     static Ref<Shader> ShaderThreshold();
     static Ref<Shader> ShaderBlur();
     static Ref<Shader> ShaderAdditive();
+    static Ref<Shader> ShaderTonemapping();
     static Ref<Shader> ShaderError();
 
   };

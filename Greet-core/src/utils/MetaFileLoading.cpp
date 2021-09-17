@@ -183,8 +183,15 @@ namespace Greet
       return nullptr;
     }
 
-    Ref<Material> MetaFileLoading::LoadMaterial(const MetaFileClass& metaClass)
+    Material MetaFileLoading::LoadMaterial(const MetaFileClass& metaClass)
     {
-      return Ref<Material>(new Material(LoadShader(metaClass), LoadTexture2D(metaClass)));
+      Material mat{LoadShader(metaClass), LoadTexture2D(metaClass)};
+      mat.SetColor(LoadColor(metaClass, "color", Color{1, 1, 1}));
+      mat.SetAmbient(LoadFloat(metaClass, "ambient", 0.3));
+      mat.SetIntensity(LoadFloat(metaClass, "intensity", 1.0));
+      mat.SetSpecularExponent(LoadFloat(metaClass, "specularExponent", 10.0));
+      mat.SetSpecularStrength(LoadFloat(metaClass, "specularStrength", 0.5));
+      mat.SetDiffuseStrength(LoadFloat(metaClass, "diffuseStrength", 0.5));
+      return mat;
     }
 }

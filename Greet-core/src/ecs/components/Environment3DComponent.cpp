@@ -45,12 +45,14 @@ namespace Greet
     lightColor{MetaFileLoading::LoadColor(metaClass, "lightColor", {1.0, 0.96, 0.9})},
     fogColor{MetaFileLoading::LoadColor(metaClass, "fogColor", {0.125f, 0.125f, 0.125f})},
     fogNearDistance{MetaFileLoading::LoadFloat(metaClass, "fogNearDistance", 100)},
-    fogFarDistance{MetaFileLoading::LoadFloat(metaClass, "fogFarDistance", 140)}
+    fogFarDistance{MetaFileLoading::LoadFloat(metaClass, "fogFarDistance", 140)},
+    bloomThreshold{MetaFileLoading::LoadFloat(metaClass, "bloomThreshold", 4.5)},
+    bloomFalloff{MetaFileLoading::LoadFloat(metaClass, "bloomFalloff", 0.25)}
   {
     skyboxMesh->SetClockwiseRender(true);
   }
 
-  void Environment3DComponent::Skybox(Camera3DComponent& camera)
+  void Environment3DComponent::Skybox(Camera3DComponent& camera) const
   {
     RenderCommand::EnableDepthTest(false);
     skybox->Enable();
@@ -66,7 +68,7 @@ namespace Greet
     RenderCommand::ResetDepthTest();
   }
 
-  void Environment3DComponent::SetShaderUniforms(const Ref<Shader>& shader)
+  void Environment3DComponent::SetShaderUniforms(const Ref<Shader>& shader) const
   {
     shader->SetUniform3f("uLightPosition", lightPos);
     shader->SetUniformColor3("uLightColor", lightColor);

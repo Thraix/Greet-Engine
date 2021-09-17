@@ -7,7 +7,30 @@
   <TabButton align="left"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
-    <DockerContainer weight="3">
+    <DockerContainer weight="1">
+      <DockerTab title="Shader Config">
+        <Container width="1w" height="1w" padding="10">
+
+          <Label>Ambient</Label>
+          <Slider name="ambient_slider" width="1w" minValue="0.1" maxValue="3" defaultValue="1"></Slider>
+          <Label name="ambient_label" width="1w">NaN</Label>
+
+          <Label>Intensity</Label>
+          <Slider name="intensity_slider" width="1w" minValue="0.1" maxValue="10" defaultValue="10"></Slider>
+          <Label name="intensity_label" width="1w">NaN</Label>
+
+          <Label>Bloom threshold</Label>
+          <Slider name="bloom_threshold_slider" width="1w" minValue="0.1" maxValue="10" defaultValue="4.5"></Slider>
+          <Label name="bloom_threshold_label" width="1w">NaN</Label>
+
+          <Label>Bloom falloff</Label>
+          <Slider name="bloom_falloff_slider" width="1w" minValue="0.0" maxValue="1" defaultValue="0.5"></Slider>
+          <Label name="bloom_falloff_label" width="1w">NaN</Label>
+
+        </Container>
+      </DockerTab>
+    </DockerContainer>
+    <DockerContainer weight="8">
       <DockerTab title="ECS Scene">
         <SceneView name="sceneView"/>
       </DockerTab>

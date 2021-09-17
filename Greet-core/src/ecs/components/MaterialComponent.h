@@ -7,9 +7,9 @@ namespace Greet
 {
   struct MaterialComponent
   {
-    Ref<Material> material;
+    Material material;
 
-    MaterialComponent(const Ref<Material>& material);
+    MaterialComponent(const Material& material);
     MaterialComponent(const MetaFileClass& metaClass);
   };
 }

@@ -22,8 +22,12 @@ out vec4 fColor;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
 
+uniform float uWeightTexture1;
+uniform float uWeightTexture2;
+
 void main()
 {
-  fColor = texture(uTexture1, vTexCoord) + texture(uTexture2, vTexCoord);
+  fColor = uWeightTexture1 * texture(uTexture1, vTexCoord) + uWeightTexture2 * texture(uTexture2, vTexCoord);
+  fColor.a = 1.0;
 }
 )"

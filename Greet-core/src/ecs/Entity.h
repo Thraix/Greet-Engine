@@ -28,6 +28,11 @@ namespace Greet
 
       operator EntityID() const { return id; }
 
+      void operator=(EntityID entityId)
+      {
+        id = entityId;
+      }
+
       operator bool() const
       {
         if(manager)

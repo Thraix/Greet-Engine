@@ -64,7 +64,7 @@ uniform float uSpecularExponent = 10.0;
 uniform float uSpecularStrength = 1;
 uniform float uDiffuseStrength = 1;
 uniform float uAmbient = 0.3;
-uniform float uIntensity = 0.0;
+uniform float uIntensity = 1.0;
 
 void main()
 {
@@ -84,7 +84,7 @@ void main()
 	float uSpecular = uSpecularStrength * pow(max(dot(reflect(lightDirection, unitNormal), unitVectorToCamera), 0.0f), uSpecularExponent);
 
 	fColor *= vec4((uAmbient + (uDiffuse + uSpecular) * uLightColor), 1.0f);
-  fColor += vec4(vec3(uIntensity), 0.0);
   fColor = mix(vec4(uFogColor.xyz, fColor.a), fColor, vVisibility);
+  fColor *= vec4(vec3(uIntensity), 1.0);
 }
 )"
