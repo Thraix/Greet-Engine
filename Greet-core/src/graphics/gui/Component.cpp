@@ -351,7 +351,7 @@ namespace Greet
     auto it = styles.find(stylename);
     if(it != styles.end())
       return it->second;
-    Log::Error("Style does not exist within component: ", name, ", ", stylename);
+    Log::Error("Style does not exist within component: %s, %s", name, stylename);
     return styles.find("normal")->second;
   }
 
@@ -360,7 +360,7 @@ namespace Greet
     auto it = styles.find(stylename);
     if(it != styles.end())
       return it->second;
-    Log::Error("Style does not exist within component: ", name, ", ", stylename);
+    Log::Error("Style does not exist within component: %s, %s", name, stylename);
     return styles.find("normal")->second;
   }
 
@@ -369,7 +369,7 @@ namespace Greet
     auto it = styles.find(stylename);
     if(it != styles.end())
     {
-      Log::Error("Style already exist: ", stylename, " in ", name);
+      Log::Error("Style already exist: %s in %s", stylename, name);
       return *this;
     }
     ComponentStyle* inheritStyle = nullptr;
@@ -416,7 +416,7 @@ namespace Greet
     auto it = styles.find(stylename);
     if(it == styles.end())
     {
-      Log::Error("Style does not exist within component: ", name, ", ", stylename);
+      Log::Error("Style does not exist within component: %s, %s", name, stylename);
       return *this;
     }
     it->second.Load(styling);
@@ -433,7 +433,7 @@ namespace Greet
       Remeasure();
       return;
     }
-    Log::Error("Style does not exist within component: ", name, ", ", stylename);
+    Log::Error("Style does not exist within component: %s, %s", name, stylename);
   }
 
   Vec2f Component::GetSizeValue() const

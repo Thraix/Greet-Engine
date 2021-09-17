@@ -129,7 +129,7 @@ namespace Greet
         {
           stylingType = &classesType[0];
           if(classesType.size() > 1)
-            Log::Warning("More than one style specified in style file for component \"", classesType, "\"");
+            Log::Warning("More than one style specified in style file for component \"%s\"", classesType);
         }
 
         auto classesName = object.GetMetaClass(componentName);
@@ -138,7 +138,7 @@ namespace Greet
         {
           stylingName = &classesName[0];
           if(classesName.size() > 1)
-            Log::Warning("More than one style specified in style file for component \"", classesName, "\"");
+            Log::Warning("More than one style specified in style file for component \"%s\"", classesName);
         }
 
         auto classesVariables = object.GetMetaClass("Variables");
@@ -147,7 +147,7 @@ namespace Greet
         {
           stylingVariables = &classesVariables[0];
           if(classesVariables.size() > 1)
-            Log::Warning("More than one variable meta class specified in style file for component \"", stylingVariables, "\"");
+            Log::Warning("More than one variable meta class specified in style file for component \"%s\"", stylingVariables);
         }
 
         colors.Load(mode, stylingType, stylingName, stylingVariables);

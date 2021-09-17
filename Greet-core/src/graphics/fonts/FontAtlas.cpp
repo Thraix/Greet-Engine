@@ -86,7 +86,6 @@ namespace Greet
     miXPos += pixelWidth + 1;
     std::pair<std::map<char,  Glyph>::iterator, bool> ret = mvGlyphs.emplace(acCharacter, g);
     mAtlas->SetPixels(mvPixels);
-    //Log::Info(g.miWidth," ",g.kerning, " ", g.advanceX," ",g.advanceY, " ", g.miHeight," ", g.ascending," ",g.descending);
     return ret.first->second;
   }
 

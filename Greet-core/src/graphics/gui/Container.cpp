@@ -43,7 +43,7 @@ namespace Greet
     {
       Component* component = ComponentFactory::GetComponent(object.GetObject(i), this);
       if(StringUtils::StartsWith(component->GetName(),"Failed#"))
-        Log::Error("Could not load Component, could not understand type. (type=",object.GetObject(i).GetName(),")");
+        Log::Error("Could not load Component, could not understand type. (type=%s)", object.GetObject(i).GetName());
       else
         AddComponent(component);
     }

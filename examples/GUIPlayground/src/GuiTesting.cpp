@@ -158,7 +158,7 @@ class Core : public App
 
     void OnTreeNodeFlowChanged(TreeView* view, TreeNode* node)
     {
-      Log::Info("TreeView node flow changed ", node->GetName(), " ", node->IsOpen() ? "true" : "false");
+      Log::Info("TreeView node flow changed %s %s", node->GetName(), node->IsOpen() ? "true" : "false");
     }
 
     void OnRadioChangeCallback(RadioButton* button)

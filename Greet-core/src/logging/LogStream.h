@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <iterator>
+#include <cstring>
 
 namespace Greet {
 
@@ -36,16 +37,29 @@ namespace Greet {
        * Output the given arguments to the stream with a given LogLevel
        */
       template<typename... Args>
+      void Output(const LogLevel& level, const char* str, const Args&... args)
+      {
+        // Check if the given level is allowed to be streamed.
+        if (m_levelCheck(m_logLevel, level))
+        {
+          // Output all the arguments with an endline
+          PutFormat(std::string_view(str, strlen(str)), args...);
+        }
+      }
+
+      /*
+       * Output the given arguments to the stream with a given LogLevel
+       */
+      template<typename... Args>
       void Output(const LogLevel& level, const Args&... args)
       {
         // Check if the given level is allowed to be streamed.
         if (m_levelCheck(m_logLevel, level))
         {
           // Output all the arguments with an endline
-          Put(args..., '\n');
+          Put(args...);
         }
       }
-
 
       /*
        * Return the name of the stream.
@@ -110,6 +124,7 @@ namespace Greet {
             Put(" ");
         }
       }
+
       /*
        * Put all the arguments to the stream.
        */
@@ -131,6 +146,47 @@ namespace Greet {
         PutHelper(t, 0);
       }
 
-  };
+      /*
+       * Output the string_view
+       */
+      void PutFormat(const std::string_view& sv)
+      {
+        Put(sv);
+      }
 
+      /*
+       * Output the arguments using string formatting (only %s is needed)
+       */
+      template<typename T, typename... Args>
+      void PutFormat(const std::string_view& sv, const T& t, const Args&... args)
+      {
+        size_t pos = sv.find('%');
+        if(pos == std::string::npos)
+        {
+          Put(sv);
+          Put(t, args...);
+        }
+        else if(pos == sv.size() - 1)
+        {
+          Put(sv);
+          Put(t, args...);
+        }
+        else if(sv[pos + 1] == 's')
+        {
+          Put(sv.substr(0, pos)); // Print string up to %s
+          Put(t); // Print value
+          PutFormat(sv.substr(pos + 2), args...); // Print rest of StringFormat
+        }
+        else if(sv[pos + 1] == '%')
+        {
+          Put(sv.substr(0, pos + 1)); // Print string up to %%
+          PutFormat(sv.substr(pos + 2), t, args...); // Print format the rest
+        }
+        else
+        {
+          Put(sv.substr(0, pos + 1)); // Print string up to %%
+          PutFormat(sv.substr(pos + 1), t, args...); // Print format the rest
+        }
+      }
+  };
 }

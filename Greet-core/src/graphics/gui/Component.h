@@ -179,7 +179,7 @@ namespace Greet
       {
         T* component = dynamic_cast<T*>(GetComponentByNameNoCast(name));
         if(component == nullptr)
-          Log::Warning("Could not find Component with given type (name = ", name,")");
+          Log::Warning("Could not find Component with given type (name = %s)", name);
         return component;
       }
 

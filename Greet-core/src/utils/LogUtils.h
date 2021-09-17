@@ -16,7 +16,7 @@ namespace Greet {
         return (uint)(c - 'a' + 10);
       else if(c >= 'A' && c <= 'F')
         return (uint)(c - 'A' + 10);
-      Log::Warning("Utils::Hex10ToDec16 couldn't recognize the hex character \'", c, "\'");
+      Log::Warning("Utils::Hex10ToDec16 couldn't recognize the hex character \'%s\'", c);
       return 0;
     }
 

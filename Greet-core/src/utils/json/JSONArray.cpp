@@ -31,7 +31,7 @@ namespace Greet {
     size_t size = m_objects.size();
     if (i >= size)
     {
-      Log::Error("Index is out of bounds: ",i," >= ",size);
+      Log::Error("Index is out of bounds: %s >= %s", i, size);
       if (size != 0)
       {
         return GetObject(0);

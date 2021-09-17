@@ -90,7 +90,7 @@ namespace Greet {
       if (timeToNext >= 1)
       {
         if(timeToNext > 100)
-          Log::Info("Sleeping for ", timeToNext, "milliseconds");
+          Log::Info("Sleeping for %s milliseconds", timeToNext);
         std::this_thread::sleep_for(std::chrono::milliseconds((long long)timeToNext));
       }
     }

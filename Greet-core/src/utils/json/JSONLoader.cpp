@@ -13,7 +13,7 @@ namespace Greet {
     JSONObject obj;
     if (!IsObject(file, currentPos,&obj))
     {
-      Log::Error("Invalid format: ",currentPos,file[currentPos] == ' ');
+      Log::Error("Invalid format: %s %s",currentPos, file[currentPos] == ' ');
       return JSONObject();
     }
     while (IsIndent(file, currentPos));

@@ -23,7 +23,7 @@ namespace Greet {
     // Check if there already is a stream with the given stream name.
     if (GetLogStream(stream->GetName()))
     {
-      Log::Error("Stream with name ", stream->GetName(), " already exists.");
+      Log::Error("Stream with name %s already exists", stream->GetName());
     }
     else
       m_streams.push_back(stream);
@@ -52,7 +52,7 @@ namespace Greet {
         return *it;
       }
     }
-    Log::Warning("No stream removed with name: ", name, ". Could not find.");
+    Log::Warning("Could not find stream for removal: ", name);
     return nullptr;
   }
 

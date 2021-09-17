@@ -43,7 +43,7 @@ namespace Greet
       char* endPos;
       int value = std::strtol(str.c_str(), &endPos, 10);
       if(endPos != &*str.end())
-        Log::Warning("Invalid string in int property \"",key,"\"=\"", str, "\"");
+        Log::Warning("Invalid string in int property \"%s\"=\"%s\"", key, str);
       return value;
     }
     return defaultValue;
@@ -62,7 +62,7 @@ namespace Greet
     if (str == "true")
       return true;
     else if (str != "false")
-      Log::Warning("Invalid string in boolean property \"", str, "\"");
+      Log::Warning("Invalid string in boolean property \"%s\"", str);
     return false;
   }
 
@@ -119,7 +119,7 @@ namespace Greet
     else
     {
       if(endPos != &*str.end())
-        Log::Warning("Invalid string in size property \"", str, "\"");
+        Log::Warning("Invalid string in size property \"%s\"", str);
       sizing.type = GUISize::Type::Pixels;
     }
     return sizing;

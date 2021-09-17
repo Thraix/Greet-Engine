@@ -63,7 +63,7 @@ namespace Greet{
   {
     if (aiStartPos > asText.size() || aiEndPos < aiStartPos || aiEndPos > asText.size())
     {
-      Log::Error("Invalid start and endpos (start=", aiStartPos, ", end=", aiEndPos, ", strlen=", asText.size(), ")");
+      Log::Error("Invalid start and endpos (start=%s, end=%s strlen=%s)", aiStartPos, aiEndPos, asText.size());
       return 0;
     }
     return GetWidthOfText(std::string_view(asText.c_str() + aiStartPos, aiEndPos - aiStartPos));

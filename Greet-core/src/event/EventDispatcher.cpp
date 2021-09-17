@@ -25,7 +25,7 @@ namespace Greet {
     }
     if(globalEventReceivers.find(name) != globalEventReceivers.end())
     {
-      Log::Error("Global event receiver already exists in EventDispatcher (name=",name,")");
+      Log::Error("Global event receiver already exists in EventDispatcher (name=%s)", name);
       return;
     }
     globalEventReceivers.emplace(name,fn);
@@ -36,7 +36,7 @@ namespace Greet {
     auto it = globalEventReceivers.find(name);
     if(it == globalEventReceivers.end())
     {
-      Log::Error("EventDispatcher could not find global event receiver (name=",name,")");
+      Log::Error("EventDispatcher could not find global event receiver (name=%s)", name);
       return;
     }
     globalEventReceivers.erase(it);

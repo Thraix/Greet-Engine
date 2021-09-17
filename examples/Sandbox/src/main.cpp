@@ -365,11 +365,11 @@ class Core : public App
       }
       else if(EVENT_IS_TYPE(event, EventType::JOYSTICK_CONNECT))
       {
-        Log::Info("Controller ", ((JoystickConnectEvent&)event).GetJoystick(), " connected!");
+        Log::Info("Controller %s connected!", ((JoystickConnectEvent&)event).GetJoystick());
       }
       else if(EVENT_IS_TYPE(event, EventType::JOYSTICK_DISCONNECT))
       {
-        Log::Info("Controller ", ((JoystickDisconnectEvent&)event).GetJoystick(), " disconnected!");
+        Log::Info("Controller %s disconnected!", ((JoystickDisconnectEvent&)event).GetJoystick());
       }
       else if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
       {
@@ -399,7 +399,7 @@ class Core : public App
         Ref<TPCamera3D> camera = std::static_pointer_cast<TPCamera3D>(layer3d->GetCamera3D());
         if (e.GetButton() == GLFW_KEY_F1)
         {
-          Log::Info("pos=", camera->GetPosition(), " height=", camera->GetHeight(), " distance=", camera->GetDistance(), ", rotation=", camera->GetRotation());
+          Log::Info("pos=%s height=%s distance=%s rotation=%s", camera->GetPosition(), camera->GetHeight(), camera->GetDistance(), camera->GetRotation());
         }
         if (e.GetButton() == GLFW_KEY_F2)
         {
@@ -432,7 +432,7 @@ class Core : public App
       else if(EVENT_IS_TYPE(event, EventType::JOYSTICK_PRESS))
       {
         JoystickPressEvent& e = (JoystickPressEvent&)event;
-        Log::Info("Joystick button pressed joy=", e.GetJoystick(), " button=", e.GetButton());
+        Log::Info("Joystick button pressed joy=%s button=%s", e.GetJoystick(), e.GetButton());
       }
     }
 

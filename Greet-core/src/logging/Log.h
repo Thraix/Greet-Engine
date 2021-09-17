@@ -46,7 +46,8 @@ namespace Greet {
       template <typename... Args>
       static void Info(const Args&... args)
       {
-        m_log.m_logger.Log(LogLevel::Information(), "[Greet][INF] ", args...);
+        m_log.m_logger.Log(LogLevel::Information(), "[Greet][INF] ");
+        m_log.m_logger.Log(LogLevel::Information(), args..., "\n");
       }
 
       /*
@@ -55,7 +56,9 @@ namespace Greet {
       template <typename... Args>
       static void Warning(const Args&... args)
       {
-        m_log.m_logger.Log(LogLevel::Warning(), "\e[0;33m[Greet][WRN] ", args..., "\e[m");
+        m_log.m_logger.Log(LogLevel::Warning(), "\e[0;33m[Greet][WRN] ");
+        m_log.m_logger.Log(LogLevel::Warning(), args...);
+        m_log.m_logger.Log(LogLevel::Warning(), "\n\e[m");
       }
 
       /*
@@ -64,16 +67,20 @@ namespace Greet {
       template <typename... Args>
       static void Error(const Args&... args)
       {
-        m_log.m_logger.Log(LogLevel::Error(),"\e[0;31m[Greet][ERR] ",args..., "\e[m");
+        m_log.m_logger.Log(LogLevel::Warning(), "\e[0;31m[Greet][ERR] ");
+        m_log.m_logger.Log(LogLevel::Warning(), args...);
+        m_log.m_logger.Log(LogLevel::Warning(), "\n\e[m");
       }
 
       /*
-       * Logging at user defined log level.
+       * Logging at assert log level.
        */
       template <typename... Args>
-      static void LogAt(const LogLevel& level, const Args&... args)
+      static void LogAssert(const char* filename, const char* funcname, int linenr, const Args&... args)
       {
-        m_log.m_logger.Log(level, "[Greet]", args...);
+        m_log.m_logger.Log(LogLevel::Assert(), "\e[0;31m[Greet][ASSERT][%s::%s:%s] ", filename, funcname, linenr);
+        m_log.m_logger.Log(LogLevel::Assert(), args...);
+        m_log.m_logger.Log(LogLevel::Assert(), "\n\e[m");
       }
   };
 }
@@ -83,7 +90,7 @@ namespace Greet {
 #define ASSERT(x,...) \
 if(!(x)) \
 { \
-  Greet::Log::LogAt(Greet::LogLevel::Error(),"[ASSERT]","[",__FILENAME__, "::", __func__,":", __LINE__, "] " __VA_ARGS__);\
+  Greet::Log::LogAssert(__FILENAME__, __func__, __LINE__, __VA_ARGS__);\
   abort();\
 }
 #else

@@ -6,13 +6,13 @@ namespace Greet
 
   void HotSwapping::AddHotswapResource(Resource* res)
   {
-    Log::Info("Adding hotswapped resource: count=", resources.size() + 1, ", file=", res->filePath);
+    Log::Info("Adding hotswapped resource: count=%s, file=%s", resources.size() + 1, res->filePath);
     resources.emplace(res->id, res);
   }
 
   void HotSwapping::RemoveHotswapResource(Resource* res)
   {
-    Log::Info("Removing hotswapped resource: count=", resources.size() - 1, ", file=", res->filePath);
+    Log::Info("Removing hotswapped resource: count=%s, file=%s", resources.size() - 1, res->filePath);
     ASSERT(resources.erase(res->id) == 1, "Invalid remove size on Hotswapped resource");
   }
 
@@ -28,7 +28,10 @@ namespace Greet
   {
     if(resources.size() > 0)
     {
-      Log::Warning(resources.size(), " hotswapped resource", resources.size() > 1 ? "s were" : " was", " not freed.");
+      if(resources.size() == 1)
+        Log::Warning("1 hotswapped resource was not freed");
+      else
+        Log::Warning("%s hotswapped resources were not freed", resources.size());
     }
   }
 }

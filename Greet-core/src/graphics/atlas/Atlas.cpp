@@ -40,7 +40,7 @@ namespace Greet {
     auto res = ImageUtils::LoadImage(filePath.c_str(), &width, &height);
     if (width != textureSize || height != textureSize)
     {
-      Log::Error("The given textures size is not valid: ",name.c_str()," (",width,",",height,")");
+      Log::Error("The given textures size is not valid: %s (%s, %s)", name.c_str(), width, height);
       return false;
     }
     bool success = AddTexture(res.second,name);
@@ -95,7 +95,7 @@ namespace Greet {
       return AtlasCoords{coord1, coord2};
     }
 
-    Log::Error("No texture found in Atlas: (", sheetName.c_str(), ")");
+    Log::Error("No texture found in Atlas: (%s)", sheetName.c_str());
     return AtlasCoords{{0,0}, {1,1}};
   }
 

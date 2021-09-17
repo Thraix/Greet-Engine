@@ -212,7 +212,7 @@ namespace Greet {
     std::ifstream file(filename);
     if (!file.good())
     {
-      Log::Error("Shader::FromFile Couldn't find shader in path \'", filename, "\'");
+      Log::Error("Shader::FromFile Couldn't find shader in path \"%s\"", filename);
       return {
         std::pair{ShaderFactory::shaderErrorVert, true},
         {ShaderFactory::shaderErrorFrag, true},

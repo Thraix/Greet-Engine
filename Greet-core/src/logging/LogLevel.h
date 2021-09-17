@@ -41,5 +41,9 @@ namespace Greet {
       static LogLevel Error() {
         return (1 << 8);
       }
+      // Low level -> high priority
+      static LogLevel Assert() {
+        return 0;
+      }
   };
 }

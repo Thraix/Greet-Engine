@@ -18,7 +18,7 @@ namespace Greet
       auto it = map->find(object.GetName());
       if(it == map->end())
       {
-        Log::Warning("There is no such component: ", object.GetName(), ".");
+        Log::Warning("Component does not exist: ", object.GetName());
         XMLObject o("Failed", std::map<std::string, std::string>(), "");
         return new Component(o, parent); // Return plain content to avoid crash.
       }
@@ -38,7 +38,7 @@ namespace Greet
     auto it = map->find(xmlObject.GetName());
     if(it == map->end())
     {
-      Log::Warning("There is no such component: ", xmlObject.GetName(), ".");
+        Log::Warning("Component does not exist: ", xmlObject.GetName());
       XMLObject o("Failed", std::map<std::string, std::string>(), "");
       return new Component(o,parent); // Return plain content to avoid crash.
     }
@@ -64,7 +64,7 @@ namespace Greet
     auto it = map->find(xmlObject.GetName());
     if(it == map->end())
     {
-      Log::Warning("There is no such frame: ", xmlObject.GetName(), ".");
+      Log::Warning("Frame does not exist: ", xmlObject.GetName());
       XMLObject o("Failed", std::map<std::string, std::string>(), "");
       return new Frame(o); // Return plain content to avoid crash.
     }

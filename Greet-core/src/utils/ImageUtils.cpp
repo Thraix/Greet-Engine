@@ -81,10 +81,10 @@ namespace Greet {
     bpp >>= 3;
     if (bpp != 3 && bpp != 4)
     {
-      Log::Error("Bits per pixel is not valid (24 or 32): ", filepath, " ", bpp * 8, " bpp");
+      Log::Error("Bits per pixel is not valid (24 or 32): %s %s bpp", filepath, bpp * 8);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_BPP);
       FreeImage_Unload(dib);
-      return {false,ImageFactory::GetBadBPPImage(width,height)};
+      return {false, ImageFactory::GetBadBPPImage(width,height)};
     }
 
     std::vector<byte> bits((*width) * (*height) * 4);
@@ -126,7 +126,7 @@ namespace Greet {
   {
     if (cx >= width || cy >= height || cx + cwidth > width || cy + cheight > height)
     {
-      Log::Error("Invalid bounds when cropping image. ", cx, ", ", cy, ", ", cwidth, ", ", cheight);
+      Log::Error("Invalid bounds when cropping image: %s, %s, %s, %s", cx, cy, cwidth, cheight);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_CROP);
       return ImageFactory::GetCropErrorImage(&width,&height);
     }
