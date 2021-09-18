@@ -1,9 +1,10 @@
 #pragma once
 
-#include <graphics/textures/CubeMap.h>
+#include <common/Memory.h>
 #include <graphics/cameras/Camera3D.h>
-#include <graphics/shaders/Shader.h>
 #include <graphics/models/Mesh.h>
+#include <graphics/shaders/Shader.h>
+#include <graphics/textures/CubeMap.h>
 
 namespace Greet {
 
@@ -12,7 +13,7 @@ namespace Greet {
     private:
       Ref<CubeMap> m_map;
       Ref<Shader> m_shader;
-      Mesh* m_mesh;
+      Ref<Mesh> m_mesh;
     public:
       Skybox(const Ref<CubeMap>& map);
       Skybox(const Ref<CubeMap>&, const Ref<Shader>& shader);

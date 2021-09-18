@@ -1,9 +1,10 @@
 #pragma once
 
-#include <map>
-#include <graphics/textures/Texture2D.h>
-#include <graphics/textures/CubeMap.h>
 #include <common/Memory.h>
+#include <graphics/textures/CubeMap.h>
+#include <graphics/textures/Texture2D.h>
+
+#include <map>
 
 namespace Greet {
   class TextureManager

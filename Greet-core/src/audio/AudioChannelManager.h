@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <audio/AudioChannel.h>
+
+#include <vector>
 
 namespace Greet {
   class AudioChannelManager

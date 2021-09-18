@@ -2,6 +2,7 @@
 
 #include <graphics/models/MeshFactory.h>
 #include <graphics/shaders/ShaderFactory.h>
+#include <graphics/RenderCommand.h>
 
 
 namespace Greet {
@@ -15,14 +16,12 @@ namespace Greet {
     : m_map(map), m_shader(shader)
   {
     MeshData data{MeshFactory::Cube()};
-    m_mesh = new Mesh(data);
+    m_mesh = NewRef<Mesh>(data);
     m_mesh->SetClockwiseRender(true);
   }
 
   Skybox::~Skybox()
-  {
-    delete m_mesh;
-  }
+  {}
 
   void Skybox::Render(const Ref<Camera3D>& camera) const
   {

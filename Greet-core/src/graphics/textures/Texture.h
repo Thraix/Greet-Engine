@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-#include <memory>
-#include <common/Types.h>
+#include <stdint.h>
 
 namespace Greet {
 
@@ -52,25 +50,25 @@ namespace Greet {
 
   struct TextureDeleter final
   {
-    void operator()(uint* id);
+    void operator()(uint32_t* id);
   };
 
   class Texture
   {
     protected:
-      uint texId;
-      uint m_textureType;
+      uint32_t texId;
+      uint32_t m_textureType;
     public:
-      Texture(uint textureType, bool generateTexture = true);
-      Texture(uint texId, uint textureType);
+      Texture(uint32_t textureType, bool generateTexture = true);
+      Texture(uint32_t texId, uint32_t textureType);
       Texture();
       virtual ~Texture();
 
       virtual void Enable() const;
-      virtual void Enable(uint index) const;
+      virtual void Enable(uint32_t index) const;
       virtual void Disable() const;
 
-      uint GetTexId() const;
+      uint32_t GetTexId() const;
       bool Invalid() const { return texId == 0;};
       friend bool operator<(const Texture& tex1, const Texture& tex2)
       {

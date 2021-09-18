@@ -16,7 +16,7 @@ namespace Greet
 
       inline const int GetWidth() const { return width; }
       inline const int GetHeight() const { return height; }
-      uint GetCategory() const {return WINDOW_EVENT;}
+      uint32_t GetCategory() const {return WINDOW_EVENT;}
       EventType GetType() const {return EventType::WINDOW_RESIZE;}
   };
 
@@ -37,7 +37,7 @@ namespace Greet
       inline const int GetY() const { return y; }
       inline const int GetDX() const { return x; }
       inline const int GetDY() const { return y; }
-      uint GetCategory() const {return WINDOW_EVENT;}
+      uint32_t GetCategory() const {return WINDOW_EVENT;}
       EventType GetType() const {return EventType::WINDOW_MOVE;}
   };
   class WindowFocusChangeEvent : public Event
@@ -46,7 +46,7 @@ namespace Greet
       WindowFocusChangeEvent()
       {}
     public:
-      uint GetCategory() const {return WINDOW_EVENT;}
+      uint32_t GetCategory() const {return WINDOW_EVENT;}
       virtual bool IsFocused() const = 0;
   };
 

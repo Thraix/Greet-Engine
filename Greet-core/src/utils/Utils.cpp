@@ -3,10 +3,12 @@
 #include <internal/GreetGL.h>
 #include <math/Vec2.h>
 
+#include <stdint.h>
+
 namespace Greet {
-  void Utils::Screenshot(uint width, uint height, std::string filename)
+  void Utils::Screenshot(uint32_t width, uint32_t height, std::string filename)
   {
-    byte* pixels = new byte[4 * width * height];
+    uint8_t* pixels = new uint8_t[4 * width * height];
     glReadPixels(0,0,width,height, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
     FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, width, height, 4 * width, 32, 0x0000ff, 0x00ff00, 0xFF0000, false);
     if(filename == "")

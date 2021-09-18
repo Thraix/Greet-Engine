@@ -14,6 +14,9 @@
 #include <string>
 #include <cstring>
 #include <logging/Log.h>
+
+// TODO: Move implementation to cpp file
+
 namespace Greet {
 
   struct FileUtils {

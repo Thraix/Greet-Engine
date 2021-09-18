@@ -1,9 +1,6 @@
 #include "UUID.h"
 
-#include <graphics/Window.h>
 #include <logging/Log.h>
-
-#include <ctime>
 
 namespace Greet {
 
@@ -14,21 +11,21 @@ namespace Greet {
   {
   }
 
-  uint UUID::GetUUID()
+  uint32_t UUID::GetUUID()
   {
     return GenNewUUID();
   }
 
   // generates a random 32 bit number
-  uint UUID::GetRandomNumber()
+  uint32_t UUID::GetRandomNumber()
   {
     return m_distribution(m_randomEngine);
   }
 
-  uint UUID::GenNewUUID()
+  uint32_t UUID::GenNewUUID()
   {
-    uint i = 1000;
-    uint number;
+    uint32_t i = 1000;
+    uint32_t number;
     while (i--)
     {
       number = GetRandomNumber();

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <math/Maths.h>
+#include <common/Memory.h>
 #include <graphics/shaders/Shader.h>
+
 #include <string.h>
 
 namespace Greet {
@@ -9,10 +10,10 @@ namespace Greet {
   {
     public:
       Vec3f position;
-      uint color;
+      uint32_t color;
 
     public:
-      Light(const Vec3f& position, uint color) : position(position) , color(color) {}
+      Light(const Vec3f& position, uint32_t color) : position(position) , color(color) {}
 
       void SetToUniform(const Ref<Shader>& shader, const std::string& prefix)
       {

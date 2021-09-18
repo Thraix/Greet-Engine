@@ -1,8 +1,8 @@
 #pragma once
 
 #include <event/Event.h>
-#include <common/Types.h>
-#include <math/Maths.h>
+
+#include <stdint.h>
 
 namespace Greet {
 
@@ -10,31 +10,31 @@ namespace Greet {
   {
     protected:
       Vec2f position;
-      uint button;
+      uint32_t button;
     protected:
-      MouseButtonEvent(float x, float y, uint button)
+      MouseButtonEvent(float x, float y, uint32_t button)
         : Event(),position(x,y),button(button)
       {}
-      MouseButtonEvent(const Vec2f& pos, uint button)
+      MouseButtonEvent(const Vec2f& pos, uint32_t button)
         : Event(),position(pos),button(button)
       {}
     public:
       float GetX() const { return position.x; }
       float GetY() const { return position.y; }
       const Vec2f& GetPosition() const { return position; }
-      uint GetButton() const { return button; }
+      uint32_t GetButton() const { return button; }
 
-      uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
+      uint32_t GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
   };
 
   class MousePressEvent : public MouseButtonEvent
   {
     public:
-      MousePressEvent(float x, float y, uint button)
+      MousePressEvent(float x, float y, uint32_t button)
         : MouseButtonEvent(x, y, button)
       {}
 
-      MousePressEvent(const Vec2f& pos, uint button)
+      MousePressEvent(const Vec2f& pos, uint32_t button)
         : MouseButtonEvent(pos, button)
       {}
       EventType GetType() const {return EventType::MOUSE_PRESS;}
@@ -43,10 +43,10 @@ namespace Greet {
   class MouseReleaseEvent : public MouseButtonEvent
   {
     public:
-      MouseReleaseEvent(float x, float y, uint button)
+      MouseReleaseEvent(float x, float y, uint32_t button)
         : MouseButtonEvent(x, y, button)
       {}
-      MouseReleaseEvent(const Vec2f& pos, uint button)
+      MouseReleaseEvent(const Vec2f& pos, uint32_t button)
         : MouseButtonEvent(pos, button)
       {}
 
@@ -75,7 +75,7 @@ namespace Greet {
       const Vec2f& GetPosition() const { return position; }
       const Vec2f& GetDeltaPosition() const { return deltaPosition; }
       EventType GetType() const {return EventType::MOUSE_MOVE;}
-      uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
+      uint32_t GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
   };
 
   class MouseScrollEvent : public Event
@@ -90,7 +90,7 @@ namespace Greet {
 
       const float GetScrollHorizontal() const { return scrollHorizontal; }
       const float GetScrollVertical() const { return scrollVertical; }
-      uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
+      uint32_t GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
       EventType GetType() const {return EventType::MOUSE_SCROLL;}
 
   };

@@ -4,14 +4,14 @@
 #include <graphics/buffers/VertexArray.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/renderers/Renderer2D.h>
-#include <math/Vec4.h>
-#include <stack>
+#include <graphics/shaders/Shader.h>
+#include <math/Vec2.h>
+
+#include <stdint.h>
 
 namespace Greet
 {
   class GUI;
-
-
 
   class GUIRenderer : public Renderer2D
   {
@@ -28,23 +28,23 @@ namespace Greet
     private:
       std::stack<Vec4f> m_viewports;
       std::stack<Vec2f> translationStack;
-      uint m_bufferSize;
-      uint m_iboSize;
-      uint m_vertices;
+      uint32_t m_bufferSize;
+      uint32_t m_iboSize;
+      uint32_t m_vertices;
       int maxTextures;
 
 
       Ref<Buffer> ibo;
       Ref<VertexBuffer> vbo;
       Ref<VertexArray> vao;
-      uint m_lastIndex;
-      uint* m_indices;
-      uint m_iboCount;
+      uint32_t m_lastIndex;
+      uint32_t* m_indices;
+      uint32_t m_iboCount;
       GUIVertex* m_buffer;
       GUIVertex* m_bufferBegin;
 
-      uint* m_textures;
-      byte m_textureCount;
+      uint32_t* m_textures;
+      uint8_t m_textureCount;
 
 
     public:
@@ -59,7 +59,7 @@ namespace Greet
       void DrawText(const std::string& text, const Vec2f& position, const Font& font, const Color& color, bool isHsv = true);
       void DrawTriangle(const Vec2f& pos1, const Vec2f& pos2, const Vec2f& pos3, const Color& color, bool isHsv = true);
       void DrawRect(const Vec2f& pos, const Vec2f& size, const Color& color, bool isHsv = true);
-      void DrawRoundedRect(const Vec2f& pos, const Vec2f& size, const Color& color, float radius, uint precision, bool isHsv = true);
+      void DrawRoundedRect(const Vec2f& pos, const Vec2f& size, const Color& color, float radius, uint32_t precision, bool isHsv = true);
       void DrawRect(const Vec2f& pos, const Vec2f& size, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv = true);
 
       void PushViewport(const Vec2f& pos, const Vec2f& size, bool overwrite=false);
@@ -68,12 +68,12 @@ namespace Greet
       void PushTranslation(const Vec2f& translation, bool override = false);
       void PopTranslation();
     private:
-      float GetTextureSlot(uint Id);
-      bool NeedFlush(uint indices, uint vertices);
+      float GetTextureSlot(uint32_t Id);
+      bool NeedFlush(uint32_t indices, uint32_t vertices);
       Vec4f GetViewport(const Vec2f& pos1, const Vec2f& pos2) const;
       void AppendTriangle(const Vec2f& pos1, const Vec2f& pos2, const Vec2f& pos3, const Color& color, bool isHsv);
-      void AppendRoundedQuad(const Vec2f& position, const Vec2f& size, const Color& color, bool hsb, float radius, uint precision);
-      void AppendQuaterCircle(const Vec2f& center, const Color& color, bool isHsv, float radius, uint precision, bool top, bool left);
+      void AppendRoundedQuad(const Vec2f& position, const Vec2f& size, const Color& color, bool hsb, float radius, uint32_t precision);
+      void AppendQuaterCircle(const Vec2f& center, const Color& color, bool isHsv, float radius, uint32_t precision, bool top, bool left);
       void AppendQuad(const Vec2f& position, const Vec2f& size, const Vec2f& texCoord1, const Vec2f& texCoord2, float texID, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv);
       void AppendQuad(const Vec2f& position, const Vec2f& size, const Vec2f& texCoord1, const Vec2f& texCoord2, float texID, const Color& color, bool isHsv);
       void AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, float texID, const Color& color, const Vec4f& viewport, bool isHsv);

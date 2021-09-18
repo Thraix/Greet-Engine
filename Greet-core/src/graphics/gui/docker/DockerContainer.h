@@ -2,11 +2,9 @@
 
 #include <graphics/gui/docker/DockerTab.h>
 #include <graphics/gui/docker/DockerInterface.h>
-#include <graphics/gui/Button.h>
-#include <utils/xml/XML.h>
+#include <utils/xml/XMLObject.h>
 
 #include <vector>
-#include <variant>
 
 namespace Greet {
 
@@ -17,10 +15,10 @@ namespace Greet {
   {
     protected:
       std::vector<DockerTab*> children;
-      uint activeTab = 0;
+      uint32_t activeTab = 0;
 
       bool hover = false;
-      uint hoverTab = 0;
+      uint32_t hoverTab = 0;
 
     public:
       DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);

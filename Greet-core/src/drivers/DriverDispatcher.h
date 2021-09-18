@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <drivers/Driver.h>
+
+#include <vector>
 
 namespace Greet {
   class App;

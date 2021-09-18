@@ -27,7 +27,7 @@ namespace Greet
       const Vec2f& GetPosition() const { return pos; }
       const Vec2f& GetSize() const { return size; }
 
-      uint GetCategory() const {return VIEWPORT_EVENT;}
+      uint32_t GetCategory() const {return VIEWPORT_EVENT;}
       EventType GetType() const {return EventType::VIEWPORT_RESIZE;}
   };
 }

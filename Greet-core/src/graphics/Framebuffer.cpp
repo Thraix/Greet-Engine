@@ -7,7 +7,7 @@
 
 namespace Greet {
 
-  Framebuffer::Framebuffer(uint width, uint height, bool hdr)
+  Framebuffer::Framebuffer(uint32_t width, uint32_t height, bool hdr)
     : width(width), height(height), hdr{hdr}
   {
     GLCall(glGenFramebuffers(1, &fbo));
@@ -44,7 +44,7 @@ namespace Greet {
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
   }
 
-  void Framebuffer::Resize(uint _width, uint _height)
+  void Framebuffer::Resize(uint32_t _width, uint32_t _height)
   {
     if(width != _width || height != _height)
     {

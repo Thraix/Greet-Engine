@@ -1,9 +1,8 @@
 #pragma once
 
-#include <common/Types.h>
+#include <common/Memory.h>
 #include <input/Joystick.h>
-#include <math/Maths.h>
-#include <memory>
+#include <math/Vec2.h>
 
 #include <vector>
 
@@ -23,7 +22,7 @@ class GLFWwindow;
 namespace Greet {
   class GUI;
   typedef void(*WINDOW_RESIZE)(int width, int height);
-  typedef void(*JOYSTICK_STATE)(uint joystick, unsigned char state);
+  typedef void(*JOYSTICK_STATE)(uint32_t joystick, unsigned char state);
   typedef void(*WINDOW_FOCUS)(int state);
 
   class Window
@@ -32,10 +31,10 @@ namespace Greet {
       static void* pointer;
       friend struct GLFWwindow;
       static std::string title;
-      static uint width, height;
+      static uint32_t width, height;
       static GLFWwindow *window;
 
-      static std::vector<std::unique_ptr<Joystick>> joysticks;
+      static std::vector<Ptr<Joystick>> joysticks;
 
       static bool focus;
       static bool mouseButtonDown[MAX_MOUSEBUTTONS];
@@ -49,7 +48,7 @@ namespace Greet {
 
       static void window_resize(GLFWwindow *window, int width, int height);
       static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
-      static void key_char_callback(GLFWwindow* window, uint charCode);
+      static void key_char_callback(GLFWwindow* window, uint32_t charCode);
 
       static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
       static void window_focus_callback(GLFWwindow* window, int state);
@@ -59,7 +58,7 @@ namespace Greet {
       static void joystick_callback(int joy, int event);
     public:
 
-      static void CreateWindow(std::string title, uint width, uint height);
+      static void CreateWindow(std::string title, uint32_t width, uint32_t height);
       static void DestroyWindow();
 
       static void Close();
@@ -83,8 +82,8 @@ namespace Greet {
       static GLFWwindow* GetGLFWWindow() { return window; }
       static void SetTitle(const std::string& title);
 
-      static Joystick* GetJoystick(uint joystick);
-      static bool IsJoystickConnected(uint joystick);
+      static Joystick* GetJoystick(uint32_t joystick);
+      static bool IsJoystickConnected(uint32_t joystick);
 
 
       inline static void* getUserPointer(Window* window) { return window->pointer; }

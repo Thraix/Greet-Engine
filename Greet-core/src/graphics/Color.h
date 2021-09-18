@@ -1,11 +1,11 @@
 #pragma once
 
-#include <common/Types.h>
 #include <math/Vec3.h>
 #include <math/Vec4.h>
 
 #include <ostream>
 
+// TODO: Implement this in a cpp file
 namespace Greet
 {
   struct Color
@@ -49,7 +49,7 @@ namespace Greet
       : r{color.x}, g{color.y}, b{color.z}, a{color.w}
     {}
 
-    Color(uint argb32)
+    Color(uint32_t argb32)
       : r{((argb32 >> 16) & 0xff) / 255.0f}, g{((argb32 >> 8) & 0xff) / 255.0f}, b{(argb32 & 0xff) / 255.0f}, a{((argb32 >> 24) & 0xff) / 255.0f}
     {}
 
@@ -59,7 +59,7 @@ namespace Greet
         h = 0;
       float c = v * s;
       float h6f = h*6.0f;
-      uint h6 = (uint)h6f;
+      uint32_t h6 = (uint32_t)h6f;
 
       float f = h6f - h6;
 
@@ -129,12 +129,12 @@ namespace Greet
       return *this;
     }
 
-    uint AsUInt() const
+    uint32_t AsUInt() const
     {
-      return (((uint)(a * 255) & 0xff) << 24) |
-        (((uint)(r * 255) & 0xff) << 16) |
-        (((uint)(g * 255) & 0xff) << 8) |
-        ((uint)(b * 255) & 0xff);
+      return (((uint32_t)(a * 255) & 0xff) << 24) |
+        (((uint32_t)(r * 255) & 0xff) << 16) |
+        (((uint32_t)(g * 255) & 0xff) << 8) |
+        ((uint32_t)(b * 255) & 0xff);
     }
 
     Color& Invert()

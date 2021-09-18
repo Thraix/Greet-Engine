@@ -1,51 +1,39 @@
 #include "ImageUtils.h"
 
 #include <logging/Log.h>
-#include <iostream>
 #include <graphics/textures/ImageFactory.h>
-#include <fstream>
 #include <utils/ErrorHandle.h>
-#include <utils/StringUtils.h>
+
+#include <FreeImage.h>
+#include <fstream>
 
 namespace Greet {
 
-  void ImageUtils::PrintImage(byte* bits, uint width, uint height)
+  void ImageUtils::PrintImage(const ImageData& imageData)
   {
-    for (uint y = 0;y<height;y++)
+    for (uint32_t y = 0;y < imageData.height; y++)
     {
-      byte* pixel = (byte*)bits;
-      for (uint x = 0;x<width;x++)
+      for (uint32_t x = 0;x < imageData.width; x++)
       {
-        std::string s = "pixel(" + StringUtils::to_string(x) + "," + StringUtils::to_string(y) + ")";
-        s += "(" + StringUtils::to_string((uint)pixel[FI_RGBA_RED]) + ",";
-        s += StringUtils::to_string((uint)pixel[FI_RGBA_GREEN]) + ",";
-        s += StringUtils::to_string((uint)pixel[FI_RGBA_BLUE]) + ")";
-        pixel += 4;
-        Log::Info(s);
+        Log::Info("pixel(%s, %s) (R=%s, G=%s, B=%s)", x, y, (int)imageData.at(x, y, IMAGE_DATA_RED), (int)imageData.at(x, y, IMAGE_DATA_GREEN), (int)imageData.at(x, y, IMAGE_DATA_BLUE));
       }
-      bits += 4*width;
     }
   }
 
-  std::vector<byte> ImageUtils::FlipImage(const std::vector<byte>& bits, uint width, uint height)
+  ImageData ImageUtils::FlipImage(const ImageData& imageData)
   {
-    std::vector<byte> result(width*height*4);
-    size_t offset = 4*width*height;
-    size_t rowOffset = 0;
-    for (uint y = 0;y < height;y++)
+    ImageData result(imageData.width, imageData.height);
+    for (uint32_t y = 0;y < imageData.height;y++)
     {
-      for (uint x = 0;x < width;x++)
+      for (uint32_t x = 0;x < imageData.width;x++)
       {
-        offset -= 4;
-        memcpy(result.data()+offset,bits.data() + rowOffset,4);
-        rowOffset += 4;
+        result.at(imageData.width - x - 1, imageData.height - y - 1) = imageData.at(x, y);
       }
     }
-
     return result;
   }
 
-  std::pair<bool, std::vector<byte>> ImageUtils::LoadImage(const std::string& filepath, uint* width, uint* height)
+  ImageDataResult ImageUtils::LoadImage(const std::string& filepath)
   {
     FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 
@@ -60,7 +48,7 @@ namespace Greet {
     {
       Log::Error("FreeImage file format is not supported or file not exist: ", filepath);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_FORMAT);
-      return {false, ImageFactory::GetBadFormatImage(width,height)};
+      return {false, ImageFactory::GetBadFormatImage()};
     }
 
     if (FreeImage_FIFSupportsReading(fif))
@@ -69,75 +57,76 @@ namespace Greet {
     {
       Log::Error("FreeImage file Cannot be read: ", filepath);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_READ);
-      return {false,ImageFactory::GetCantReadImage(width,height)};
+      return {false, ImageFactory::GetCantReadImage()};
     }
 
 
-    byte* fiBits = FreeImage_GetBits(dib);
+    uint8_t* fiBits = FreeImage_GetBits(dib);
 
-    *width = FreeImage_GetWidth(dib);
-    *height = FreeImage_GetHeight(dib);
-    uint bpp = FreeImage_GetBPP(dib);
+    uint8_t bpp = FreeImage_GetBPP(dib);
     bpp >>= 3;
     if (bpp != 3 && bpp != 4)
     {
       Log::Error("Bits per pixel is not valid (24 or 32): %s %s bpp", filepath, bpp * 8);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_BPP);
       FreeImage_Unload(dib);
-      return {false, ImageFactory::GetBadBPPImage(width,height)};
+      return {false, ImageFactory::GetBadBPPImage()};
     }
 
-    std::vector<byte> bits((*width) * (*height) * 4);
-    uint resultI = 0;
-    uint bitsI = 0;
-    for(uint y = 0; y < *height; y++)
+    ImageData result{FreeImage_GetWidth(dib), FreeImage_GetHeight(dib)};
+    uint32_t bitsI = 0;
+    for(uint32_t y = 0; y < result.height; y++)
     {
-      for(uint x = 0; x < *width; x++)
+      for(uint32_t x = 0; x < result.width; x++)
       {
         // Incase the order of FreeImage is not RGB (its probably BGRA)
-        bits[resultI++] = fiBits[bitsI + FI_RGBA_RED];
-        bits[resultI++] = fiBits[bitsI + FI_RGBA_GREEN];
-        bits[resultI++] = fiBits[bitsI + FI_RGBA_BLUE];
+        result.at(x, y, IMAGE_DATA_RED) = fiBits[bitsI + FI_RGBA_RED];
+        result.at(x, y, IMAGE_DATA_GREEN) = fiBits[bitsI + FI_RGBA_GREEN];
+        result.at(x, y, IMAGE_DATA_BLUE) = fiBits[bitsI + FI_RGBA_BLUE];
         if(bpp == 4)
-          bits[resultI++] = fiBits[bitsI + FI_RGBA_ALPHA];
+          result.at(x, y, IMAGE_DATA_ALPHA) = fiBits[bitsI + FI_RGBA_ALPHA];
         else
-          bits[resultI++] = 0xff;
+          result.at(x, y, IMAGE_DATA_ALPHA) = 0xff;
         bitsI += bpp;
       }
     }
     FreeImage_Unload(dib);
-    return {true,bits};
+    return {true, result};
   }
 
-  std::vector<byte> ImageUtils::CreateHeightmapImage(const std::vector<float>& heightMap, uint width, uint height)
+  ImageData ImageUtils::CreateHeightmapImage(const std::vector<float>& heightMap, uint32_t width, uint32_t height)
   {
-    std::vector<byte> data(width * height * 4);
-    for(int i = 0;i<width*height;i++)
+    ImageData result(width, height);
+    for(uint32_t y = 0; y < height; y++)
     {
-      data[i * 4 + FI_RGBA_RED]   = heightMap[i] * 255;
-      data[i * 4 + FI_RGBA_GREEN] = heightMap[i] * 255;
-      data[i * 4 + FI_RGBA_BLUE]  = heightMap[i] * 255;
-      data[i * 4 + FI_RGBA_ALPHA] = 0xff;
+      for(uint32_t x = 0; x < width; x++)
+      {
+        uint8_t color = heightMap[x + y * width] * 255;
+        result.at(x, y, IMAGE_DATA_RED) = color;
+        result.at(x, y, IMAGE_DATA_GREEN) = color;
+        result.at(x, y, IMAGE_DATA_BLUE) = color;
+        result.at(x, y, IMAGE_DATA_ALPHA) = 0xff;
+      }
     }
-    return data;
+    return result;
   }
 
-  std::vector<byte> ImageUtils::CropImage(const std::vector<byte>& bits, uint width,  uint height,  uint cx,  uint cy,  uint cwidth,  uint cheight)
+  ImageData ImageUtils::CropImage(const ImageData& imageData, uint32_t cx, uint32_t cy, uint32_t cwidth, uint32_t cheight)
   {
-    if (cx >= width || cy >= height || cx + cwidth > width || cy + cheight > height)
+    if (cx >= imageData.width || cy >= imageData.height || cx + cwidth > imageData.width || cy + cheight > imageData.height)
     {
       Log::Error("Invalid bounds when cropping image: %s, %s, %s, %s", cx, cy, cwidth, cheight);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_CROP);
-      return ImageFactory::GetCropErrorImage(&width,&height);
+      return ImageFactory::GetCropErrorImage();
     }
-    cy = height - cheight - cy;
-    std::vector<byte> result(cwidth * cheight * 4);
-    size_t offset = (cx + cy * width) * 4;
+    cy = imageData.height - cheight - cy;
+    ImageData result(cwidth, cheight);
+    size_t offset = (cx + cy * imageData.width) * 4;
     size_t resultOffset = 0;
-    for (uint y = 0;y < cheight;y++)
+    for (uint32_t y = 0;y < cheight;y++)
     {
-      memcpy(result.data()+resultOffset, bits.data()+offset, cwidth * 4);
-      offset += width * 4;
+      memcpy(result.data.get() + resultOffset, imageData.data.get() + offset, cwidth * 4);
+      offset += imageData.width * 4;
       resultOffset += cwidth * 4;
     }
     return result;
@@ -145,14 +134,12 @@ namespace Greet {
 
   void ImageUtils::SaveImageBytes(const std::string& filepath, const std::string& output)
   {
-    uint width,height,bpp;
-    auto res = LoadImage(filepath, &width, &height);
+    auto res = LoadImage(filepath);
     if(res.first)
     {
-
       std::ofstream fout;
       fout.open(output, std::ios_base::binary | std::ios_base::out);
-      fout.write((char*) res.second.data(), width*height*bpp/8);
+      fout.write((char*) res.second.data.get(), res.second.width * res.second.height * 4);
 
       fout.close();
     }

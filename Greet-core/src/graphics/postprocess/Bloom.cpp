@@ -5,7 +5,7 @@
 
 namespace Greet
 {
-  Bloom::Bloom(uint width, uint height, int iterations)
+  Bloom::Bloom(uint32_t width, uint32_t height, int iterations)
   {
     float div = 0.25;
     thresholdBuffer = NewRef<Framebuffer>(width * 0.25, height * 0.25, true);
@@ -19,14 +19,14 @@ namespace Greet
     thresholdShader = ShaderFactory::ShaderThreshold();
     blurShader = ShaderFactory::ShaderBlur();
     additiveShader = ShaderFactory::ShaderAdditive();
-    quadMesh = NewRef<Mesh>(MeshData(Pointer<Vec3f>{{-1, -1, 0}, {1, -1, 0}, {1, 1, 0}, {-1, 1, 0}}, Pointer<uint>{0, 1, 2, 0, 2, 3}));
+    quadMesh = NewRef<Mesh>(MeshData(Pointer<Vec3f>{{-1, -1, 0}, {1, -1, 0}, {1, 1, 0}, {-1, 1, 0}}, Pointer<uint32_t>{0, 1, 2, 0, 2, 3}));
   }
 
   Bloom::~Bloom()
   {
   }
 
-  void Bloom::Resize(uint width, uint height)
+  void Bloom::Resize(uint32_t width, uint32_t height)
   {
     float div = 0.25;
     thresholdBuffer->Resize(width * 0.5, height * 0.5);

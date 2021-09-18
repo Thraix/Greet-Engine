@@ -1,14 +1,16 @@
 #pragma once
 
-#include <functional>
-#include <typeindex>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 #include <logging/Log.h>
 #include <ecs/ComponentPool.h>
-#include <ecs/Config.h>
+
+#include <unordered_map>
+#include <unordered_set>
+#include <functional>
+#include <typeindex>
+
+// TODO: Move implementation to cpp file
 
 namespace Greet
 {

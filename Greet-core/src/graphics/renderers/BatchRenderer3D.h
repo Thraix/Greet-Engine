@@ -1,14 +1,12 @@
 #pragma once
 
+#include <common/Memory.h>
+#include <graphics/cameras/Camera3D.h>
+#include <graphics/models/EntityModel.h>
+#include <graphics/renderers/Renderer3D.h>
+
 #include <map>
 #include <vector>
-#include <graphics/models/EntityModel.h>
-#include <utils/OBJUtils.h>
-#include <utils/Utils.h>
-#include <graphics/textures/TextureManager.h>
-#include <graphics/Skybox.h>
-#include <graphics/models/MeshFactory.h>
-#include <graphics/renderers/Renderer3D.h>
 
 namespace Greet {
 

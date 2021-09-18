@@ -8,7 +8,7 @@
 
 namespace Greet {
 
-  Mesh::Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices)
+  Mesh::Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint32_t>& indices)
     : m_clockwise(false)
   {
     m_drawMode = DrawType::TRIANGLES;
@@ -16,7 +16,7 @@ namespace Greet {
     m_indexCount = indices.Size();
 
     vao = VertexArray::Create();
-    ibo = Buffer::Create((uint)(indices.Size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC);
+    ibo = Buffer::Create((uint32_t)(indices.Size()*sizeof(uint32_t)), BufferType::INDEX, BufferDrawType::STATIC);
     ibo->UpdateData((void*)indices.Data());
 
     // Attributes
@@ -74,7 +74,7 @@ namespace Greet {
     vao->AddVertexBuffer(buffer);
   }
 
-  bool Mesh::HasVBO(uint location) const
+  bool Mesh::HasVBO(uint32_t location) const
   {
     if (m_vbos.find(location) != m_vbos.end())
     {
@@ -85,14 +85,14 @@ namespace Greet {
     return false;
   }
 
-  void Mesh::SetDefaultAttribute4f(uint location, const Vec4f& data)
+  void Mesh::SetDefaultAttribute4f(uint32_t location, const Vec4f& data)
   {
     vao->Enable();
     GLCall(glVertexAttrib4f(location,data.x,data.y,data.z,data.w));
     vao->Disable();
   }
 
-  void Mesh::SetDefaultAttribute3f(uint location, const Vec3f& data)
+  void Mesh::SetDefaultAttribute3f(uint32_t location, const Vec3f& data)
   {
     vao->Enable();
     GLCall(glVertexAttrib3f(location,data.x,data.y,data.z));

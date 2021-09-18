@@ -1,8 +1,8 @@
 #include "FontManager.h"
 
 #include <logging/Log.h>
-#include <common/Types.h>
-#include <utils/ErrorHandle.h>
+
+#include <stdint.h>
 
 namespace Greet{
 
@@ -20,7 +20,7 @@ namespace Greet{
     return true;
   }
 
-  Font FontManager::Get(const std::string& asFontname, uint aiSize)
+  Font FontManager::Get(const std::string& asFontname, uint32_t aiSize)
   {
     auto it = mvFonts.find(asFontname);
     if(it == mvFonts.end())

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <common/Memory.h>
-#include <graphics/Window.h>
 #include <utils/Timer.h>
 #include <event/Event.h>
 
@@ -13,11 +12,11 @@ namespace Greet {
 
     protected:
       Timer* m_timer;
-      uint m_fps;
-      uint m_ups;
+      uint32_t m_fps;
+      uint32_t m_ups;
       double frameCap = 0;
     protected:
-      App(const std::string& title, uint width, uint height);
+      App(const std::string& title, uint32_t width, uint32_t height);
 
       virtual ~App();
 
@@ -28,7 +27,7 @@ namespace Greet {
       virtual void Render() = 0;
       virtual void OnEvent(Event& event) {}
 
-      void SetFrameCap(uint frameCap)
+      void SetFrameCap(uint32_t frameCap)
       {
         if (frameCap == 0)
           this->frameCap = 0;
@@ -36,15 +35,15 @@ namespace Greet {
           this->frameCap = 1.0 / (double)frameCap;
       }
 
-      uint GetFrameCap()
+      uint32_t GetFrameCap()
       {
         if (frameCap == 0)
           return 0;
-        return (uint)(1.0 / frameCap);
+        return (uint32_t)(1.0 / frameCap);
       }
 
-      uint GetFPS() const { return m_fps; }
-      uint GetUPS() const { return m_ups; }
+      uint32_t GetFPS() const { return m_fps; }
+      uint32_t GetUPS() const { return m_ups; }
 
     public:
       void Start();

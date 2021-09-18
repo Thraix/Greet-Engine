@@ -32,9 +32,9 @@ namespace Greet{
 
   Sound* SoundManager::Get(const std::string& soundname)
   {
-    uint size = m_sounds.size();
+    uint32_t size = m_sounds.size();
 
-    for (uint i = 0; i < size; i++)
+    for (uint32_t i = 0; i < size; i++)
       if (soundname.compare(m_sounds[i]->GetName().c_str()) == 0)
         return m_sounds[i];
     ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
@@ -44,7 +44,7 @@ namespace Greet{
 
   void SoundManager::Destroy()
   {
-    for (uint i = 0; i < m_sounds.size(); i++)
+    for (uint32_t i = 0; i < m_sounds.size(); i++)
       delete m_sounds[i];
 
     gau_manager_destroy(m_manager);

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <graphics/layers/Scene.h>
 #include <common/Memory.h>
+#include <graphics/layers/Scene.h>
+
 #include <vector>
 
 namespace Greet {

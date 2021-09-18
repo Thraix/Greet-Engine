@@ -1,9 +1,9 @@
 #pragma once
 
-#include <math/Maths.h>
+#include <common/Memory.h>
 #include <graphics/Renderable.h>
-#include <common/Types.h>
 #include <graphics/Sprite.h>
+#include <math/Vec2.h>
 
 namespace Greet{
 
@@ -12,13 +12,13 @@ namespace Greet{
     Vec2f vertex;
     Vec2f texCoord;
     float texID;
-    uint color;
+    uint32_t color;
   };
 
   class Renderable2D : public Renderable
   {
     public:
-      uint m_color;
+      uint32_t m_color;
       Vec2f m_position;
       Vec2f m_size;
     protected:
@@ -26,11 +26,11 @@ namespace Greet{
     protected:
 
     public:
-      Renderable2D(const Vec2f& position, const Vec2f& size, uint color)
+      Renderable2D(const Vec2f& position, const Vec2f& size, uint32_t color)
         : m_position{position},m_size{size}, m_color{color}, m_sprite{nullptr}
       {}
 
-      Renderable2D(const Vec2f& position, const Vec2f& size, uint color, const Ref<Sprite>& sprite)
+      Renderable2D(const Vec2f& position, const Vec2f& size, uint32_t color, const Ref<Sprite>& sprite)
         : m_position{position},m_size{size}, m_color{color}, m_sprite{sprite}
       {}
 
@@ -38,8 +38,8 @@ namespace Greet{
         : m_position(Vec2f(0, 0)), m_size(Vec2f(1, 1)), m_color(0xffffffff)
       {}
 
-      void SetColor(uint color) override { m_color = color; }
-      inline uint GetColor() const override { return m_color;}
+      void SetColor(uint32_t color) override { m_color = color; }
+      inline uint32_t GetColor() const override { return m_color;}
       void SetPosition(const Vec2f& position) override { m_position = position; }
       inline const Vec2f& GetPosition() const override { return m_position;}
       void SetSize(const Vec2f& size) override { m_size = size; }

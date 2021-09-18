@@ -3,7 +3,6 @@
 #include <string>
 #include <common/Memory.h>
 #include <utils/FileUtils.h>
-#include <utils/UUID.h>
 
 namespace Greet
 {
@@ -14,8 +13,8 @@ namespace Greet
     friend class HotSwapping;
 
     private:
-      static uint s_Id;
-      uint id;
+      static uint32_t s_Id;
+      uint32_t id;
       FileUtils::TimeModified modDate;
 
     protected:

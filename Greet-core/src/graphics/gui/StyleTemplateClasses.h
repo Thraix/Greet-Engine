@@ -4,11 +4,10 @@
 #include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/TLBR.h>
 #include <logging/Log.h>
-#include <math/Vec4.h>
 #include <utils/MetaFile.h>
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 namespace Greet
 {

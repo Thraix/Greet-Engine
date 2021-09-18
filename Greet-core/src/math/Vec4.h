@@ -4,9 +4,9 @@
 #define _USE_MATH_DEFINES
 #endif
 
-#include <iostream>
-#include <math.h>
 #include <logging/Log.h>
+
+#include <iostream>
 
 namespace Greet{
 
@@ -173,13 +173,13 @@ namespace Greet{
       return Vec4(first).Divide(c);
     }
 
-    T& operator[](uint i)
+    T& operator[](uint32_t i)
     {
       ASSERT(i < 4, "Index out of bound");
       return *((&x)+i);
     }
 
-    const T& operator[](uint i) const
+    const T& operator[](uint32_t i) const
     {
       ASSERT(i < 4, "Index out of bound");
       return *((&x)+i);

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <graphics/cameras/Camera3D.h>
-#include <math/Maths.h>
-#include <event/EventDispatcher.h>
+#include <math/Vec2.h>
+#include <math/Vec3.h>
 
 namespace Greet {
 

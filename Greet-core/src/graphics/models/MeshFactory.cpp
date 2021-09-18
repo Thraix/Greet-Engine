@@ -1,8 +1,9 @@
 #include "MeshFactory.h"
+
 #include "graphics/models/MeshData.h"
 #include <logging/Log.h>
-namespace Greet {
 
+namespace Greet {
   // Calculate a normal of 3 points in space
   Vec3f MeshFactory::CalculateNormal(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3)
   {
@@ -12,12 +13,12 @@ namespace Greet {
     return normal;
   }
 
-  void MeshFactory::CalculateNormals(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices, Pointer<Vec3f>& normals)
+  void MeshFactory::CalculateNormals(const Pointer<Vec3f>& vertices, const Pointer<uint32_t>& indices, Pointer<Vec3f>& normals)
   {
     Vec3f faceNormal;
     Vec3f p1, p2, p3;
     memset(normals.Data(), 0, sizeof(float) * 3 * vertices.Size());
-    for (uint i = 0; i < indices.Size(); i += 3)
+    for (uint32_t i = 0; i < indices.Size(); i += 3)
     {
       if(indices[i] >= vertices.Size() ||
           indices[i+1] >= vertices.Size() ||
@@ -34,31 +35,31 @@ namespace Greet {
       normals[indices[i + 1]] += faceNormal;
       normals[indices[i + 2]] += faceNormal;
     }
-    for (uint i = 0; i < vertices.Size(); i++)
+    for (uint32_t i = 0; i < vertices.Size(); i++)
     {
       normals[i].Normalize();
     }
   }
 
   // Calculate normals for a mesh
-  Pointer<Vec3f> MeshFactory::CalculateNormals(const Pointer<Vec3f> vertices, const Pointer<uint>& indices)
+  Pointer<Vec3f> MeshFactory::CalculateNormals(const Pointer<Vec3f> vertices, const Pointer<uint32_t>& indices)
   {
     Pointer<Vec3f> normals(vertices.Size());
     CalculateNormals(vertices, indices, normals);
     return normals;
   }
 
-  MeshData MeshFactory::Polygon(uint count, PolygonSizeFormat format, const Vec3f& pos, float size)
+  MeshData MeshFactory::Polygon(uint32_t count, PolygonSizeFormat format, const Vec3f& pos, float size)
   {
     if(count < 3)
     {
       Log::Warning("Invalid Polygon corners (returning square): ", count);
       count = 4;
     }
-    uint indexCount = 3 * (count - 2);
+    uint32_t indexCount = 3 * (count - 2);
     Pointer<Vec3f> vertices = Pointer<Vec3f>(count);
     Pointer<Vec3f> normals(count);
-    Pointer<uint> indices = Pointer<uint>(indexCount);
+    Pointer<uint32_t> indices = Pointer<uint32_t>(indexCount);
     float radius = 0;
 
     // 180 * (count - 2) / count
@@ -77,13 +78,13 @@ namespace Greet {
         break;
     }
     float angle = 2 * M_PI / (float)count;
-    for(uint i = 0; i < count;i++)
+    for(uint32_t i = 0; i < count;i++)
     {
       vertices[i] = pos + Vec3f(cos(angle/2 + angle*i), 0, sin(angle/2 + angle*i)) * radius;
       normals[i] = Vec3f(0,1,0);
     }
 
-    for(uint i = 0;i < count - 2; i++)
+    for(uint32_t i = 0;i < count - 2; i++)
     {
       indices[i*3 + 0] = 0;
       indices[i*3 + 1] = 2 + i;
@@ -117,7 +118,7 @@ namespace Greet {
     texCoords[2] = Vec2f(1.0f, 1.0f);
     texCoords[3] = Vec2f(0.0f, 1.0f);
 
-    Pointer<uint> indices{0,2,1,0,3,2};
+    Pointer<uint32_t> indices{0,2,1,0,3,2};
     MeshData meshdata(vertices,indices);
     meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
     meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
@@ -228,7 +229,7 @@ namespace Greet {
     texCoords[23] = Vec2f(0.25f, 2.0f / 3.0f - epsilon);
 
 
-    Pointer<uint> indices{
+    Pointer<uint32_t> indices{
       0, 2, 1, 0, 3, 2,
         4, 5, 6, 4, 6, 7,
         8, 10, 9, 8, 11, 10,
@@ -273,7 +274,7 @@ namespace Greet {
     normals[2] = (v3 - pos).Normalize();
     normals[3] = (v4 - pos).Normalize();
 
-    Pointer<uint> indices{ 0, 2, 1, 1, 3, 0, 2, 0, 3, 1, 2, 3};
+    Pointer<uint32_t> indices{ 0, 2, 1, 1, 3, 0, 2, 0, 3, 1, 2, 3};
     MeshData meshdata(vertices, indices);
     meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
     return meshdata;
@@ -292,7 +293,7 @@ namespace Greet {
     float tileWidth = size.x / (float)gridSize.x;
     float tileLength = size.z / (float)gridSize.y;
 
-    uint vertexCount = (gridSize.x + 1) * (gridSize.y + 1);
+    uint32_t vertexCount = (gridSize.x + 1) * (gridSize.y + 1);
 
     Pointer<Vec3f> vertices(vertexCount);
 
@@ -301,23 +302,23 @@ namespace Greet {
     float z = pos.z - size.z / 2.0f;
 
 
-    for (uint iz = 0; iz <= gridSize.y; iz++)
+    for (uint32_t iz = 0; iz <= gridSize.y; iz++)
     {
-      for (uint ix = 0; ix <= gridSize.x; ix++)
+      for (uint32_t ix = 0; ix <= gridSize.x; ix++)
       {
         float heightM = heightMap.Size() == 0 ? 0 : heightMap[ix + iz*(gridSize.x + 1)];
         vertices[ix + iz*(gridSize.x + 1)] = Vec3f(x + ix*tileWidth, pos.y + heightM * size.y, z + iz*tileLength);
       }
     }
 
-    uint indexCount = 6 * gridSize.x * gridSize.y;
-    Pointer<uint> indices(indexCount);
+    uint32_t indexCount = 6 * gridSize.x * gridSize.y;
+    Pointer<uint32_t> indices(indexCount);
 
     // Loop through every square
-    uint i = 0;
-    for (uint iz = 0; iz < gridSize.y; iz++)
+    uint32_t i = 0;
+    for (uint32_t iz = 0; iz < gridSize.y; iz++)
     {
-      for (uint ix = 0; ix < gridSize.x; ix++)
+      for (uint32_t ix = 0; ix < gridSize.x; ix++)
       {
         if (ix % 2 == iz % 2)
         {
@@ -347,7 +348,7 @@ namespace Greet {
     return data;
   }
 
-  uint MeshFactory::IndexGrid(uint x, uint z, uint gridWidth, uint gridLength)
+  uint32_t MeshFactory::IndexGrid(uint32_t x, uint32_t z, uint32_t gridWidth, uint32_t gridLength)
   {
     if (z >= gridLength - 1)
     {
@@ -376,7 +377,7 @@ namespace Greet {
     float tileWidth = size.x / (float)gridSize.x;
     float tileLength = size.z / (float)gridSize.y;
 
-    uint vertexCount = (gridSize.x + 1) * (gridSize.y + 1) + (gridSize.x - 1)*(gridSize.y - 1);
+    uint32_t vertexCount = (gridSize.x + 1) * (gridSize.y + 1) + (gridSize.x - 1)*(gridSize.y - 1);
 
     Pointer<Vec3f> vertices = Pointer<Vec3f>(vertexCount);
 
@@ -384,13 +385,13 @@ namespace Greet {
     float x = pos.x - size.x / 2.0f;
     float z = pos.z - size.z / 2.0f;
 
-    for (uint iz = 0; iz <= gridSize.y; iz++)
+    for (uint32_t iz = 0; iz <= gridSize.y; iz++)
     {
-      for (uint ix = 0; ix <= gridSize.x; ix++)
+      for (uint32_t ix = 0; ix <= gridSize.x; ix++)
       {
         float heightM = heightMap.Size() == 0 ? 0 : heightMap[ix + iz * (gridSize.x + 1)];
         Vec3f vec = Vec3f(x + ix*tileWidth, pos.y + heightM * size.y, z + iz*tileLength);
-        uint index = IndexGrid(ix,iz,gridSize.x, gridSize.y);
+        uint32_t index = IndexGrid(ix,iz,gridSize.x, gridSize.y);
         vertices[index] = vec;
         if(iz < gridSize.y - 1 && ix != 0 && ix != gridSize.x)
         {
@@ -399,18 +400,18 @@ namespace Greet {
       }
     }
 
-    uint indexCount = 6 * gridSize.x * gridSize.y;
-    Pointer<uint> indices = Pointer<uint>(indexCount);
+    uint32_t indexCount = 6 * gridSize.x * gridSize.y;
+    Pointer<uint32_t> indices = Pointer<uint32_t>(indexCount);
 
     // Loop through every square
-    uint i = 0;
-    for (uint iz = 0; iz < gridSize.y; iz++)
+    uint32_t i = 0;
+    for (uint32_t iz = 0; iz < gridSize.y; iz++)
     {
-      for (uint ix = 0; ix < gridSize.x; ix++)
+      for (uint32_t ix = 0; ix < gridSize.x; ix++)
       {
         if (iz < gridSize.y - 1)
         {
-          uint add = (ix != 0) ? 1 : 0;
+          uint32_t add = (ix != 0) ? 1 : 0;
           if (ix % 2 == iz % 2)
           {
             indices[i++] = IndexGrid(ix, iz,gridSize.x,gridSize.y) + add;
@@ -462,7 +463,7 @@ namespace Greet {
     return data;
   }
 
-  MeshData MeshFactory::Sphere(uint latitudes, uint longitudes, const Vec3f& pos, float radius)
+  MeshData MeshFactory::Sphere(uint32_t latitudes, uint32_t longitudes, const Vec3f& pos, float radius)
   {
     if(latitudes < 1 || longitudes < 4)
     {
@@ -471,19 +472,19 @@ namespace Greet {
       return Cube(pos, {radius, radius, radius});
     }
 
-    uint vertexCount = (longitudes + 1) * (latitudes + 2);
+    uint32_t vertexCount = (longitudes + 1) * (latitudes + 2);
     Pointer<Vec3f> vertices = Pointer<Vec3f>(vertexCount);
     Pointer<Vec2f> texCoords = Pointer<Vec2f>(vertexCount);
 
     float anglePitch = M_PI / (latitudes + 1);
     float angleYaw = 2 * M_PI / longitudes;
-    uint i = 0;
-    for(uint lon = 0; lon <= longitudes; ++lon)
+    uint32_t i = 0;
+    for(uint32_t lon = 0; lon <= longitudes; ++lon)
     {
       float angleYaw = 2 * M_PI * lon / longitudes;
       vertices[i] = pos + Vec3f{0, radius, 0};
       texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, 1};
-      for(uint lat = 0; lat < latitudes; ++lat)
+      for(uint32_t lat = 0; lat < latitudes; ++lat)
       {
         float anglePitch = (lat + 1) / (float)(latitudes + 2) * M_PI;
         float y = pos.y + radius * cos(anglePitch);
@@ -497,10 +498,10 @@ namespace Greet {
       texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, 0};
     }
 
-    uint indexCount = 2 * 3 * (longitudes) + 2 * 3 * longitudes * (latitudes - 1);
+    uint32_t indexCount = 2 * 3 * (longitudes) + 2 * 3 * longitudes * (latitudes - 1);
 
-    Pointer<uint> indices = Pointer<uint>(indexCount);
-    uint index = 0;
+    Pointer<uint32_t> indices = Pointer<uint32_t>(indexCount);
+    uint32_t index = 0;
 
     for(int lon = 0; lon < longitudes; lon++)
     {

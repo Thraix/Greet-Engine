@@ -1,12 +1,11 @@
 #include "FontAtlas.h"
 
-#include <math/Vec3.h>
 #include <internal/GreetGL.h>
 
 namespace Greet
 {
-  FontAtlas::FontAtlas(const std::string& asFilename, uint aiFontSize)
-    : miYPos{0}, miXPos{0}, miNextYPos{0}, miWidth{512}, miHeight{512}, mAtlas{Texture2D::Create(512, 512, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA))}, mvPixels(miWidth * miHeight * 4)
+  FontAtlas::FontAtlas(const std::string& asFilename, uint32_t aiFontSize)
+    : miYPos{0}, miXPos{0}, miNextYPos{0}, miWidth{512}, miHeight{512}, mAtlas{Texture2D::Create(512, 512, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA))}, mImageData{miWidth, miHeight}
   {
     if(FT_Init_FreeType(&mLibrary))
     {
@@ -18,8 +17,6 @@ namespace Greet
     }
 
     FT_Set_Pixel_Sizes(mFace, 0, aiFontSize);
-
-    memset(mvPixels.data(), 0, miWidth * miHeight * 4);
 
     miBaselineOffset = (mFace->size->metrics.ascender + mFace->size->metrics.descender) / 64;
 
@@ -53,8 +50,8 @@ namespace Greet
       return mvGlyphs.begin()->second;
     }
 
-    uint pixelWidth = mFace->glyph->bitmap.width;
-    uint pixelHeight = mFace->glyph->bitmap.rows;
+    uint32_t pixelWidth = mFace->glyph->bitmap.width;
+    uint32_t pixelHeight = mFace->glyph->bitmap.rows;
     if(miXPos + pixelWidth >= miWidth)
     {
       miXPos = 0;
@@ -63,15 +60,15 @@ namespace Greet
     // Set new y value.
     if(miYPos+pixelHeight > miNextYPos)
       miNextYPos = miYPos+pixelHeight;
-    for(uint y = 0;y<pixelHeight;y++)
+    for(uint32_t y = 0;y<pixelHeight;y++)
     {
-      for(uint x = 0;x<pixelWidth;x++)
+      for(uint32_t x = 0;x<pixelWidth;x++)
       {
         unsigned char a = mFace->glyph->bitmap.buffer[(x+y*pixelWidth)];
-        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+0] = 0xff;
-        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+1] = 0xff;
-        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+2] = 0xff;
-        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+3] = a;
+        mImageData.at(x + miXPos, y + miYPos, IMAGE_DATA_RED) = 0xff;
+        mImageData.at(x + miXPos, y + miYPos, IMAGE_DATA_GREEN) = 0xff;
+        mImageData.at(x + miXPos, y + miYPos, IMAGE_DATA_BLUE) = 0xff;
+        mImageData.at(x + miXPos, y + miYPos, IMAGE_DATA_ALPHA) = a;
       }
     }
     Glyph g;
@@ -85,31 +82,31 @@ namespace Greet
     g.mvTextureCoords = Vec4(miYPos / (float)miHeight, miXPos / (float)miWidth, (miYPos+pixelHeight)/(float)miHeight, (miXPos+pixelWidth)/(float)miWidth);
     miXPos += pixelWidth + 1;
     std::pair<std::map<char,  Glyph>::iterator, bool> ret = mvGlyphs.emplace(acCharacter, g);
-    mAtlas->SetPixels(mvPixels);
+    mAtlas->SetPixels(mImageData);
     return ret.first->second;
   }
 
-  uint FontAtlas::GetTextureId() const
+  uint32_t FontAtlas::GetTextureId() const
   {
     return mAtlas->GetTexId();
   }
 
-  uint FontAtlas::GetBaselineOffset() const
+  uint32_t FontAtlas::GetBaselineOffset() const
   {
     return miBaselineOffset;
   }
 
-  uint FontAtlas::GetMedianOffset() const
+  uint32_t FontAtlas::GetMedianOffset() const
   {
     return miMedianOffset;
   }
 
-  uint FontAtlas::GetMedianHeight() const
+  uint32_t FontAtlas::GetMedianHeight() const
   {
     return miMedianHeight;
   }
 
-  Ref<FontAtlas> FontAtlas::Create(const std::string& asFontname, uint aiFontSize)
+  Ref<FontAtlas> FontAtlas::Create(const std::string& asFontname, uint32_t aiFontSize)
   {
     return Ref<FontAtlas>{new FontAtlas(asFontname, aiFontSize)};
   }

@@ -16,8 +16,8 @@ namespace Greet {
 
   Group::~Group()
   {
-    uint size = m_renderables.size();
-    for (uint i = 0; i < size; i++)
+    uint32_t size = m_renderables.size();
+    for (uint32_t i = 0; i < size; i++)
       delete m_renderables[i];
   }
 
@@ -42,7 +42,7 @@ namespace Greet {
   {
     bool update = false;
     if (enable)
-      for (uint i = 0; i < m_renderables.size(); i++)
+      for (uint32_t i = 0; i < m_renderables.size(); i++)
         update |= m_renderables[i]->Update(timeElapsed);
     return update;
   }
@@ -56,7 +56,7 @@ namespace Greet {
   void Group::Render(const Ref<Renderer2D>& renderer) const
   {
     if (render)
-      for (uint i = 0; i < m_renderables.size(); i++)
+      for (uint32_t i = 0; i < m_renderables.size(); i++)
       {
         m_renderables[i]->Begin(renderer);
         m_renderables[i]->Render(renderer);

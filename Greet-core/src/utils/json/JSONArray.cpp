@@ -1,5 +1,7 @@
 #include "JSONArray.h"
 
+#include <logging/Log.h>
+#include <utils/json/JSON.h>
 #include <utils/json/JSONObject.h>
 
 namespace Greet {
@@ -51,8 +53,8 @@ namespace Greet {
   {
     os << JSON::get_indent() << "[\n";
     JSON::push_indent();
-    uint size = arr.m_objects.size();
-    for (uint i = 0;i<size;++i)
+    uint32_t size = arr.m_objects.size();
+    for (uint32_t i = 0;i<size;++i)
     {
       os << arr.GetObject(i);
       if(i != size - 1)

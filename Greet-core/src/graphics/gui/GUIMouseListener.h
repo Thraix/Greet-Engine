@@ -1,5 +1,7 @@
 #pragma once
+
 namespace Greet {
+
   class Content;
 
   struct GUIMouseListener

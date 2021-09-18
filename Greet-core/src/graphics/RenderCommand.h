@@ -1,9 +1,10 @@
 #pragma once
 
-#include <stack>
 #include <math/Vec2.h>
 #include <math/Vec4.h>
 #include <graphics/Color.h>
+
+#include <stack>
 
 namespace Greet
 {

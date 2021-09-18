@@ -30,4 +30,21 @@ namespace Greet
       return lhs.get() < rhs.get();
     }
   };
+
+  template <typename T>
+  using Ptr = std::unique_ptr<T>;
+
+  template <typename T, typename... Args>
+  Ptr<T> NewPtr(const Args&... args)
+  {
+    return std::make_unique<T>(args...);
+  }
+
+  template<class T> struct PtrLess
+  {
+    bool operator()(const Ptr<T>& lhs, const Ptr<T> rhs) const
+    {
+      return lhs.get() < rhs.get();
+    }
+  };
 }

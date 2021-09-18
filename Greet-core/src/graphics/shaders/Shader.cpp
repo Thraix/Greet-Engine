@@ -11,9 +11,9 @@
 
 namespace Greet {
 
-  static const uint SHADER_VERTEX = 0;
-  static const uint SHADER_FRAGMENT = 1;
-  static const uint SHADER_GEOMETRY = 2;
+  static const uint32_t SHADER_VERTEX = 0;
+  static const uint32_t SHADER_FRAGMENT = 1;
+  static const uint32_t SHADER_GEOMETRY = 2;
 
   Shader::Shader(const std::string& filename)
     : Resource(filename), m_shaderID{Load(filename)}, uniforms{GetUniforms(m_shaderID)}
@@ -37,20 +37,20 @@ namespace Greet {
     if(m_shaderID)
     {
       std::array<std::pair<std::string, bool>, 3> ret = ReadFile(filePath);
-      uint vertShader = CompileShader(m_shaderID, ret[0].first, GL_VERTEX_SHADER, false);
+      uint32_t vertShader = CompileShader(m_shaderID, ret[0].first, GL_VERTEX_SHADER, false);
       if(!vertShader)
         return;
-      uint fragShader = CompileShader(m_shaderID, ret[1].first, GL_FRAGMENT_SHADER, false);
+      uint32_t fragShader = CompileShader(m_shaderID, ret[1].first, GL_FRAGMENT_SHADER, false);
       if(!fragShader)
         return;
-      uint geomShader = 0;
+      uint32_t geomShader = 0;
       if(ret[2].second)
       {
         geomShader = CompileShader(m_shaderID, ret[2].first, GL_GEOMETRY_SHADER, false);
         if(!geomShader)
           return;
       }
-      GLCall(uint program = glCreateProgram());
+      GLCall(uint32_t program = glCreateProgram());
       AttachShader(program, vertShader);
       AttachShader(program, fragShader);
       if(geomShader)
@@ -68,7 +68,7 @@ namespace Greet {
         return;
       }
       GLCall(glValidateProgram(program));
-      uint oldProgram = m_shaderID;
+      uint32_t oldProgram = m_shaderID;
       m_shaderID = program;
       MoveUniforms(program, oldProgram);
       GLCall(glDeleteProgram(oldProgram));
@@ -78,7 +78,7 @@ namespace Greet {
       Log::Error("Invalid pointer");
   }
 
-  void Shader::MoveUniforms(uint program, uint oldProgram)
+  void Shader::MoveUniforms(uint32_t program, uint32_t oldProgram)
   {
     std::set<UniformData> oldUniforms = GetListOfUniforms(oldProgram);
     uniforms = GetUniforms(program);
@@ -172,13 +172,13 @@ namespace Greet {
         {
           if(it->arraySize == 1)
           {
-            uint i;
+            uint32_t i;
             GLCall(glGetUniformuiv(oldProgram, found->location, &i));
             SetUniform1ui(it->name, i);
           }
           else
           {
-            uint values[it->arraySize];
+            uint32_t values[it->arraySize];
             // For some reason GetnUniforms doesn't work
             // So you have to query each element individually...
             for(int i = 0;i<it->arraySize;i++)
@@ -227,7 +227,7 @@ namespace Greet {
     bool hasWritten[3] = {false, false, false};
 
     std::string line;
-    uint shader = SHADER_VERTEX;
+    uint32_t shader = SHADER_VERTEX;
     while (std::getline(stream, line))
     {
       if (line == "//vertex" || line == "#shader vertex")
@@ -254,7 +254,7 @@ namespace Greet {
     return {std::pair{ss[0].str(), hasWritten[0]}, {ss[1].str(), hasWritten[1]},{ss[2].str(), hasWritten[2]}};
   }
 
-  void Shader::ReadLineToStringStream(std::stringstream ss[3], const std::string& line, uint shaderIndex)
+  void Shader::ReadLineToStringStream(std::stringstream ss[3], const std::string& line, uint32_t shaderIndex)
   {
     ss[shaderIndex] << line << std::endl;
 
@@ -263,22 +263,22 @@ namespace Greet {
     ss[(shaderIndex + 2) % 3] << std::endl;
   }
 
-  uint Shader::Load(const std::string& filename)
+  uint32_t Shader::Load(const std::string& filename)
   {
     std::array<std::pair<std::string, bool>,3> ret =  ReadFile(filename);
     return Load(ret[0].first, ret[1].first, ret[2].first, ret[2].second);
   }
 
-  uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
+  uint32_t Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
   {
     return Load(vertSrc, fragSrc, "", false);
   }
 
-  uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry)
+  uint32_t Shader::Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry)
   {
-    GLCall(uint program = glCreateProgram());
+    GLCall(uint32_t program = glCreateProgram());
 
-    uint shader = CompileAttachShader(program, vertSrc, GL_VERTEX_SHADER, true);
+    uint32_t shader = CompileAttachShader(program, vertSrc, GL_VERTEX_SHADER, true);
     if (!shader)
       return LoadError(program);
     shader = CompileAttachShader(program, fragSrc, GL_FRAGMENT_SHADER, true);
@@ -307,7 +307,7 @@ namespace Greet {
     return program;
   }
 
-  uint Shader::LoadError(uint program)
+  uint32_t Shader::LoadError(uint32_t program)
   {
     glDeleteProgram(program);
     GLCall(program = glCreateProgram());
@@ -319,7 +319,7 @@ namespace Greet {
     return program;
   }
 
-  std::map<std::string, int> Shader::GetUniforms(uint program) const
+  std::map<std::string, int> Shader::GetUniforms(uint32_t program) const
   {
     std::map<std::string, int> uniforms;
     GLint numActiveUniforms = 0;
@@ -348,7 +348,7 @@ namespace Greet {
     return uniforms;
   }
 
-  std::set<UniformData> Shader::GetListOfUniforms(uint program) const
+  std::set<UniformData> Shader::GetListOfUniforms(uint32_t program) const
   {
     std::set<UniformData> uniforms;
     GLint numActiveUniforms = 0;
@@ -376,18 +376,18 @@ namespace Greet {
     return uniforms;
   }
 
-  uint Shader::CompileAttachShader(uint program, const std::string& shaderSrc, uint shaderType, bool safeFail)
+  uint32_t Shader::CompileAttachShader(uint32_t program, const std::string& shaderSrc, uint32_t shaderType, bool safeFail)
   {
-    uint shader = CompileShader(program, shaderSrc, shaderType, safeFail);
+    uint32_t shader = CompileShader(program, shaderSrc, shaderType, safeFail);
     if(shader == 0)
       return 0;
     AttachShader(program, shader);
     return 1;
   }
 
-  uint Shader::CompileShader(uint program, const std::string& shaderSrc, uint shaderType, bool safeFail)
+  uint32_t Shader::CompileShader(uint32_t program, const std::string& shaderSrc, uint32_t shaderType, bool safeFail)
   {
-    GLCall(uint shader = glCreateShader(shaderType));
+    GLCall(uint32_t shader = glCreateShader(shaderType));
     const char* src = shaderSrc.c_str();
     GLCall(glShaderSource(shader, 1, &src, NULL));
     GLCall(glCompileShader(shader));
@@ -454,13 +454,13 @@ namespace Greet {
 
 
 
-  void Shader::AttachShader(uint program, uint shader)
+  void Shader::AttachShader(uint32_t program, uint32_t shader)
   {
     GLCall(glAttachShader(program, shader));
     GLCall(glDeleteShader(shader));
   }
 
-  void Shader::BindAttributeOutput(uint attachmentId, const std::string& name) const
+  void Shader::BindAttributeOutput(uint32_t attachmentId, const std::string& name) const
   {
     GLCall(glBindFragDataLocation(m_shaderID,attachmentId,name.c_str()));
   }
@@ -483,7 +483,7 @@ namespace Greet {
     GLCall(glUniform1f(GetUniformLocation(name), value));
   }
 
-  void Shader::SetUniform1fv(const std::string& name, uint count, float* value) const
+  void Shader::SetUniform1fv(const std::string& name, uint32_t count, float* value) const
   {
     GLCall(glUniform1fv(GetUniformLocation(name), count, value));
   }
@@ -493,17 +493,17 @@ namespace Greet {
     GLCall(glUniform1i(GetUniformLocation(name), value));
   }
 
-  void Shader::SetUniform1iv(const std::string& name, uint count, int* value) const
+  void Shader::SetUniform1iv(const std::string& name, uint32_t count, int* value) const
   {
     GLCall(glUniform1iv(GetUniformLocation(name), count, value));
   }
 
-  void Shader::SetUniform1ui(const std::string& name, uint value) const
+  void Shader::SetUniform1ui(const std::string& name, uint32_t value) const
   {
     GLCall(glUniform1ui(GetUniformLocation(name), value));
   }
 
-  void Shader::SetUniform1uiv(const std::string& name, uint count, uint* value) const
+  void Shader::SetUniform1uiv(const std::string& name, uint32_t count, uint32_t* value) const
   {
     GLCall(glUniform1uiv(GetUniformLocation(name), count, value));
   }

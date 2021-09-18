@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include <logging/LogLevel.h>
 #include <logging/LogStream.h>
 

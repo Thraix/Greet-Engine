@@ -4,6 +4,7 @@
 #include <graphics/gui/GUIScene.h>
 #include <graphics/renderers/GUIRenderer.h>
 #include <math/Vec2.h>
+#include <utils/MetaFile.h>
 
 namespace Greet
 {

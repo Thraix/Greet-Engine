@@ -1,10 +1,8 @@
 #pragma once
 
-#include <unordered_map>
-
-#include <graphics/fonts/Font.h>
-#include <graphics/fonts/FontAtlas.h>
 #include <graphics/fonts/FontContainer.h>
+
+#include <unordered_map>
 
 namespace Greet {
   class FontManager
@@ -14,7 +12,7 @@ namespace Greet {
     public:
 
       static bool Add(const std::string& asFontname, const FontContainer& aFont);
-      static Font Get(const std::string& asFontname, uint aiSize);
+      static Font Get(const std::string& asFontname, uint32_t aiSize);
       static void Destroy();
     private:
       FontManager(){}

@@ -1,14 +1,10 @@
 #include "Noise.h"
-#include <string>
-#include <cmath>
-#include <cstring>
-#include <logging/Log.h>
-#include <math/MathFunc.h>
-#include <unordered_map>
+
+#include <math.h>
 
 namespace Greet {
 
-  float Noise::Eval(int x, int y,uint width, uint height, float stepX, float stepY, uint octaves, float persistance)
+  float Noise::Eval(int x, int y, uint32_t width, uint32_t height, float stepX, float stepY, uint32_t octaves, float persistance)
   {
 
     float totalPersistance = 0;
@@ -45,7 +41,7 @@ namespace Greet {
     return value / totalPersistance;
   }
 
-  float Noise::Smooth(int x, int y, uint octave)
+  float Noise::Smooth(int x, int y, uint32_t octave)
   {
     // Smooth values ( center * 0.5 + edges * 0.08333 + corners * 0.0416666)
     return PRNG(x, y, octave) * 0.5 +
@@ -53,7 +49,7 @@ namespace Greet {
       (PRNG(x-1, y-1, octave) + PRNG(x+1, y-1, octave) + PRNG(x-1, y+1, octave) + PRNG(x+1, y+1, octave)) * 0.0416666f;
   }
 
-  float Noise::Smooth(int x, int y, int z, int xCache, int yCache, int zCache, uint octave, NoiseData3D& data)
+  float Noise::Smooth(int x, int y, int z, int xCache, int yCache, int zCache, uint32_t octave, NoiseData3D& data)
   {
     float smoothCache = data.SmoothCache(xCache,yCache,zCache);
     if(smoothCache)
@@ -97,7 +93,7 @@ namespace Greet {
     return result;
   }
 
-  std::vector<float> Noise::GenNoise(uint width, uint height, uint length, uint octaves, uint stepX, uint stepY, uint stepZ, float persistance, int offsetX, int offsetY, int offsetZ)
+  std::vector<float> Noise::GenNoise(uint32_t width, uint32_t height, uint32_t length, uint32_t octaves, uint32_t stepX, uint32_t stepY, uint32_t stepZ, float persistance, int offsetX, int offsetY, int offsetZ)
   {
     std::vector<float> result(width * height * length);
     std::vector<float> smoothCache((width+1) * (height+1) * (length+1));
@@ -172,7 +168,7 @@ namespace Greet {
     return result;
   }
 
-  std::vector<float> Noise::GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, int offsetX, int offsetY)
+  std::vector<float> Noise::GenNoise(uint32_t width, uint32_t height, uint32_t octave, uint32_t stepX, uint32_t stepY, float persistance, int offsetX, int offsetY)
   {
     std::vector<float> result = std::vector<float>(width * height);
 

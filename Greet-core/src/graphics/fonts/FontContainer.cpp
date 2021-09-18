@@ -7,7 +7,7 @@ namespace Greet{
   {
   }
 
-  Font FontContainer::GetFont(uint aiSize)
+  Font FontContainer::GetFont(uint32_t aiSize)
   {
     // TODO: Automatically remove the fonts if it's not used anymore
     // (check if Ref<FontAtlas> has count 1)

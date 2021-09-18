@@ -1,9 +1,7 @@
 #pragma once
 
-#include <common/Types.h>
-#include <math/Maths.h>
 #include <graphics/textures/Texture2D.h>
-#include <graphics/textures/TextureManager.h>
+#include <math/Vec2.h>
 
 namespace Greet{
   class Sprite

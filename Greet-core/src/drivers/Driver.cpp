@@ -1,13 +1,9 @@
 #include "Driver.h"
 
-#include <logging/Log.h>
-
 namespace Greet {
   Driver::Driver(float time, DriverListener* listener)
     : m_time(time), m_elapsed(0), m_listener(listener)
-  {
-
-  }
+  {}
 
   void Driver::Preupdate(float timeElapsed)
   {

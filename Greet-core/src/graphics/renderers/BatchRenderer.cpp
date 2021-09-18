@@ -2,7 +2,8 @@
 
 #include <graphics/RenderCommand.h>
 #include <internal/GreetGL.h>
-#include <logging/Log.h>
+
+#include <numeric>
 
 namespace Greet {
 
@@ -27,7 +28,7 @@ namespace Greet {
     vao->AddVertexBuffer(vbo);
     vbo->Disable();
 
-    indices = new uint[RENDERER_INDICES_SIZE];
+    indices = new uint32_t[RENDERER_INDICES_SIZE];
     ibo = Buffer::Create(sizeof(indices), BufferType::INDEX, BufferDrawType::DYNAMIC);
     ibo->Disable();
     vao->SetIndexBuffer(ibo);
@@ -54,7 +55,7 @@ namespace Greet {
     DrawRect(renderable.GetPosition(), renderable.GetSize(), renderable.GetTexture(), renderable.GetTexPos(), renderable.GetTexSize(), renderable.GetColor());
   }
 
-  void BatchRenderer::DrawText(const std::string& text, const Vec2f& position, const Font& font, uint color)
+  void BatchRenderer::DrawText(const std::string& text, const Vec2f& position, const Font& font, uint32_t color)
   {
     float ts = GetTextureSlot(font.GetFontAtlasId());
     if (ts == 0 && font.GetFontAtlasId() != 0)
@@ -72,7 +73,7 @@ namespace Greet {
     Vec2f uv1;
     Vec2f roundPos = Vec2f(round(position.x), round(position.y));
     float x = roundPos.x;
-    for (uint i = 0;i < text.length();i++)
+    for (uint32_t i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
       pos.x = x + glyph.miBearingX;
@@ -97,12 +98,12 @@ namespace Greet {
     }
   }
 
-  void BatchRenderer::DrawRect(const Mat3& transform, uint color)
+  void BatchRenderer::DrawRect(const Mat3& transform, uint32_t color)
   {
     DrawRect(transform, nullptr, {0, 0}, {1,1}, color);
   }
 
-  void BatchRenderer::DrawRect(const Mat3& transform, const Ref<Texture2D>& texture, const Vec2f& texPos, const Vec2f& texSize, uint color)
+  void BatchRenderer::DrawRect(const Mat3& transform, const Ref<Texture2D>& texture, const Vec2f& texPos, const Vec2f& texSize, uint32_t color)
   {
     PushMatrix(transform);
 
@@ -118,9 +119,9 @@ namespace Greet {
     m_iboSize += 6;
   }
 
-  void BatchRenderer::DrawRect(const Vec2f& position, const Vec2f& size, const Ref<Texture2D>& texture, const Vec2f& texPos, const Vec2f& texSize, uint color)
+  void BatchRenderer::DrawRect(const Vec2f& position, const Vec2f& size, const Ref<Texture2D>& texture, const Vec2f& texPos, const Vec2f& texSize, uint32_t color)
   {
-    uint ts = GetTextureSlot(texture);
+    uint32_t ts = GetTextureSlot(texture);
 
     AppendVertexBuffer(Vec2f(position.x, position.y), Vec2f(texPos.x, texPos.y), ts, color);
     AppendVertexBuffer(Vec2f(position.x, position.y + size.y), Vec2f(texPos.x, texPos.y + texSize.y), ts, color);
@@ -130,9 +131,9 @@ namespace Greet {
     m_iboSize += 6;
   }
 
-  void BatchRenderer::Draw(const Vec2f& position, const Vec2f* vertices, uint amount, uint color)
+  void BatchRenderer::Draw(const Vec2f& position, const Vec2f* vertices, uint32_t amount, uint32_t color)
   {
-    for (uint i = 0; i < amount; i++)
+    for (uint32_t i = 0; i < amount; i++)
     {
       AppendVertexBuffer(position+vertices[i],Vec2f(0,0), 0, color);
     }
@@ -140,12 +141,12 @@ namespace Greet {
     m_iboSize += (amount-2)*3;
   }
 
-  void BatchRenderer::DrawRect(const Vec2f& position, const Vec2f& size, uint color)
+  void BatchRenderer::DrawRect(const Vec2f& position, const Vec2f& size, uint32_t color)
   {
     DrawRect(position, size, nullptr, {0, 0}, {1,1}, color);
   }
 
-  void BatchRenderer::DrawLine(const Vec2f& pos1, const Vec2f& pos2, float width, uint color)
+  void BatchRenderer::DrawLine(const Vec2f& pos1, const Vec2f& pos2, float width, uint32_t color)
   {
     Vec2f delta = pos2-pos1;
     float alpha = atan(delta.y / delta.x);
@@ -171,7 +172,7 @@ namespace Greet {
     m_iboSize += 6;
   }
 
-  void BatchRenderer::AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, uint texSlot, uint color)
+  void BatchRenderer::AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, uint32_t texSlot, uint32_t color)
   {
     m_buffer->vertex = *m_transformationBack*position;
     m_buffer->texCoord = texCoord;
@@ -180,23 +181,23 @@ namespace Greet {
     m_buffer++;
   }
 
-  uint BatchRenderer::GetTextureSlot(const Ref<Texture2D>& texture)
+  uint32_t BatchRenderer::GetTextureSlot(const Ref<Texture2D>& texture)
   {
     return GetTextureSlot(texture ? texture->GetTexId() : 0);
   }
 
-  uint BatchRenderer::GetTextureSlot(uint texID)
+  uint32_t BatchRenderer::GetTextureSlot(uint32_t texID)
   {
     if (texID == 0)
       return 0.0f;
-    uint ts = 0.0f;
+    uint32_t ts = 0.0f;
     bool found = false;
     const int size = m_texSlots.size();
     for (int i = 0; i < size; i++)
     {
       if (m_texSlots[i] == texID)
       {
-        ts = (uint)(i + 1);
+        ts = (uint32_t)(i + 1);
         found = true;
         break;
       }
@@ -210,7 +211,7 @@ namespace Greet {
         Begin();
       }
       m_texSlots.push_back(texID);
-      ts = (uint)(size + 1);
+      ts = (uint32_t)(size + 1);
     }
     return ts;
   }
@@ -225,7 +226,7 @@ namespace Greet {
   {
     RenderCommand::EnableDepthTest(false);
     RenderCommand::EnableCulling(false);
-    for (uint i = 0; i < m_texSlots.size(); i++)
+    for (uint32_t i = 0; i < m_texSlots.size(); i++)
     {
       GLCall(glActiveTexture(GL_TEXTURE0 + i));
       GLCall(glBindTexture(GL_TEXTURE_2D, m_texSlots[i]));
@@ -246,7 +247,7 @@ namespace Greet {
   void BatchRenderer::EnableBuffers()
   {
     vao->Enable();
-    ibo->UpdateData(indices, m_iboSize*sizeof(uint));
+    ibo->UpdateData(indices, m_iboSize*sizeof(uint32_t));
   }
 
   void BatchRenderer::DisableBuffers()
@@ -254,10 +255,10 @@ namespace Greet {
     vao->Disable();
   }
 
-  void BatchRenderer::AddIndicesPoly(uint vertices)
+  void BatchRenderer::AddIndicesPoly(uint32_t vertices)
   {
     vertices -= 2;
-    for (uint i = 0; i < vertices; i++)
+    for (uint32_t i = 0; i < vertices; i++)
     {
       indices[m_iboSize + 3 * i] = m_lastIndex;
       indices[m_iboSize + 3 * i + 1] = m_lastIndex + i+1;

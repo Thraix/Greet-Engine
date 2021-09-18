@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <utils/StringUtils.h>
 
 namespace Greet{
 
@@ -12,9 +11,9 @@ namespace Greet{
     float m_pitch;
     float m_pan;
 
-    AudioChannel(std::string name, float volume, float pitch, float pan);
-    AudioChannel(std::string name, float volume);
-    AudioChannel(std::string name);
+    AudioChannel(const std::string& name, float volume, float pitch, float pan);
+    AudioChannel(const std::string& name, float volume);
+    AudioChannel(const std::string& name);
 
     void SetVolume(float volume);
     void SetPitch(float pitch);

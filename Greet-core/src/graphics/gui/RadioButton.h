@@ -2,7 +2,6 @@
 
 #include <graphics/gui/Component.h>
 #include <graphics/gui/RadioGroup.h>
-#include <graphics/gui/Text.h>
 
 namespace Greet
 {

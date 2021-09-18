@@ -1,14 +1,13 @@
 #pragma once
 
-#include <common/Types.h>
-#include <malloc.h>
-#include <cstring>
-#include <initializer_list>
 #include <logging/Log.h>
+
+#include <cstring>
+#include <stdint.h>
+#include <malloc.h>
 
 namespace Greet
 {
-
   template <class T>
   class PointerIterator
   {
@@ -79,29 +78,29 @@ namespace Greet
       // Element count
       size_t size;
       T* data;
-      uint* refCount;
+      uint32_t* refCount;
 
     public:
-      Pointer(uint size)
+      Pointer(uint32_t size)
         : Pointer{nullptr, size}
       {
       }
 
-      Pointer(T* data, uint size)
-        : size{size}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1u}}
+      Pointer(T* data, uint32_t size)
+        : size{size}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint32_t{1u}}
       {
         if(data != nullptr)
           memcpy(this->data, data, size * sizeof(T));
       }
 
       Pointer(const std::initializer_list<T>& list)
-        : size{list.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1u}}
+        : size{list.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint32_t{1u}}
       {
         memcpy(data, list.begin(), size * sizeof(T));
       }
 
       Pointer(const std::vector<T>& vec)
-        : size{vec.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1u}}
+        : size{vec.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint32_t{1u}}
       {
           memcpy(data, vec.data(), size * sizeof(T));
         }
@@ -188,34 +187,34 @@ namespace Greet
         return *this;
       }
 
-      T& At(uint i)
+      T& At(uint32_t i)
       {
         ASSERT(i < size, "Index out of bound");
         return *(data + i);
       }
 
-      const T& At(uint i) const
+      const T& At(uint32_t i) const
       {
         ASSERT(i < size, "Index out of bound");
         return *(data + i);
       }
 
-      T& operator[](uint i)
+      T& operator[](uint32_t i)
       {
         return At(i);
       }
 
-      const T& operator[](uint i) const
+      const T& operator[](uint32_t i) const
       {
         return At(i);
       }
 
-      uint Size() const
+      uint32_t Size() const
       {
         return size;
       }
 
-      uint ByteSize() const
+      uint32_t ByteSize() const
       {
         return size * sizeof(T);
       }

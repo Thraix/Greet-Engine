@@ -80,10 +80,10 @@ namespace Greet
         Vec2f translatedPos = e.GetPosition() - componentPos;
         // TODO: In the future we probably want to do some smart, average character length
         // to determain around where the cursor should be.
-        std::vector<uint> widths{text.font.GetPartialWidths(str)};
+        std::vector<uint32_t> widths{text.font.GetPartialWidths(str)};
         auto it{widths.begin()};
         float w = -textOffset + GetTotalPadding().w;
-        uint index = 0;
+        uint32_t index = 0;
         while(it != widths.end() && w+*it <= translatedPos.x)
         {
           ++it;
@@ -241,7 +241,7 @@ namespace Greet
 
 
 
-  void TextBox::RemoveText(uint start, uint n = -1)
+  void TextBox::RemoveText(uint32_t start, uint32_t n = -1)
   {
     std::string before = str;
     if(n == -1)

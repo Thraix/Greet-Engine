@@ -1,9 +1,8 @@
 #pragma once
 
-#include <common/Types.h>
-
-#include <set>
 #include <random>
+#include <set>
+#include <stdint.h>
 
 namespace Greet {
 
@@ -14,18 +13,18 @@ namespace Greet {
       friend class Window;
     private:
       std::default_random_engine m_randomEngine;
-      std::uniform_int_distribution<uint> m_distribution;
-      std::set<uint> m_usedUUID;
+      std::uniform_int_distribution<uint32_t> m_distribution;
+      std::set<uint32_t> m_usedUUID;
 
     public:
-      uint GetUUID();
+      uint32_t GetUUID();
     public:
       static UUID& GetInstance() { return s_instance; }
     private:
       UUID();
       ~UUID() { }
-      uint GetRandomNumber();
-      uint GenNewUUID();
+      uint32_t GetRandomNumber();
+      uint32_t GenNewUUID();
       static UUID s_instance;
   };
 }

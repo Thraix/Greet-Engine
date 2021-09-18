@@ -1,14 +1,12 @@
 #pragma once
 
-#include <unordered_map>
-
-#include <graphics/gui/Style.h>
-#include <utils/MetaFile.h>
-#include <graphics/renderers/GUIRenderer.h>
-#include <event/MouseEvent.h>
-#include <event/KeyEvent.h>
 #include <graphics/gui/ComponentFactory.h>
 #include <graphics/gui/GUIScene.h>
+#include <graphics/gui/Style.h>
+#include <graphics/renderers/GUIRenderer.h>
+#include <utils/MetaFile.h>
+
+#include <unordered_map>
 
 namespace Greet
 {
@@ -172,7 +170,7 @@ namespace Greet
       Vec2f GetContentSize() const;
       const std::string& GetName() const;
 
-      uint GetComponentDepth() const;
+      uint32_t GetComponentDepth() const;
 
       template <typename T>
       T* GetComponentByName(const std::string& name)

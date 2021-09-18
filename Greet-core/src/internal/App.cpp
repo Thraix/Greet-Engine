@@ -1,18 +1,19 @@
 #include "App.h"
+
 #include <drivers/DriverDispatcher.h>
+#include <event/EventDispatcher.h>
+#include <graphics/GlobalSceneManager.h>
+#include <graphics/RenderCommand.h>
+#include <graphics/Window.h>
+#include <input/Input.h>
+#include <logging/Log.h>
+
 #include <chrono>
 #include <thread>
-#include <logging/Log.h>
-#include <graphics/GlobalSceneManager.h>
-#include <utility>
-#include <functional>
-#include <event/EventDispatcher.h>
-#include <input/Input.h>
-#include <graphics/RenderCommand.h>
 
 namespace Greet {
 
-  App::App(const std::string& title, uint width, uint height)
+  App::App(const std::string& title, uint32_t width, uint32_t height)
     : m_fps(0), m_ups(0)
   {
     using namespace std::placeholders;
@@ -43,8 +44,8 @@ namespace Greet {
     double updateTick = frameCap;
     double renderTimer = 0.0f;
 
-    uint frames = 0;
-    uint updates = 0;
+    uint32_t frames = 0;
+    uint32_t updates = 0;
 
     while (!Window::Closed())
     {

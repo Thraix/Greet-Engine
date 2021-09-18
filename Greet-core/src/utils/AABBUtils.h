@@ -1,6 +1,6 @@
 #pragma once
 
-#include <math/Maths.h>
+#include <math/Vec2.h>
 
 namespace Greet {
   struct AABBUtils

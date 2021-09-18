@@ -1,10 +1,13 @@
 #pragma once
 
-#include <unordered_map>
-#include <string>
-#include <fstream>
-#include <utils/StringUtils.h>
 #include <logging/Log.h>
+#include <utils/StringUtils.h>
+
+#include <fstream>
+#include <string>
+#include <unordered_map>
+
+// TODO: Move implementation to cpp file
 
 namespace Greet
 {

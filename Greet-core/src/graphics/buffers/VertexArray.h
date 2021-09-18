@@ -1,9 +1,10 @@
 #pragma once
 
-#include <vector>
-#include <common/Types.h>
 #include <common/Memory.h>
 #include <graphics/buffers/VertexBuffer.h>
+
+#include <stdint.h>
+#include <vector>
 
 namespace Greet {
 
@@ -15,7 +16,7 @@ namespace Greet {
   class VertexArray final
   {
     private:
-      uint id;
+      uint32_t id;
       std::vector<Ref<VertexBuffer>> buffers;
       Ref<Buffer> indexBuffer;
     private:
@@ -28,7 +29,7 @@ namespace Greet {
       void AddVertexBuffer(const Ref<VertexBuffer>& buffer);
       void SetIndexBuffer(const Ref<Buffer>& indexBuffer);
 
-      void Render(DrawType type, uint count);
+      void Render(DrawType type, uint32_t count);
 
     public:
       static Ref<VertexArray> Create();

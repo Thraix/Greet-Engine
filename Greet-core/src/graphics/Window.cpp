@@ -6,15 +6,16 @@
 #include <event/MouseEvent.h>
 #include <event/ViewportEvent.h>
 #include <event/WindowEvent.h>
+#include <graphics/GlobalSceneManager.h>
 #include <graphics/RenderCommand.h>
 #include <graphics/atlas/AtlasManager.h>
 #include <graphics/fonts/FontManager.h>
 #include <graphics/gui/ComponentFactory.h>
+#include <graphics/textures/TextureManager.h>
 #include <input/Input.h>
 #include <input/InputDefines.h>
 #include <internal/GreetGL.h>
 #include <scripting/NativeScriptHandler.h>
-#include <graphics/GlobalSceneManager.h>
 #include <utils/HotSwapping.h>
 
 namespace Greet {
@@ -23,8 +24,8 @@ namespace Greet {
   bool Window::focus;
   Vec2f Window::mousePos;
   Vec2f Window::mousePosPixel;
-  uint Window::width;
-  uint Window::height;
+  uint32_t Window::width;
+  uint32_t Window::height;
   std::string Window::title;
   GLFWwindow *Window::window;
   bool Window::mouseButtonDown[MAX_MOUSEBUTTONS];
@@ -32,7 +33,7 @@ namespace Greet {
   bool Window::isMouseGrabbed = false;
 
 
-  void Window::CreateWindow(std::string title, uint width, uint height)
+  void Window::CreateWindow(std::string title, uint32_t width, uint32_t height)
   {
     focus = true;
     Window::title = title;
@@ -189,7 +190,7 @@ namespace Greet {
     isMouseButtonDown = mouseButtonDown[button];
     if(!isMouseButtonDown)
     {
-      for (uint i = 0;i < MAX_MOUSEBUTTONS;i++)
+      for (uint32_t i = 0;i < MAX_MOUSEBUTTONS;i++)
       {
         if (mouseButtonDown[i])
         {
@@ -215,7 +216,7 @@ namespace Greet {
     EventDispatcher::OnEvent(MouseScrollEvent{(float)scrollX, (float)scrollY});
   }
 
-  void Window::key_char_callback(GLFWwindow* window, uint charCode)
+  void Window::key_char_callback(GLFWwindow* window, uint32_t charCode)
   {
     EventDispatcher::OnEvent(KeyTypeEvent{charCode});
   }
@@ -251,13 +252,13 @@ namespace Greet {
     glfwSetWindowTitle(window, title.c_str());
   }
 
-  Joystick* Window::GetJoystick(uint joystick)
+  Joystick* Window::GetJoystick(uint32_t joystick)
   {
     ASSERT(joystick < GREET_JOYSTICKS, "Invalid Joystick. Ranges from 0-3: ", joystick);
     return (joysticks[joystick]).get();
   }
 
-  bool Window::IsJoystickConnected(uint joystick)
+  bool Window::IsJoystickConnected(uint32_t joystick)
   {
     ASSERT(joystick < GREET_JOYSTICKS, "Invalid Joystick. Ranges from 0-3: ", joystick);
     return joysticks[joystick]->m_connected;

@@ -1,6 +1,6 @@
 #include "Chunk.h"
 
-#include <graphics/models/MeshFactory.h> 
+#include <graphics/models/MeshFactory.h>
 
 using namespace Greet;
 
@@ -84,7 +84,7 @@ void Chunk::CalcGridVertexOffset(MeshData* data)
   const Pointer<Vec3f>& vertices = data->GetVertices();
   const Pointer<uint>& indices = data->GetIndices();
 
-  Pointer<byte> offsets(4 * vertices.Size());
+  Pointer<uint8_t> offsets(4 * vertices.Size());
   for (int i = 0;i < indices.Size();i+=3)
   {
     Vec3f v1 = vertices[indices[i+1]] - vertices[indices[i]];

@@ -49,7 +49,7 @@ namespace Greet {
     }
   }
 
-  bool ParticlePool::create(Vec2 pos, Vec2 size, Vec2 vel, Vec2 acc, uint color, float minspeed, float maxspeed, float frameTime, Sprite* sprite)
+  bool ParticlePool::create(Vec2 pos, Vec2 size, Vec2 vel, Vec2 acc, uint32_t color, float minspeed, float maxspeed, float frameTime, Sprite* sprite)
   {
     if (m_free.begin() != m_free.end()){
       (*m_free.begin())->define(pos, size, vel, acc, color, minspeed, maxspeed, frameTime, sprite);
@@ -67,12 +67,12 @@ namespace Greet {
       m_particles.insert(m_particles.begin(),particle);*/
   }
 
-  uint ParticlePool::usedParticles() const
+  uint32_t ParticlePool::usedParticles() const
   {
     return m_usedParticles;
   }
 
-  uint ParticlePool::freeParticles() const
+  uint32_t ParticlePool::freeParticles() const
   {
     return m_particles-m_usedParticles;
   }

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <graphics/renderers/GUIRenderer.h>
-#include <graphics/gui/Text.h>
 #include <graphics/gui/TLBR.h>
 
+#include <functional>
 #include <vector>
 #include <string>
 

@@ -39,7 +39,7 @@ namespace Greet
       }
     );
     LoadStyles(object);
-    for (uint i = 0;i < object.GetObjectCount();i++)
+    for (uint32_t i = 0;i < object.GetObjectCount();i++)
     {
       Component* component = ComponentFactory::GetComponent(object.GetObject(i), this);
       if(StringUtils::StartsWith(component->GetName(),"Failed#"))
@@ -260,7 +260,7 @@ namespace Greet
       component->SetGUIScene(guiScene);
   }
 
-  Component* Container::RemoveComponent(uint index)
+  Component* Container::RemoveComponent(uint32_t index)
   {
     if (index >= m_components.size())
     {
@@ -286,7 +286,7 @@ namespace Greet
     return NULL;
   }
 
-  Component* Container::GetComponent(uint index)
+  Component* Container::GetComponent(uint32_t index)
   {
     if (index >= m_components.size())
     {

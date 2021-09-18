@@ -1,28 +1,28 @@
 #pragma once
 
-#include <common/Types.h>
 #include <graphics/textures/Texture2D.h>
-#include <map>
+
+#include <stdint.h>
 
 namespace Greet {
 
   class Framebuffer
   {
     private:
-      uint width;
-      uint height;
+      uint32_t width;
+      uint32_t height;
       bool hdr;
-      uint fbo;
+      uint32_t fbo;
       Ref<Texture2D> colorTexture;
-      uint depthBuffer;
+      uint32_t depthBuffer;
     public:
-      Framebuffer(uint width, uint height, bool hdr);
+      Framebuffer(uint32_t width, uint32_t height, bool hdr);
       virtual ~Framebuffer();
       void Bind();
       void Unbind();
-      void Resize(uint _width, uint _height);
+      void Resize(uint32_t _width, uint32_t _height);
       const Ref<Texture2D>& GetColorTexture() const { return colorTexture; };
-      uint GetWidth() const { return width; };
-      uint GetHeight() const { return height; };
+      uint32_t GetWidth() const { return width; };
+      uint32_t GetHeight() const { return height; };
   };
 }

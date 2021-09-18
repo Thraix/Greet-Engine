@@ -1,7 +1,5 @@
 #pragma once
 
-#include <initializer_list>
-
 #include <graphics/gui/Component.h>
 #include <graphics/gui/Text.h>
 #include <graphics/gui/TreeNode.h>
@@ -9,7 +7,6 @@
 
 namespace Greet
 {
-
 
   class TreeView : public Component
   {

@@ -1,14 +1,14 @@
 #pragma once
 
 #include <event/Event.h>
-#include <graphics/shaders/Shader.h>
 #include <event/ViewportEvent.h>
-#include <event/WindowEvent.h>
-#include <graphics/RenderCommand.h>
-#include <graphics/Window.h>
-#include <logging/Log.h>
+#include <graphics/shaders/Shader.h>
 #include <math/Line.h>
-#include <math/Maths.h>
+#include <math/Mat4.h>
+#include <math/Vec2.h>
+#include <math/Vec3.h>
+
+// TODO: Move implementation to cpp file
 
 namespace Greet {
   class Camera3D {

@@ -7,7 +7,6 @@
 #include <audio/SoundManager.h>
 #include <common/Memory.h>
 #include <common/Pointer.h>
-#include <common/Types.h>
 #include <drivers/Driver.h>
 #include <drivers/Driver1.h>
 #include <drivers/Driver2.h>
@@ -136,6 +135,7 @@
 #include <utils/ErrorHandle.h>
 #include <utils/FileUtils.h>
 #include <utils/HotSwapping.h>
+#include <utils/ImageData.h>
 #include <utils/ImageUtils.h>
 #include <utils/LogUtils.h>
 #include <utils/MetaFile.h>

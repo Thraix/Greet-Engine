@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace Greet {
 
   class DriverListener

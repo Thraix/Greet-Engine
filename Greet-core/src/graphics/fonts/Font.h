@@ -1,8 +1,9 @@
 #pragma once
 
-#include <common/Types.h>
-#include <string>
+#include <common/Memory.h>
 #include <graphics/fonts/FontAtlas.h>
+
+#include <string>
 
 namespace Greet{
 
@@ -13,26 +14,26 @@ namespace Greet{
     private:
       Ref<FontAtlas> mAtlas;
       FontContainer* mContainer;
-      uint mfSize;
+      uint32_t mfSize;
 
     public:
-      Font(const Ref<FontAtlas>& aAtlas, FontContainer* aContainer, uint aiSize);
+      Font(const Ref<FontAtlas>& aAtlas, FontContainer* aContainer, uint32_t aiSize);
 
       const Ref<FontAtlas>& GetFontAtlas() const;
-      uint GetFontAtlasId() const;
+      uint32_t GetFontAtlasId() const;
 
 
       const std::string& GetName() const;
 
-      uint GetSize() const;
-      uint GetBaselineOffset() const;
-      uint GetMedianOffset() const;
-      uint GetMedianHeight() const;
+      uint32_t GetSize() const;
+      uint32_t GetBaselineOffset() const;
+      uint32_t GetMedianOffset() const;
+      uint32_t GetMedianHeight() const;
 
-      uint GetWidthOfText(const std::string& asText, uint startPos, uint endPos) const;
-      uint GetWidthOfText(const std::string& asText) const;
-      uint GetWidthOfText(const std::string_view& asText) const;
+      uint32_t GetWidthOfText(const std::string& asText, uint32_t startPos, uint32_t endPos) const;
+      uint32_t GetWidthOfText(const std::string& asText) const;
+      uint32_t GetWidthOfText(const std::string_view& asText) const;
 
-      std::vector<uint> GetPartialWidths(const std::string& asText) const;
+      std::vector<uint32_t> GetPartialWidths(const std::string& asText) const;
   };
 }

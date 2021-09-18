@@ -1,7 +1,6 @@
 #pragma once
 
 #include <math/Maths.h>
-#include <common/Types.h>
 
 namespace Greet {
 	class KeyboardControl
@@ -15,13 +14,13 @@ namespace Greet {
 		bool yNeg;
 		bool xPos;
 		bool xNeg;
-		uint yPosKey;
-		uint yNegKey;
-		uint xPosKey;
-		uint xNegKey;
+		uint32_t yPosKey;
+		uint32_t yNegKey;
+		uint32_t xPosKey;
+		uint32_t xNegKey;
 
 	public:
-		KeyboardControl(uint xPosKey, uint xNegKey, uint yPosKey, uint yNegKey, float speed)
+		KeyboardControl(uint32_t xPosKey, uint32_t xNegKey, uint32_t yPosKey, uint32_t yNegKey, float speed)
 			:xPosKey(xPosKey), xNegKey(xNegKey),yPosKey(yPosKey),yNegKey(yNegKey), speed(speed)
 		{
 			yPos = false;

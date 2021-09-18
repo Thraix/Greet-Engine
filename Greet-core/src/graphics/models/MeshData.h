@@ -1,10 +1,10 @@
 #pragma once
 
-#include <math/Maths.h>
-#include <graphics/buffers/VertexBuffer.h>
-#include <vector>
-#include <functional>
 #include <common/Pointer.h>
+#include <graphics/buffers/VertexBuffer.h>
+#include <math/Vec3.h>
+
+#include <vector>
 
 #define MESH_VERTICES_LOCATION	0
 #define MESH_TEXCOORDS_LOCATION 1
@@ -18,10 +18,10 @@ namespace Greet {
     friend class Mesh;
     private:
       Pointer<Vec3f> m_vertices;
-      Pointer<uint> m_indices;
+      Pointer<uint32_t> m_indices;
       std::vector<std::pair<BufferAttribute, Pointer<char>>> m_data;
     public:
-      MeshData(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices);
+      MeshData(const Pointer<Vec3f>& vertices, const Pointer<uint32_t>& indices);
       ~MeshData() {}
 
       void AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data)
@@ -40,11 +40,11 @@ namespace Greet {
       std::pair<BufferAttribute, Pointer<char>>* RemoveAttribute(int location);
 
       const Pointer<Vec3f>& GetVertices() const { return m_vertices; }
-      const Pointer<uint>& GetIndices() const { return m_indices; }
+      const Pointer<uint32_t>& GetIndices() const { return m_indices; }
       Pointer<Vec3f>& GetVertices() { return m_vertices; }
-      Pointer<uint>& GetIndices() { return m_indices; }
-      uint GetVertexCount() const { return m_vertices.Size(); }
-      uint GetIndexCount() const { return m_indices.Size(); }
+      Pointer<uint32_t>& GetIndices() { return m_indices; }
+      uint32_t GetVertexCount() const { return m_vertices.Size(); }
+      uint32_t GetIndexCount() const { return m_indices.Size(); }
 
       void GenerateNormals();
       MeshData* LowPolify();

@@ -5,7 +5,7 @@
 
 namespace Greet{
 
-  Font::Font(const Ref<FontAtlas>& aAtlas, FontContainer* aContainer, uint aiSize)
+  Font::Font(const Ref<FontAtlas>& aAtlas, FontContainer* aContainer, uint32_t aiSize)
     : mAtlas(aAtlas), mContainer{aContainer}, mfSize(aiSize)
   {}
 
@@ -14,7 +14,7 @@ namespace Greet{
     return mAtlas;
   }
 
-  uint Font::GetFontAtlasId() const
+  uint32_t Font::GetFontAtlasId() const
   {
     return mAtlas->GetTextureId();
   }
@@ -24,30 +24,30 @@ namespace Greet{
     return mContainer->GetName();
   }
 
-  uint Font::GetSize() const
+  uint32_t Font::GetSize() const
   {
     return mfSize;
   }
 
-  uint Font::GetBaselineOffset() const
+  uint32_t Font::GetBaselineOffset() const
   {
     return mAtlas->GetBaselineOffset();
   }
 
-  uint Font::GetMedianOffset() const
+  uint32_t Font::GetMedianOffset() const
   {
     return mAtlas->GetMedianOffset();
   }
 
-  uint Font::GetMedianHeight() const
+  uint32_t Font::GetMedianHeight() const
   {
     return mAtlas->GetMedianHeight();
   }
 
-  uint Font::GetWidthOfText(const std::string_view& asText) const
+  uint32_t Font::GetWidthOfText(const std::string_view& asText) const
   {
-    uint width = 0;
-    for (uint i = 0;i < asText.size();i++)
+    uint32_t width = 0;
+    for (uint32_t i = 0;i < asText.size();i++)
     {
       const Glyph& glyph = mAtlas->GetGlyph(asText[i]);
       // If it is the last char do not include the advancement
@@ -59,7 +59,7 @@ namespace Greet{
     return width;
   }
 
-  uint Font::GetWidthOfText(const std::string& asText, uint aiStartPos, uint aiEndPos) const
+  uint32_t Font::GetWidthOfText(const std::string& asText, uint32_t aiStartPos, uint32_t aiEndPos) const
   {
     if (aiStartPos > asText.size() || aiEndPos < aiStartPos || aiEndPos > asText.size())
     {
@@ -69,18 +69,18 @@ namespace Greet{
     return GetWidthOfText(std::string_view(asText.c_str() + aiStartPos, aiEndPos - aiStartPos));
   }
 
-  uint Font::GetWidthOfText(const std::string& asText) const
+  uint32_t Font::GetWidthOfText(const std::string& asText) const
   {
     return GetWidthOfText(asText, 0, asText.size());
   }
 
-  std::vector<uint> Font::GetPartialWidths(const std::string& asText) const
+  std::vector<uint32_t> Font::GetPartialWidths(const std::string& asText) const
   {
     float width = 0;
 
-    std::vector<uint> widths;
+    std::vector<uint32_t> widths;
 
-    for (uint i = 0;i < asText.size();i++)
+    for (uint32_t i = 0;i < asText.size();i++)
     {
       const Glyph& glyph = mAtlas->GetGlyph(asText[i]);
       widths.push_back(width);

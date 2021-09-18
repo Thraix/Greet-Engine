@@ -1,5 +1,4 @@
-#ifndef _GREETGL_H_
-#define _GREETGL_H_
+#pragma once
 
 #include <utils/LogUtils.h>
 #include <logging/Log.h>
@@ -35,5 +34,3 @@ static void GLLogError(const char* glCall, const char* file, int line, bool asse
 #else
 #define GLCall(x) x
 #endif
-
-#endif // _GREETGL_H_

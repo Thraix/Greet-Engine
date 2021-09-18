@@ -4,7 +4,7 @@
 
 namespace Greet
 {
-  uint Resource::s_Id = 0;
+  uint32_t Resource::s_Id = 0;
 
   Resource::Resource(const std::string& filePath)
     : id{++s_Id}, modDate{FileUtils::GetTimeModified(filePath)}, filePath{filePath}

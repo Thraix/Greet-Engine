@@ -92,10 +92,10 @@ namespace Greet{
     }
     else
     {
-      uint width, height;
-      auto data = ImageFactory::GetCantReadImage(&width, &height);
+      uint32_t width, height;
+      auto data = ImageFactory::GetCantReadImage();
       Log::Error("No texture found in meta file: ", metaFile);
-      static Ref<CubeMap> invalid{new CubeMap(data, width, height)};
+      static Ref<CubeMap> invalid{new CubeMap(data)};
       return invalid;
     }
   }
@@ -123,9 +123,9 @@ namespace Greet{
     else
     {
       Log::Error("No texture found in meta file: ", metaFile);
-      uint width, height;
-      auto data = ImageFactory::GetCantReadImage(&width, &height);
-      static Ref<Texture2D> invalid{Texture2D::Create(data, width, height)};
+      uint32_t width, height;
+      auto data = ImageFactory::GetCantReadImage();
+      static Ref<Texture2D> invalid{Texture2D::Create(data)};
       return invalid;
     }
   }

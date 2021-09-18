@@ -1,19 +1,12 @@
 #pragma once
 
-#include <math/Maths.h>
-#include <graphics/models/EntityModel.h>
 #include <graphics/cameras/Camera3D.h>
-#include <graphics/Skybox.h>
-#include <graphics/layers/Scene.h>
-
+#include <graphics/shaders/Shader.h>
 
 namespace Greet{
 
   class Renderer3D
   {
-
-    protected:
-
     public:
       Renderer3D()
       {}

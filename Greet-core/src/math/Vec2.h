@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cmath>
 #include <iostream>
 #include <math/Vec3.h>
 #include <math/Vec4.h>
@@ -213,13 +212,13 @@ namespace Greet{
         return Vec2(-first.x, -first.y);
       }
 
-      T& operator[](uint i)
+      T& operator[](uint32_t i)
       {
         ASSERT(i < 2, "Index out of bound");
         return *((&x)+i);
       }
 
-      const T& operator[](uint i) const
+      const T& operator[](uint32_t i) const
       {
         ASSERT(i < 2, "Index out of bound");
         return *((&x)+i);

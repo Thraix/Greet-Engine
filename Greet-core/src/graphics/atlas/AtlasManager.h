@@ -1,7 +1,9 @@
 #pragma once
 
-#include <vector>
+#include <common/Memory.h>
 #include <graphics/atlas/Atlas.h>
+
+#include <map>
 
 namespace Greet {
   class AtlasManager

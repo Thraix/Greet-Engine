@@ -1,6 +1,5 @@
 #pragma once
 
-#include <math/Maths.h>
 #include <event/Event.h>
 
 namespace Greet {
@@ -15,7 +14,7 @@ namespace Greet {
     public:
       int GetJoystick() const { return joystick; }
       int GetButton() const { return button; }
-      uint GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
+      uint32_t GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
   };
 
   class JoystickPressEvent : public JoystickButtonEvent
@@ -63,7 +62,7 @@ namespace Greet {
       float GetDY() const { return dy; }
 
       EventType GetType() const {return EventType::JOYSTICK_STICK_MOVE;}
-      uint GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
+      uint32_t GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
   };
 
   class JoystickTriggerMoveEvent : public Event
@@ -85,7 +84,7 @@ namespace Greet {
       float GetDeltaValue() const { return dVal; }
 
       EventType GetType() const {return EventType::JOYSTICK_STICK_MOVE;}
-      uint GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
+      uint32_t GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
   };
 
   class JoystickConnectionEvent : public Event
@@ -99,7 +98,7 @@ namespace Greet {
       {}
     public:
       int GetJoystick() const { return joystick; }
-      uint GetCategory() const {return JOYSTICK_EVENT;}
+      uint32_t GetCategory() const {return JOYSTICK_EVENT;}
   };
 
   class JoystickConnectEvent : public JoystickConnectionEvent

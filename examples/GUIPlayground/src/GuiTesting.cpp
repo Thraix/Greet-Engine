@@ -1,4 +1,5 @@
 #include <Greet.h>
+
 #include <functional>
 
 #include "TestScene.h"
@@ -9,7 +10,7 @@ class Layer2D : public Layer
 {
   public:
     Layer2D()
-      : Layer{new BatchRenderer(ShaderFactory::Shader2D()), Mat3{1}}
+      : Layer{NewRef<BatchRenderer>(ShaderFactory::Shader2D()), Mat3{1}}
     {}
 
     virtual void ViewportResize(ViewportResizeEvent& event) override
@@ -27,7 +28,7 @@ class Core : public App
     float progressBarValue;
     Ref<Layer2D> layer;
     SceneView* editorView;
-    Renderable2D* renderable;
+    Ref<Renderable2D> renderable;
   public:
     Core()
       : App("GUI Testing", 960, 540)
@@ -40,7 +41,7 @@ class Core : public App
 
     void Init() override
     {
-      renderable = new Renderable2D({0, 0}, {70, 70}, 0xffffffff);
+      renderable = NewRef<Renderable2D>(Vec2f{0, 0}, Vec2f{70, 70}, 0xffffffff);
       /* GlobalSceneManager::GetSceneManager().Add2DScene(new TestScene(), "testscene"); */
       /* return; */
       layer = NewRef<Layer2D>();

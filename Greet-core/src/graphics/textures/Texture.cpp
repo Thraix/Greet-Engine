@@ -4,20 +4,20 @@
 
 namespace Greet {
 
-  Texture::Texture(uint textureType, bool generateTexture)
+  Texture::Texture(uint32_t textureType, bool generateTexture)
     : texId{0}, m_textureType{textureType}
   {
-    ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum: ", (uint)m_textureType);
+    ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum: ", (uint32_t)m_textureType);
     if(generateTexture)
     {
-      uint id;
+      uint32_t id;
       glGenTextures(1, &id);
       texId = id;
       Enable();
     }
   }
 
-  Texture::Texture(uint texId, uint textureType)
+  Texture::Texture(uint32_t texId, uint32_t textureType)
     : texId{texId}, m_textureType{textureType}
   {
     ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum");
@@ -39,7 +39,7 @@ namespace Greet {
     GLCall(glBindTexture(m_textureType, texId));
   }
 
-  void Texture::Enable(uint index) const
+  void Texture::Enable(uint32_t index) const
   {
     GLCall(glActiveTexture(GL_TEXTURE0 + index));
     GLCall(glBindTexture(m_textureType, texId));
@@ -50,7 +50,7 @@ namespace Greet {
     GLCall(glBindTexture(m_textureType, 0));
   }
 
-  uint Texture::GetTexId() const
+  uint32_t Texture::GetTexId() const
   {
     return texId;
   }

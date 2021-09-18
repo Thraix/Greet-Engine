@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vector>
 #include <graphics/gui/Component.h>
-#include <utils/xml/XML.h>
+#include <utils/xml/XMLObject.h>
+
+#include <vector>
 
 namespace Greet {
   class Container : public Component
@@ -35,9 +36,9 @@ namespace Greet {
       virtual void UpdateHandle(float timeElapsed) override;
 
       void AddComponent(Component* component);
-      Component* RemoveComponent(uint index);
+      Component* RemoveComponent(uint32_t index);
       Component* RemoveComponent(Component* component);
-      Component* GetComponent(uint index);
+      Component* GetComponent(uint32_t index);
       size_t GetComponentCount() const;
 
       virtual void LoadFrameStyle(const MetaFile& metaFile) override;

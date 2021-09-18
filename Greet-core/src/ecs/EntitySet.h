@@ -1,9 +1,12 @@
 #pragma once
 
+#include <ecs/Config.h>
+
+#include <stddef.h>
 #include <unordered_map>
 #include <vector>
 
-#include <ecs/Config.h>
+// TODO: Move implementation to cpp file
 
 namespace Greet
 {

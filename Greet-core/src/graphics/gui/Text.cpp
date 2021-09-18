@@ -30,7 +30,7 @@ overlapMode = OverlapMode::Wrap;
 
     for(auto&& line : lines)
     {
-      uint widthOfText = font.GetWidthOfText(line);
+      uint32_t widthOfText = font.GetWidthOfText(line);
       if(align == Align::Left)
         offset.x = 0;
       else if(align == Align::Center)
@@ -55,7 +55,7 @@ overlapMode = OverlapMode::Wrap;
       size_t previousEnd = end;
       while(end != std::string::npos)
       {
-        uint width = font.GetWidthOfText(str, begin, end);
+        uint32_t width = font.GetWidthOfText(str, begin, end);
         if(width > maxWidth)
         {
           lines.push_back(str.substr(begin, previousEnd - begin));
@@ -65,7 +65,7 @@ overlapMode = OverlapMode::Wrap;
         end = str.find(' ', end + 1);
       }
 
-      uint width = font.GetWidthOfText(str, begin, str.size());
+      uint32_t width = font.GetWidthOfText(str, begin, str.size());
       if(width > maxWidth)
       {
         lines.push_back(str.substr(begin, previousEnd - begin));
@@ -77,7 +77,7 @@ overlapMode = OverlapMode::Wrap;
     else
     {
       std::string text = str;
-      uint widthOfText = font.GetWidthOfText(text);
+      uint32_t widthOfText = font.GetWidthOfText(text);
       if(overlapMode == OverlapMode::Dots)
       {
         if(widthOfText > maxWidth)

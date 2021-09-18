@@ -5,6 +5,7 @@
 #endif
 
 #include <logging/Log.h>
+
 #include <math/MathFunc.h>
 #include <math/Quaternion.h>
 #include <math/Vec4.h>
@@ -225,13 +226,13 @@ namespace Greet{
       return Vec3(c / vec.x, c / vec.y, c / vec.z);
     }
 
-    const T& operator[](uint i) const
+    const T& operator[](uint32_t i) const
     {
       ASSERT(i < 3, "Index out of bound");
       return *((&x)+i);
     }
 
-    T& operator[](uint i)
+    T& operator[](uint32_t i)
     {
       ASSERT(i < 3, "Index out of bound");
       return *((&x)+i);

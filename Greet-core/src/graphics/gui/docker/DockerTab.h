@@ -1,11 +1,7 @@
 #pragma once
 
 #include <graphics/gui/Component.h>
-#include <graphics/gui/docker/DockerInterface.h>
-#include <utils/xml/XML.h>
-
-#include <vector>
-#include <variant>
+#include <utils/xml/XMLObject.h>
 
 namespace Greet {
 

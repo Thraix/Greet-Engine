@@ -1,5 +1,7 @@
 #include "Log.h"
 
+#include <iostream>
+
 namespace Greet {
 
   Log Log::m_log;

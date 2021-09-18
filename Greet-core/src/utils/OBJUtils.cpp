@@ -1,8 +1,9 @@
 #include "OBJUtils.h"
 
-#include <utils/FileUtils.h>
 #include <utils/StringUtils.h>
 #include <graphics/models/MeshFactory.h>
+
+#include <fstream>
 
 namespace Greet {
 
@@ -18,10 +19,10 @@ namespace Greet {
     std::vector<Vec3f> positions;
     std::vector<Vec2f> texCoords;
     std::vector<Vec3f> normals;
-    std::vector<uint> indices;
+    std::vector<uint32_t> indices;
 
     std::ifstream input(filename);
-    std::map<std::string, uint> verticesMap;
+    std::map<std::string, uint32_t> verticesMap;
 
     // These are the same length.
     std::vector<Vec3f> vertexPos;

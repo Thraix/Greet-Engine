@@ -2,10 +2,9 @@
 
 #include <graphics/gui/docker/DockerContainer.h>
 #include <graphics/gui/docker/DockerInterface.h>
-#include <utils/xml/XML.h>
+#include <utils/xml/XMLObject.h>
 
 #include <vector>
-#include <variant>
 
 namespace Greet {
 

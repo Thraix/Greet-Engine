@@ -9,10 +9,10 @@ namespace Greet {
 
   REGISTER_FRAME_DEFINITION(Frame);
 
-  byte Frame::RESIZING_LEFT = BIT(0);
-  byte Frame::RESIZING_RIGHT = BIT(1);
-  byte Frame::RESIZING_TOP = BIT(2);
-  byte Frame::RESIZING_BOTTOM = BIT(3);
+  uint8_t Frame::RESIZING_LEFT = BIT(0);
+  uint8_t Frame::RESIZING_RIGHT = BIT(1);
+  uint8_t Frame::RESIZING_TOP = BIT(2);
+  uint8_t Frame::RESIZING_BOTTOM = BIT(3);
   int Frame::RESIZING_MARGIN = 5;
 
   Frame::Frame()

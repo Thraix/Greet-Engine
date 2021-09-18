@@ -1,8 +1,9 @@
 #pragma once
 
 #include <utils/json/JSONArray.h>
-#include <common/Types.h>
+
 #include <map>
+#include <stdint.h>
 
 namespace Greet {
 
@@ -36,7 +37,7 @@ namespace Greet {
       void AddObject(std::string key, JSONObject value);
 
       const std::string& GetValue(const std::string& key, const std::string& defaultValue = "") const;
-      uint GetValueAsUint(const std::string& key, uint defaultValue = 0) const;
+      uint32_t GetValueAsUint(const std::string& key, uint32_t defaultValue = 0) const;
       int GetValueAsInt(const std::string& key, int defaultValue = 0) const;
       float GetValueAsFloat(const std::string& key, float defaultValue = 0.0) const;
       bool GetValueAsBool(const std::string& key, bool defaultValue = false) const;

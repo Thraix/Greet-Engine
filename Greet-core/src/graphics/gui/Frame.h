@@ -1,9 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <graphics/gui/Container.h>
 #include <graphics/gui/GUIMouseListener.h>
-#include <utils/xml/XML.h>
+#include <utils/xml/XMLObject.h>
 
 namespace Greet {
   class Frame : public Container
@@ -13,15 +12,15 @@ namespace Greet {
 
     protected:
 
-      static byte RESIZING_RIGHT;
-      static byte RESIZING_LEFT;
-      static byte RESIZING_TOP;
-      static byte RESIZING_BOTTOM;
+      static uint8_t RESIZING_RIGHT;
+      static uint8_t RESIZING_LEFT;
+      static uint8_t RESIZING_TOP;
+      static uint8_t RESIZING_BOTTOM;
       static int RESIZING_MARGIN;
 
       bool m_resizing;
-      byte m_resizableFlags;
-      byte m_resizingFlags;
+      uint8_t m_resizableFlags;
+      uint8_t m_resizingFlags;
       Vec2f minSize;
 
       bool m_stayInsideWindow;

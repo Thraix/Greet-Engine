@@ -2,7 +2,6 @@
 
 #include <event/ViewportEvent.h>
 #include <graphics/RenderCommand.h>
-#include <graphics/Sprite.h>
 #include <graphics/models/Material.h>
 #include <graphics/models/Mesh.h>
 #include <graphics/models/MeshFactory.h>
@@ -11,6 +10,8 @@
 #include <scripting/NativeScriptHandler.h>
 #include <utils/MetaFile.h>
 #include <utils/MetaFileLoading.h>
+
+// TODO: Move implementation to cpp file
 
 namespace Greet
 {

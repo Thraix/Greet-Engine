@@ -8,7 +8,7 @@ namespace Greet {
   JSONObject JSONLoader::LoadJSON(const std::string& filename)
   {
     std::string file = FileUtils::ReadFile(filename.c_str());
-    uint currentPos = file.find("{");
+    uint32_t currentPos = file.find("{");
     while (IsIndent(file, currentPos));
     JSONObject obj;
     if (!IsObject(file, currentPos,&obj))
@@ -25,9 +25,9 @@ namespace Greet {
     return obj;
   }
 
-  bool JSONLoader::IsValue(const std::string& file, uint& currentPos, std::string* value, JSONObject* object, JSONArray* jsonArray, uint* type)
+  bool JSONLoader::IsValue(const std::string& file, uint32_t& currentPos, std::string* value, JSONObject* object, JSONArray* jsonArray, uint32_t* type)
   {
-    uint lastPos = currentPos;
+    uint32_t lastPos = currentPos;
     std::string s = file.substr(currentPos,4);
     currentPos += 4;
     if (s == "null")
@@ -75,15 +75,15 @@ namespace Greet {
     return false;
   }
 
-  bool JSONLoader::IsObject(const std::string& file, uint& currentPos, JSONObject* object)
+  bool JSONLoader::IsObject(const std::string& file, uint32_t& currentPos, JSONObject* object)
   {
     JSONObject retObject;
     std::string key;
     std::string value;
     JSONObject obj;
     JSONArray jsonArray;
-    uint type;
-    uint lastPos = currentPos;
+    uint32_t type;
+    uint32_t lastPos = currentPos;
     while (IsIndent(file, currentPos));
     char c = file[currentPos++];
     if (c != '{')
@@ -131,10 +131,10 @@ namespace Greet {
     return true;
   }
 
-  bool JSONLoader::IsArray(const std::string& file, uint& currentPos, JSONArray* jsonArray)
+  bool JSONLoader::IsArray(const std::string& file, uint32_t& currentPos, JSONArray* jsonArray)
   {
     JSONObject object;
-    uint lastPos = currentPos;
+    uint32_t lastPos = currentPos;
     char c = file[currentPos++];
     if (c != '[')
     {
@@ -165,9 +165,9 @@ namespace Greet {
     return true;
   }
 
-  bool JSONLoader::IsKeyValue(const std::string& file, uint& currentPos, std::string* key, std::string* value, JSONObject* object, JSONArray* jsonArray, uint* type)
+  bool JSONLoader::IsKeyValue(const std::string& file, uint32_t& currentPos, std::string* key, std::string* value, JSONObject* object, JSONArray* jsonArray, uint32_t* type)
   {
-    uint lastPos = currentPos;
+    uint32_t lastPos = currentPos;
     std::string keyValue;
     if (!IsString(file, currentPos,&keyValue))
     {
@@ -191,9 +191,9 @@ namespace Greet {
     return true;
   }
 
-  bool JSONLoader::IsString(const std::string& file, uint& currentPos, std::string* value)
+  bool JSONLoader::IsString(const std::string& file, uint32_t& currentPos, std::string* value)
   {
-    uint lastPos = currentPos;
+    uint32_t lastPos = currentPos;
     char c = file[currentPos++];
     if (c != '\"')
     {
@@ -240,9 +240,9 @@ namespace Greet {
     return true;
   }
 
-  bool JSONLoader::IsNumber(const std::string& file, uint& currentPos, std::string* value)
+  bool JSONLoader::IsNumber(const std::string& file, uint32_t& currentPos, std::string* value)
   {
-    uint lastPos = currentPos;
+    uint32_t lastPos = currentPos;
     char c = file[currentPos++];
     if (c != '-' && (c < '0' || c > '9'))
     {
@@ -258,7 +258,7 @@ namespace Greet {
       c = file[currentPos++];
       while (c >= '0' && c <= '9')
         c = file[currentPos++];
-      uint pos = currentPos;
+      uint32_t pos = currentPos;
       if (c == '.')
       {
         c = file[currentPos++];
@@ -302,12 +302,12 @@ namespace Greet {
   }
 
 
-  void JSONLoader::SetString(const std::string& file, uint start, uint end, std::string* set)
+  void JSONLoader::SetString(const std::string& file, uint32_t start, uint32_t end, std::string* set)
   {
     *set = file.substr(start,end-start);
   }
 
-  bool JSONLoader::IsIndent(const std::string& file, uint& currentPos)
+  bool JSONLoader::IsIndent(const std::string& file, uint32_t& currentPos)
   {
     char c = file[currentPos++];
     if (c != '\t' && c != '\n' && c != ' ')

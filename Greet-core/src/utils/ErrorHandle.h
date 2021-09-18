@@ -1,7 +1,8 @@
 #pragma once
 
-#include <common/Types.h>
 #include <utils/Utils.h>
+
+#include <stdint.h>
 
 #define GREET_ERROR_IMAGE_FORMAT	BIT(0)
 #define GREET_ERROR_IMAGE_READ		BIT(1)
@@ -18,13 +19,14 @@
 #define GREET_ERROR_MANAGER_REMOVE	BIT(11)
 
 namespace Greet {
+
   struct ErrorHandle
   {
     private:
-      static ulong errorCode;
+      static uint64_t errorCode;
     public:
-      static void SetErrorCode(ulong errorCode) { ErrorHandle::errorCode |= errorCode; };
-      static ulong GetErrorCode() { return errorCode; }
+      static void SetErrorCode(uint64_t errorCode) { ErrorHandle::errorCode |= errorCode; };
+      static uint64_t GetErrorCode() { return errorCode; }
       static void ResetErrorCode() { ErrorHandle::errorCode = 0; }
   };
 }

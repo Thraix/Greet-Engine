@@ -1,8 +1,8 @@
 #pragma once
 
-#include <common/Types.h>
 #include <logging/Log.h>
-#include <cstring>
+
+// TODO: Move implementation to cpp file
 
 namespace Greet {
 

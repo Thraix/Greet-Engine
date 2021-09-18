@@ -4,19 +4,19 @@
 
 namespace Greet{
 
-  AudioChannel::AudioChannel(std::string name, float volume, float pitch, float pan)
+  AudioChannel::AudioChannel(const std::string& name, float volume, float pitch, float pan)
     : m_name(name), m_volume(volume), m_pitch(pitch), m_pan(pan)
   {
 
   }
 
-  AudioChannel::AudioChannel(std::string name, float volume)
+  AudioChannel::AudioChannel(const std::string& name, float volume)
     : m_name(name), m_volume(volume), m_pitch(1), m_pan(0)
   {
 
   }
 
-  AudioChannel::AudioChannel(std::string name)
+  AudioChannel::AudioChannel(const std::string& name)
     : m_name(name), m_volume(1), m_pitch(1), m_pan(0)
   {
 

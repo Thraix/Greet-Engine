@@ -1,9 +1,7 @@
 #pragma once
 
-#include <math.h>
-#include <common/Types.h>
 #include <iostream>
-
+#include <math.h>
 
 namespace Greet{ namespace Math {
 

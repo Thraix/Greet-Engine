@@ -1,13 +1,11 @@
 #pragma once
 
-#include <graphics/shaders/Shader.h>
-#include <graphics/layers/Scene.h>
-#include <graphics/renderers/GUIRenderer.h>
-#include <graphics/gui/Style.h>
 #include <event/Event.h>
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
-#include <string>
+#include <graphics/layers/Scene.h>
+#include <graphics/renderers/GUIRenderer.h>
+
 #include <list>
 #include <queue>
 

@@ -1,9 +1,6 @@
 #pragma once
 
-#include <common/Types.h>
-#include <math/Maths.h>
 #include <graphics/Color.h>
-#include <logging/Logger.h>
 
 #define COLOR_UTILS_MODIFIER 0.1f
 

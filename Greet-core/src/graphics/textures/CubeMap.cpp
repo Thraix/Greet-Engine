@@ -2,8 +2,6 @@
 
 #include <internal/GreetGL.h>
 #include <utils/ImageUtils.h>
-#include <utils/ErrorHandle.h>
-#include <internal/GreetGL.h>
 
 namespace Greet {
   CubeMap::CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back)
@@ -15,20 +13,20 @@ namespace Greet {
   CubeMap::CubeMap(const std::string& map)
     : Resource(map), Texture(GL_TEXTURE_CUBE_MAP)
   {
-    uint width;
-    uint height;
-    auto res = ImageUtils::LoadImage(map.c_str(), &width, &height);
-    LoadCubeMap(res.second, width, height, res.first);
+    uint32_t width;
+    uint32_t height;
+    auto res = ImageUtils::LoadImage(map.c_str());
+    LoadCubeMap(res.second, res.first);
   }
 
-  CubeMap::CubeMap(const std::vector<byte>& data, uint width, uint height)
+  CubeMap::CubeMap(const ImageData& imageData)
     : Texture(GL_TEXTURE_CUBE_MAP)
   {
-    LoadCubeMap(data, width, height, true);
+    LoadCubeMap(imageData, true);
   }
 
-  CubeMap::CubeMap(uint texId)
-    : Texture(texId, (uint)GL_TEXTURE_CUBE_MAP)
+  CubeMap::CubeMap(uint32_t texId)
+    : Texture(texId, (uint32_t)GL_TEXTURE_CUBE_MAP)
   {
 
   }
@@ -40,35 +38,33 @@ namespace Greet {
 
   void CubeMap::ReloadResource()
   {
-    uint width;
-    uint height;
-    auto res = ImageUtils::LoadImage(filePath.c_str(), &width, &height);
-    LoadCubeMap(res.second, width, height, res.first);
+    auto res = ImageUtils::LoadImage(filePath.c_str());
+    LoadCubeMap(res.second, res.first);
   }
 
-  void CubeMap::LoadCubeMap(const std::vector<byte>& data, uint width, uint height, bool printDimensionError)
+  void CubeMap::LoadCubeMap(const ImageData& imageData, bool printDimensionError)
   {
-    if(width % 4 != 0 || height % 3 != 0)
+    if(imageData.width % 4 != 0 || imageData.height % 3 != 0)
     {
-      LoadImage(data,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_X,false);
-      LoadImage(data,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_X,false);
-      LoadImage(data,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_Y,false);
-      LoadImage(data,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,false);
-      LoadImage(data,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_Z,false);
-      LoadImage(data,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,false);
+      LoadImage(imageData, GL_TEXTURE_CUBE_MAP_POSITIVE_X, false);
+      LoadImage(imageData, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, false);
+      LoadImage(imageData, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, false);
+      LoadImage(imageData, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, false);
+      LoadImage(imageData, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, false);
+      LoadImage(imageData, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, false);
     }
     else
     {
-      uint w = width / 4;
-      uint h = height / 3;
-      LoadImage(ImageUtils::CropImage(data,width,height,0,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_X,true);
-      LoadImage(ImageUtils::CropImage(data,width,height,w*2,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_X,true);
+      uint32_t w = imageData.width / 4;
+      uint32_t h = imageData.height / 3;
+      LoadImage(ImageUtils::CropImage(imageData, 0, h, w, h), GL_TEXTURE_CUBE_MAP_POSITIVE_X, true);
+      LoadImage(ImageUtils::CropImage(imageData, w*2, h, w, h), GL_TEXTURE_CUBE_MAP_NEGATIVE_X, true);
 
-      LoadImage(ImageUtils::CropImage(data,width,height,w,0,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Y,true);
-      LoadImage(ImageUtils::CropImage(data,width,height,w,h*2,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,true);
+      LoadImage(ImageUtils::CropImage(imageData, w, 0, w, h), GL_TEXTURE_CUBE_MAP_POSITIVE_Y, true);
+      LoadImage(ImageUtils::CropImage(imageData, w, h*2, w, h), GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, true);
 
-      LoadImage(ImageUtils::CropImage(data,width,height,w,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Z,true);
-      LoadImage(ImageUtils::CropImage(data,width,height,w*3,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,true);
+      LoadImage(ImageUtils::CropImage(imageData, w, h, w, h), GL_TEXTURE_CUBE_MAP_POSITIVE_Z, true);
+      LoadImage(ImageUtils::CropImage(imageData, w*3, h, w, h), GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, true);
     }
     LoadParameters();
 
@@ -100,23 +96,23 @@ namespace Greet {
     GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
   }
 
-  void CubeMap::LoadImage(const std::string& image, uint mapLocation)
+  void CubeMap::LoadImage(const std::string& image, uint32_t mapLocation)
   {
-    uint width;
-    uint height;
-    auto res = ImageUtils::LoadImage(image.c_str(), &width, &height);
-    LoadImage(res.second,width,height,mapLocation,true);
+    uint32_t width;
+    uint32_t height;
+    auto res = ImageUtils::LoadImage(image.c_str());
+    LoadImage(res.second, mapLocation, true);
   }
 
-  void CubeMap::LoadImage(const std::vector<byte>& bits, uint width, uint height, uint mapLocation, bool flip)
+  void CubeMap::LoadImage(const ImageData& imageData, uint32_t mapLocation, bool flip)
   {
     if(flip)
     {
-      GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ImageUtils::FlipImage(bits,width,height).data()));
+      GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, imageData.width, imageData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ImageUtils::FlipImage(imageData).data.get()));
     }
     else
     {
-      GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits.data()));
+      GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, imageData.width, imageData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData.data.get()));
     }
   }
 }

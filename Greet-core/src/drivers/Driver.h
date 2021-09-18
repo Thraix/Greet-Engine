@@ -1,7 +1,6 @@
 #pragma once
 
 #include <drivers/DriverListener.h>
-#include <common/Types.h>
 
 namespace Greet {
 

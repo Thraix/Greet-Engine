@@ -2,7 +2,6 @@
 
 #include <graphics/Color.h>
 #include <graphics/fonts/Font.h>
-#include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/StyleTemplateClasses.h>
 #include <graphics/gui/TLBR.h>
 #include <utils/MetaFile.h>

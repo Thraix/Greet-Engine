@@ -4,13 +4,13 @@
 #include <utils/HotSwapping.h>
 #include <utils/Timer.h>
 
+#include <functional>
+
 namespace Greet {
 
   SceneManager::SceneManager()
     : focusedScene{nullptr}
-  {
-
-  }
+  {}
 
   SceneManager::~SceneManager()
   {

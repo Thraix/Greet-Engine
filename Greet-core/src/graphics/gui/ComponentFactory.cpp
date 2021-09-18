@@ -2,6 +2,7 @@
 
 #include <graphics/gui/Component.h>
 #include <graphics/gui/Frame.h>
+#include <utils/xml/XML.h>
 #include <utils/xml/XMLException.h>
 
 namespace Greet

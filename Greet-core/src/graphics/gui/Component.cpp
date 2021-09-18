@@ -461,9 +461,9 @@ namespace Greet
     return par;
   }
 
-  uint Component::GetComponentDepth() const
+  uint32_t Component::GetComponentDepth() const
   {
-    uint depth = 1;
+    uint32_t depth = 1;
     const Component* par = this;
     while(par->GetParent())
     {

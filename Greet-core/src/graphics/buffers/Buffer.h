@@ -1,7 +1,8 @@
 #pragma once
 
-#include <common/Types.h>
 #include <common/Memory.h>
+
+#include <stdint.h>
 
 namespace Greet {
 
@@ -11,7 +12,7 @@ namespace Greet {
     INDEX = 0x8893, // GL_ELEMENT_ARRAY_BUFFER
   };
 
-  enum class BufferDrawType : uint
+  enum class BufferDrawType : uint32_t
   {
     STATIC = 0x88E4, // GL_STATIC_DRAW
     DYNAMIC = 0x88E8 // GL_DYNAMIC_DRAW
@@ -20,27 +21,27 @@ namespace Greet {
   class Buffer
   {
     protected:
-      uint id;
-      uint dataSize;
+      uint32_t id;
+      uint32_t dataSize;
       BufferType type;
       BufferDrawType drawType;
 
     protected:
-      Buffer(uint dataSize, BufferType type, BufferDrawType drawType);
+      Buffer(uint32_t dataSize, BufferType type, BufferDrawType drawType);
 
     public:
       virtual ~Buffer();
       void UpdateData(const void* data) const;
-      void UpdateData(const void* data, uint dataSize);
+      void UpdateData(const void* data, uint32_t dataSize);
       void* MapBuffer() const;
       void UnmapBuffer() const;
 
       void Enable() const;
       void Disable() const;
 
-      inline uint GetDataSize() const { return dataSize; }
+      inline uint32_t GetDataSize() const { return dataSize; }
 
     public:
-      static Ref<Buffer> Create(uint dataSize, BufferType type, BufferDrawType drawType);
+      static Ref<Buffer> Create(uint32_t dataSize, BufferType type, BufferDrawType drawType);
   };
 }

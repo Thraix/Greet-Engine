@@ -1,50 +1,42 @@
 #include "ImageFactory.h"
 
-#include <logging/Log.h>
-#include <utils/Utils.h>
-
-
 namespace Greet {
-  std::vector<BYTE> ImageFactory::GetBadFormatImage(uint* width, uint* height)
+  ImageData ImageFactory::GetBadFormatImage()
   {
-    return GetErrorImage(width,height,0xff00ff,0xaa00aa);
+    return GetErrorImage(0xff00ff, 0xaa00aa);
   }
 
-  std::vector<BYTE> ImageFactory::GetBadBPPImage(uint* width, uint* height)
+  ImageData ImageFactory::GetBadBPPImage()
   {
-    return GetErrorImage(width,height,0xffff00,0xaaaa00);
+    return GetErrorImage(0xffff00, 0xaaaa00);
   }
 
-  std::vector<BYTE> ImageFactory::GetCantReadImage(uint* width, uint* height)
+  ImageData ImageFactory::GetCantReadImage()
   {
-    return GetErrorImage(width,height,0x00ffff,0x00aaaa);
+    return GetErrorImage(0x00ffff, 0x00aaaa);
   }
 
-  std::vector<BYTE> ImageFactory::GetCropErrorImage(uint* width, uint* height)
+  ImageData ImageFactory::GetCropErrorImage()
   {
-    return GetErrorImage(width,height,0xff0000,0xaa0000);
+    return GetErrorImage(0xff0000, 0xaa0000);
   }
 
-  std::vector<BYTE> ImageFactory::GetErrorImage(uint* width, uint* height, uint lightColor, uint darkColor)
+  ImageData ImageFactory::GetErrorImage(uint32_t lightColor, uint32_t darkColor)
   {
-    *width = 16;
-    *height = 16;
-    std::vector<BYTE> bits(*width * *height * 4);
-    size_t offset = 0;
-    for(uint y = 0;y<*height;y++)
+    ImageData imageData(16, 16);
+    for(uint32_t y = 0;y < imageData.height; y++)
     {
-      for(uint x = 0;x<*width;x++)
+      for(uint32_t x = 0; x < imageData.width; x++)
       {
-        uint color = lightColor;
-        if(x == 0 || y == *height-1)
+        uint32_t color = lightColor;
+        if(x == 0 || y == imageData.height - 1)
           color = darkColor;
-        bits[offset + FI_RGBA_RED] = (color & 0xff0000) >> 16;
-        bits[offset + FI_RGBA_GREEN] = (color & 0xff00) >> 8;
-        bits[offset + FI_RGBA_BLUE] = (color & 0xff) >> 0;
-        bits[offset + FI_RGBA_ALPHA] = 0xff;
-        offset += 4;
+        imageData.at(x, y, IMAGE_DATA_RED) = (color & 0xff0000) >> 16;
+        imageData.at(x, y, IMAGE_DATA_GREEN) = (color & 0xff00) >> 8;
+        imageData.at(x, y, IMAGE_DATA_BLUE) = color & 0xff;
+        imageData.at(x, y, IMAGE_DATA_ALPHA) = 0xff;
       }
     }
-    return bits;
+    return imageData;
   }
 }

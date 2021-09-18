@@ -2,7 +2,6 @@
 
 #include <ecs/Config.h>
 #include <ecs/ECSManager.h>
-#include <common/Memory.h>
 
 namespace Greet
 {

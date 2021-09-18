@@ -23,9 +23,9 @@ namespace Greet{
 
   AudioChannel* AudioChannelManager::Get(const std::string& channelname)
   {
-    uint size = m_channels.size();
+    uint32_t size = m_channels.size();
 
-    for (uint i = 0; i < size; i++)
+    for (uint32_t i = 0; i < size; i++)
       if (channelname.compare(m_channels[i]->GetName().c_str()) == 0)
         return m_channels[i];
     ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
@@ -35,7 +35,7 @@ namespace Greet{
 
   void AudioChannelManager::Destroy()
   {
-    for (uint i = 0; i < m_channels.size(); i++)
+    for (uint32_t i = 0; i < m_channels.size(); i++)
       delete m_channels[i];
   }
 

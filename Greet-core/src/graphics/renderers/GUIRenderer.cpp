@@ -1,12 +1,13 @@
 #include "GUIRenderer.h"
 
-#include <algorithm>
-#include <cmath>
-
 #include <graphics/RenderCommand.h>
 #include <graphics/Renderable2D.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <internal/GreetGL.h>
+
+#include <algorithm>
+#include <cmath>
+#include <numeric>
 
 namespace Greet
 {
@@ -26,7 +27,7 @@ namespace Greet
     shader->SetUniform1iv("textures", maxTextures, samplerUnits.data());
     translationStack.push({0, 0});
 
-    m_textures = new uint[maxTextures];
+    m_textures = new uint32_t[maxTextures];
     m_vertices = 10000;
     m_bufferSize = m_vertices * sizeof(GUIVertex) * 4;
     m_iboSize = m_vertices * 6;
@@ -45,7 +46,7 @@ namespace Greet
 
     vbo->Disable();
     //Generate all the indices at runtime
-    m_indices = new uint[m_iboSize];
+    m_indices = new uint32_t[m_iboSize];
     ibo = Buffer::Create(m_iboSize, BufferType::INDEX, BufferDrawType::DYNAMIC);
     ibo->Disable();
     vao->SetIndexBuffer(ibo);
@@ -74,14 +75,14 @@ namespace Greet
       // instead
       RenderCommand::EnableDepthTest(false);
 
-      for (byte i = 0; i < m_textureCount; i++)
+      for (uint8_t i = 0; i < m_textureCount; i++)
       {
         GLCall(glActiveTexture(GL_TEXTURE0 + i));
         GLCall(glBindTexture(GL_TEXTURE_2D, m_textures[i]));
       }
 
       vao->Enable();
-      ibo->UpdateData(m_indices, sizeof(uint) * m_iboCount);
+      ibo->UpdateData(m_indices, sizeof(uint32_t) * m_iboCount);
 
       vao->Render(DrawType::TRIANGLES, m_iboCount);
 
@@ -168,7 +169,7 @@ namespace Greet
   {
     AppendQuad(pos, size, Vec2f(0, 0), Vec2f(1, 1), 0, color, isHsv);
   }
-  void GUIRenderer::DrawRoundedRect(const Vec2f& pos, const Vec2f& size, const Color& color, float radius, uint precision, bool isHsv)
+  void GUIRenderer::DrawRoundedRect(const Vec2f& pos, const Vec2f& size, const Color& color, float radius, uint32_t precision, bool isHsv)
   {
     AppendRoundedQuad(pos,size,color,isHsv,radius,precision);
   }
@@ -195,7 +196,7 @@ namespace Greet
     Vec2f uv1;
     Vec2f roundPos = Vec2f(round(position.x), round(position.y));
     float x = roundPos.x;
-    for (uint i = 0;i < text.length();i++)
+    for (uint32_t i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
       pos.x = x + glyph.miBearingX;
@@ -214,11 +215,11 @@ namespace Greet
     }
   }
 
-  float GUIRenderer::GetTextureSlot(uint id)
+  float GUIRenderer::GetTextureSlot(uint32_t id)
   {
     if (id == 0)
       return 0;
-    for (byte i = 0; i < m_textureCount; i++)
+    for (uint8_t i = 0; i < m_textureCount; i++)
     {
       if (m_textures[i] == id)
         return i + 1;
@@ -230,7 +231,7 @@ namespace Greet
     return m_textureCount;
   }
 
-  bool GUIRenderer::NeedFlush(uint indices, uint vertices)
+  bool GUIRenderer::NeedFlush(uint32_t indices, uint32_t vertices)
   {
     if (m_vertices - (m_buffer - m_bufferBegin) < vertices)
       return true;
@@ -299,7 +300,7 @@ namespace Greet
 
   // TODO: Improve this code, remove the center vertex and
   // remove unnecessary verticies when width is too small
-  void GUIRenderer::AppendRoundedQuad(const Vec2f& position, const Vec2f& size, const Color& color, bool isHsv, float radius, uint precision)
+  void GUIRenderer::AppendRoundedQuad(const Vec2f& position, const Vec2f& size, const Color& color, bool isHsv, float radius, uint32_t precision)
   {
     // If precision is 0 or radius is too little, just draw a normal quad
     if(precision == 0 || radius <= 0)
@@ -407,7 +408,7 @@ namespace Greet
     m_lastIndex += (precision+1)*4 + 1;
   }
 
-  void GUIRenderer::AppendQuaterCircle(const Vec2f& center, const Color& color, bool isHsv, float radius, uint precision, bool left, bool top)
+  void GUIRenderer::AppendQuaterCircle(const Vec2f& center, const Color& color, bool isHsv, float radius, uint32_t precision, bool left, bool top)
   {
     Vec4f viewport = GetViewport(center-radius, center + radius);
     float xRad = radius;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <graphics/gui/Component.h>
-#include <graphics/gui/Label.h>
 #include <graphics/gui/Text.h>
 
 namespace Greet
@@ -52,7 +51,7 @@ namespace Greet
       void SetOnTextChangedCallback(OnTextChangedCallback callback);
 
     protected:
-      void RemoveText(uint start, uint n);
+      void RemoveText(uint32_t start, uint32_t n);
       void RecenterText();
       void MoveCursor(int delta);
       void MoveCursorWord(bool forward);

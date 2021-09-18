@@ -2,7 +2,6 @@
 
 #include <ecs/ECSManager.h>
 #include <ecs/Entity.h>
-#include <graphics/Skybox.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/renderers/BatchRenderer.h>
 #include <graphics/Framebuffer.h>
@@ -11,7 +10,7 @@
 
 namespace Greet
 {
-  class ECSScene : public Greet::Scene
+  class ECSScene : public Scene
   {
     protected:
       Ref<ECSManager> manager;

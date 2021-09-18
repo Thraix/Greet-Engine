@@ -1,6 +1,8 @@
 #pragma once
 
 #include <graphics/cameras/Camera3D.h>
+#include <math/Mat4.h>
+#include <math/Vec3.h>
 
 namespace Greet {
 

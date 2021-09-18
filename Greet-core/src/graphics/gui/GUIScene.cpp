@@ -180,8 +180,8 @@ namespace Greet {
     Component* unfocused = focused;
     Component* tmp = component;
 
-    uint unfocusedDepth = unfocused ? unfocused->GetComponentDepth() : 0;
-    uint focusedDepth = tmp ? tmp->GetComponentDepth() : 0;
+    uint32_t unfocusedDepth = unfocused ? unfocused->GetComponentDepth() : 0;
+    uint32_t focusedDepth = tmp ? tmp->GetComponentDepth() : 0;
 
     while(unfocusedDepth != focusedDepth)
     {

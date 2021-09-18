@@ -1,11 +1,10 @@
 #pragma once
 
 #include <logging/LogLevel.h>
+
+#include <cstring>
 #include <ostream>
 #include <string>
-#include <iostream>
-#include <iterator>
-#include <cstring>
 
 namespace Greet {
 

@@ -1,7 +1,11 @@
 #pragma once
 
-#include <graphics/renderers/Renderer3D.h>
+#include <graphics/Skybox.h>
+#include <graphics/cameras/Camera3D.h>
 #include <graphics/layers/Scene.h>
+#include <graphics/layers/Scene.h>
+#include <graphics/renderers/Renderer3D.h>
+#include <math/Line.h>
 
 namespace Greet {
   class Layer3D : public Scene

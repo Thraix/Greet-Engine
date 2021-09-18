@@ -1,10 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <graphics/gui/Container.h>
-#include <utils/xml/XML.h>
+#include <graphics/gui/Button.h>
+#include <graphics/gui/Component.h>
 #include <graphics/gui/docker/DockerSplit.h>
-#include <graphics/fonts/FontManager.h>
+#include <utils/xml/XMLObject.h>
 
 namespace Greet {
 

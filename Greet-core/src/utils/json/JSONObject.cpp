@@ -1,5 +1,7 @@
 #include "JSONObject.h"
 
+#include <logging/Log.h>
+#include <utils/json/JSON.h>
 #include <utils/StringUtils.h>
 
 namespace Greet {
@@ -98,7 +100,7 @@ namespace Greet {
     return std::stoi(it->second.c_str());
   }
 
-  uint JSONObject::GetValueAsUint(const std::string& key, uint defaultValue) const
+  uint32_t JSONObject::GetValueAsUint(const std::string& key, uint32_t defaultValue) const
   {
     auto it = m_values.find(key);
     if (it == m_values.end())
@@ -165,11 +167,11 @@ namespace Greet {
   {
     os << JSON::get_indent() << "{\n";
     JSON::push_indent();
-    uint vsize = obj.m_values.size();
-    uint asize = obj.m_arrays.size();
-    uint osize = obj.m_objects.size();
+    uint32_t vsize = obj.m_values.size();
+    uint32_t asize = obj.m_arrays.size();
+    uint32_t osize = obj.m_objects.size();
 
-    uint i = 1;
+    uint32_t i = 1;
     for (auto it = obj.m_values.begin();it != obj.m_values.end(); ++it, ++i)
     {
       os << JSON::get_indent() << "\"" << it->first << "\"" << ": ";

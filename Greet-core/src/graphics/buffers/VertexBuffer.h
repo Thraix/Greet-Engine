@@ -1,9 +1,10 @@
 #pragma once
 
-#include <common/Types.h>
 #include <common/Memory.h>
 #include <graphics/buffers/Buffer.h>
 #include <logging/Log.h>
+
+#include <stdint.h>
 
 namespace Greet
 {
@@ -12,7 +13,7 @@ namespace Greet
     FLOAT, VEC2, VEC3, VEC4, MAT3, MAT4, UINT, UBYTE4, BYTE4
   };
 
-  static uint BufferAttributeToCount(BufferAttributeType type)
+  static uint32_t BufferAttributeToCount(BufferAttributeType type)
   {
     switch(type)
     {
@@ -31,7 +32,7 @@ namespace Greet
     return 0;
   }
 
-  static uint BufferAttributeToByteSize(BufferAttributeType type)
+  static uint32_t BufferAttributeToByteSize(BufferAttributeType type)
   {
     switch(type)
     {
@@ -50,7 +51,7 @@ namespace Greet
     return 0;
   }
 
-  static uint BufferAttributeToGLPrimitive(BufferAttributeType type)
+  static uint32_t BufferAttributeToGLPrimitive(BufferAttributeType type)
   {
     switch(type)
     {
@@ -73,7 +74,7 @@ namespace Greet
   {
     int location;
     BufferAttributeType type;
-    uint size;
+    uint32_t size;
     unsigned long long offset;
     bool normalize;
 
@@ -86,14 +87,14 @@ namespace Greet
   {
     private:
       std::vector<BufferAttribute> attributes;
-      uint vertexSize;
+      uint32_t vertexSize;
 
     public:
       BufferStructure() {}
       BufferStructure(const std::initializer_list<BufferAttribute>& attributes)
         : attributes{attributes}, vertexSize{0}
       {
-        uint offset = 0;
+        uint32_t offset = 0;
         for(auto&& attribute : this->attributes)
         {
           attribute.offset = offset;
@@ -102,7 +103,7 @@ namespace Greet
         vertexSize = offset;
       }
 
-      uint GetVertexSize() const
+      uint32_t GetVertexSize() const
       {
         return vertexSize;
       }
@@ -118,14 +119,14 @@ namespace Greet
     private:
       BufferStructure structure;
     public:
-      VertexBuffer(const void* data, uint size, BufferDrawType type);
+      VertexBuffer(const void* data, uint32_t size, BufferDrawType type);
       virtual ~VertexBuffer() {}
 
       void SetStructure(const BufferStructure& structure) { this->structure = structure; }
       const BufferStructure& GetStructure() const { return structure; }
 
-      static Ref<VertexBuffer> CreateDynamic(const void* data, uint size);
-      static Ref<VertexBuffer> CreateStatic(const void* data, uint size);
-      static Ref<VertexBuffer> Create(const void* data, uint size, BufferDrawType type = BufferDrawType::STATIC);
+      static Ref<VertexBuffer> CreateDynamic(const void* data, uint32_t size);
+      static Ref<VertexBuffer> CreateStatic(const void* data, uint32_t size);
+      static Ref<VertexBuffer> Create(const void* data, uint32_t size, BufferDrawType type = BufferDrawType::STATIC);
   };
 }

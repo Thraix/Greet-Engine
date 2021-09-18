@@ -2,6 +2,7 @@
 
 #include <graphics/models/Material.h>
 #include <graphics/models/Mesh.h>
+#include <math/Vec3.h>
 
 namespace Greet {
 

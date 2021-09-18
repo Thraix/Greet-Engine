@@ -4,7 +4,7 @@
 
 namespace Greet {
 
-  Buffer::Buffer(uint dataSize, BufferType type, BufferDrawType drawType)
+  Buffer::Buffer(uint32_t dataSize, BufferType type, BufferDrawType drawType)
     : id{0}, dataSize{dataSize}, type{type}, drawType{drawType}
   {
     GLCall(glGenBuffers(1, &id));
@@ -18,37 +18,37 @@ namespace Greet {
 
   void Buffer::Enable() const
   {
-    GLCall(glBindBuffer((uint)type, id));
+    GLCall(glBindBuffer((uint32_t)type, id));
   }
 
   void Buffer::UpdateData(const void* data) const
   {
-    GLCall(glBufferData((uint)type, dataSize, data, (uint)drawType));
+    GLCall(glBufferData((uint32_t)type, dataSize, data, (uint32_t)drawType));
   }
 
-  void Buffer::UpdateData(const void* data, uint dataSize)
+  void Buffer::UpdateData(const void* data, uint32_t dataSize)
   {
     this->dataSize = dataSize;
-    GLCall(glBufferData((uint)type, dataSize, data, (uint)drawType));
+    GLCall(glBufferData((uint32_t)type, dataSize, data, (uint32_t)drawType));
   }
 
   void* Buffer::MapBuffer() const
   {
-    GLCall(void* buffer = glMapBuffer((uint)type, GL_WRITE_ONLY));
+    GLCall(void* buffer = glMapBuffer((uint32_t)type, GL_WRITE_ONLY));
     return buffer;
   }
 
   void Buffer::UnmapBuffer() const
   {
-    GLCall(glUnmapBuffer((uint)type));
+    GLCall(glUnmapBuffer((uint32_t)type));
   }
 
   void Buffer::Disable() const
   {
-    GLCall(glBindBuffer((uint)type, 0));
+    GLCall(glBindBuffer((uint32_t)type, 0));
   }
 
-  Ref<Buffer> Buffer::Create(uint dataSize, BufferType type, BufferDrawType drawType)
+  Ref<Buffer> Buffer::Create(uint32_t dataSize, BufferType type, BufferDrawType drawType)
   {
     return std::shared_ptr<Buffer>(new Buffer(dataSize, type, drawType));
   }

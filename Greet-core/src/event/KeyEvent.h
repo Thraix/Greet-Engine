@@ -1,6 +1,5 @@
 #pragma once
 
-#include <math/Maths.h>
 #include <event/Event.h>
 
 namespace Greet {
@@ -8,31 +7,31 @@ namespace Greet {
   class KeyEvent : public Event
   {
     protected:
-      uint button;
+      uint32_t button;
     protected:
-      KeyEvent(uint button)
+      KeyEvent(uint32_t button)
         : button(button) {}
     public:
-      uint GetButton() const { return button; }
-      uint GetCategory() const {return INPUT_EVENT | KEYBOARD_EVENT;}
+      uint32_t GetButton() const { return button; }
+      uint32_t GetCategory() const {return INPUT_EVENT | KEYBOARD_EVENT;}
   };
 
   class KeyPressEvent : public KeyEvent
   {
     protected:
-      uint repeat;
+      uint32_t repeat;
     public:
-      KeyPressEvent(uint button, uint repeat)
+      KeyPressEvent(uint32_t button, uint32_t repeat)
         : KeyEvent(button), repeat{repeat} {}
       EventType GetType() const {return EventType::KEY_PRESS;}
       bool IsRepeat() const { return repeat != 0; }
-      uint GetRepeat() const { return repeat; }
+      uint32_t GetRepeat() const { return repeat; }
   };
 
   class KeyReleaseEvent : public KeyEvent
   {
     public:
-      KeyReleaseEvent(uint button)
+      KeyReleaseEvent(uint32_t button)
         : KeyEvent(button) {}
       EventType GetType() const {return EventType::KEY_RELEASE;}
   };
@@ -40,10 +39,10 @@ namespace Greet {
   class KeyTypeEvent : public KeyEvent
   {
     private:
-      uint charCode;
+      uint32_t charCode;
 
     public:
-      KeyTypeEvent(uint charCode) : KeyEvent(charCode) {}
+      KeyTypeEvent(uint32_t charCode) : KeyEvent(charCode) {}
       EventType GetType() const {return EventType::KEY_TYPE;}
   };
 

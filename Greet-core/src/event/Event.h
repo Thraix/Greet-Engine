@@ -7,7 +7,7 @@ namespace Greet {
 #define EVENT_IS_TYPE(event, type) ((event).GetType() == (type))
 #define EVENT_IS_CATEGORY(event, category) ((event).GetCategory() & (category)) == (category)
 
-  enum EventCategory : uint
+  enum EventCategory : uint32_t
   {
     NONE = 0,
     WINDOW_EVENT = BIT(0),
@@ -18,7 +18,7 @@ namespace Greet {
     VIEWPORT_EVENT = BIT(5),
   };
 
-  enum class EventType : uint
+  enum class EventType : uint32_t
   {
     NONE = 0,
     WINDOW_RESIZE, WINDOW_MOVE, WINDOW_CLOSE, WINDOW_FOCUS, WINDOW_UNFOCUS,
@@ -28,14 +28,14 @@ namespace Greet {
     VIEWPORT_RESIZE
   };
 
-  const uint EVENT_HANDLED = BIT(0);
-  const uint EVENT_FOCUSED = BIT(1);
-  const uint EVENT_UNFOCUSED = BIT(2);
+  const uint32_t EVENT_HANDLED = BIT(0);
+  const uint32_t EVENT_FOCUSED = BIT(1);
+  const uint32_t EVENT_UNFOCUSED = BIT(2);
 
   class Event
   {
     private:
-      uint flags = 0;
+      uint32_t flags = 0;
     protected:
       Event()
       {}
@@ -44,8 +44,8 @@ namespace Greet {
       virtual ~Event() {}
 
       virtual EventType GetType() const = 0;
-      virtual uint GetCategory() const = 0;
-      uint GetFlags() const { return flags; }
-      void AddFlag(uint flag) { flags |= flag;}
+      virtual uint32_t GetCategory() const = 0;
+      uint32_t GetFlags() const { return flags; }
+      void AddFlag(uint32_t flag) { flags |= flag;}
   };
 }

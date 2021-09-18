@@ -1,13 +1,16 @@
 #pragma once
 
-#include <utils/MetaFile.h>
-#include <math/Vec3.h>
+#include <graphics/models/Material.h>
 #include <graphics/models/Mesh.h>
 #include <graphics/models/MeshFactory.h>
-#include <graphics/models/Material.h>
+#include <graphics/shaders/ShaderFactory.h>
 #include <graphics/textures/TextureManager.h>
+#include <math/Vec2.h>
+#include <math/Vec3.h>
+#include <utils/MetaFile.h>
 #include <utils/OBJUtils.h>
-#include <graphics/textures/ImageFactory.h>
+
+// TODO: Move implementation to cpp file
 
 namespace Greet
 {

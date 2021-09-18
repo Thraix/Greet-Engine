@@ -1,12 +1,11 @@
 #pragma once
 
-#include <stack>
-
-#include <graphics/Sprite.h>
-#include <graphics/fonts/Font.h>
 #include <graphics/shaders/Shader.h>
 #include <logging/Log.h>
-#include <math/Maths.h>
+
+#include <stack>
+
+// TODO: Move implementation to cpp file
 
 namespace Greet{
 

@@ -1,8 +1,9 @@
 #pragma once
 
-#include <map>
 #include <event/Event.h>
+
 #include <functional>
+#include <map>
 
 namespace Greet {
   class EventDispatcher

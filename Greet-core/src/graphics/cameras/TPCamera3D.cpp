@@ -1,7 +1,7 @@
 #include "TPCamera3D.h"
 
-#include <graphics/Window.h>
 #include <event/MouseEvent.h>
+#include <graphics/RenderCommand.h>
 #include <input/InputDefines.h>
 
 namespace Greet {

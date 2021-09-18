@@ -1,9 +1,9 @@
 #pragma once
 
-#include <unordered_map>
-#include <utility>
-#include <functional>
 #include <utils/xml/XMLObject.h>
+
+#include <functional>
+#include <unordered_map>
 
 #define REGISTER_COMPONENT_DECLARATION(COMPONENT_NAME) \
     static ComponentRegistry<COMPONENT_NAME> reg; \

@@ -1,11 +1,9 @@
 #pragma once
 
-#include <logging/Log.h>
-#include <math/Vec4.h>
 #include <math/Vec2.h>
-#include <utils/xml/XMLObject.h>
+#include <iostream>
 
-#include <cstdlib>
+// TODO: Move implementation to cpp file
 
 namespace Greet
 {

@@ -1,11 +1,9 @@
 #pragma once
 
 #include <graphics/Color.h>
-#include <graphics/Window.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/gui/TLBR.h>
-#include <utils/StringUtils.h>
-#include <utils/xml/XML.h>
+#include <utils/xml/XMLObject.h>
 
 namespace Greet {
 

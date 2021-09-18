@@ -1,9 +1,9 @@
 #pragma once
 
+#include <graphics/Color.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/fonts/FontManager.h>
 #include <graphics/renderers/GUIRenderer.h>
-#include <math/Vec4.h>
 
 namespace Greet
 {

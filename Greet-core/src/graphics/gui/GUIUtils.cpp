@@ -1,9 +1,9 @@
 #include "GUIUtils.h"
 
-#include <utils/xml/XMLException.h>
+#include <graphics/fonts/FontManager.h>
 #include <logging/Log.h>
 #include <utils/LogUtils.h>
-#include <graphics/fonts/FontManager.h>
+#include <utils/StringUtils.h>
 
 namespace Greet
 {

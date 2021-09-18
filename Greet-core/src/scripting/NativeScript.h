@@ -1,5 +1,6 @@
 #pragma once
 
+#include <common/Memory.h>
 #include <ecs/Entity.h>
 #include <event/Event.h>
 

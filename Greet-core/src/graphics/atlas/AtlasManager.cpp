@@ -1,10 +1,10 @@
 #include "AtlasManager.h"
 
 #include <logging/Log.h>
-#include <common/Types.h>
 #include <utils/ErrorHandle.h>
 
 namespace Greet{
+
   std::map<std::string, Ref<Atlas>> AtlasManager::m_atlas;
 
   void AtlasManager::Add(const std::string& name, const Ref<Atlas>& atlas)
@@ -34,5 +34,4 @@ namespace Greet{
   {
     m_atlas.clear();
   }
-
 }

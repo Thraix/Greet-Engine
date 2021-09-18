@@ -1,7 +1,8 @@
 #pragma once
 
-#include <logging/Logger.h>
 #include <logging/LogLevel.h>
+#include <logging/Logger.h>
+
 #include <string.h>
 
 namespace Greet {

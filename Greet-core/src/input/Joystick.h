@@ -1,8 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <math/Maths.h>
-
 #ifndef MAX_JOYSTICKS
 #define MAX_JOYSTICKS 4
 #endif

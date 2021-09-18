@@ -75,7 +75,7 @@ namespace Greet
   {
     // vi will be the y value of the sizes if vertical and x value if not
     float& sliderDirSize = vertical ? height.size : width.size;
-    uint vi = vertical ? 1 : 0;
+    uint32_t vi = vertical ? 1 : 0;
 
     if(clampSlider)
     {

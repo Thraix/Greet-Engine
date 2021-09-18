@@ -64,9 +64,9 @@ class Core : public App
     {
       uint noiseS = 100;
       std::vector<float> noise = Noise::GenNoise(noiseS, noiseS, 4, 16, 16, 0.8f);
-      std::vector<BYTE> image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
+      ImageData imageData = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
 
-      TextureManager::AddTexture2D("noise", Texture2D::Create(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
+      TextureManager::AddTexture2D("noise", Texture2D::Create(imageData, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
 
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
@@ -268,7 +268,7 @@ class Core : public App
       uint indexCount = data.GetIndexCount();
       Pointer<uint>& indices = data.GetIndices();
 
-      Pointer<byte> offsets(4 * vertexCount);
+      Pointer<uint8_t> offsets(4 * vertexCount);
       for (int i = 0;i < indexCount;i+=3)
       {
         Vec3f v1 = vertices[indices[i+1]] - vertices[indices[i]];

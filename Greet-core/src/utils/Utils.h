@@ -2,12 +2,13 @@
 
 #include <string>
 #include <ctime>
-#include <common/Types.h>
 #include <math/Vec2.h>
 
 #define BIT(x) (1 << (x))
 #define BIND_MEMBER_FUNC(fn) [this](auto&&... args){ this->fn(std::forward<decltype(args)>(args)...); }
 #define BIND_GLOBAL_FUNC(fn) &fn
+
+// TODO: Move implementation to cpp file
 
 namespace Greet {
 
@@ -31,7 +32,7 @@ namespace Greet {
       return buf;
     }
 
-    static void Screenshot(uint width, uint height, std::string filename = "");
+    static void Screenshot(uint32_t width, uint32_t height, std::string filename = "");
 
     template<typename Base, typename T>
     inline bool InstanceOf(const T *ptr) {
@@ -56,17 +57,17 @@ namespace Greet {
       return res;
     }
 
-    static byte* GetBytesFromString(const std::string& s)
+    static uint8_t* GetBytesFromString(const std::string& s)
     {
-      byte* bytes = new byte[s.length()];
-      for(uint i = 0;i<s.length();i++)
+      uint8_t* bytes = new uint8_t[s.length()];
+      for(uint32_t i = 0;i<s.length();i++)
       {
         bytes[i] = s[i];
       }
       return bytes;
     }
 
-    static uint HSVtoARGB(float hue, float sat, float val)
+    static uint32_t HSVtoARGB(float hue, float sat, float val)
     {
       int h = (int)(hue * 6.0f);
       float f = hue * 6.0f - h;
@@ -111,10 +112,10 @@ namespace Greet {
       return 0xff000000 + ((int)(r * 255.0f) << 16) + ((int)(g * 255.0f) << 8) + (int)(b * 255.0f);
     }
 
-    static unsigned long long powi(uint b, uint n)
+    static unsigned long long powi(uint32_t b, uint32_t n)
     {
       unsigned long long r = 1;
-      for (uint i = 0; i < n; i++)
+      for (uint32_t i = 0; i < n; i++)
       {
         r *= b;
       }

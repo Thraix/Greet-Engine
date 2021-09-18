@@ -1,6 +1,9 @@
 #pragma once
 
-#include <graphics/Renderable2D.h>
+#include <graphics/Renderable.h>
+#include <graphics/renderers/Renderer2D.h>
+#include <math/Mat3.h>
+#include <math/Vec2.h>
 
 #define __PRETTY_FUNCTION__ __func__
 
@@ -24,10 +27,10 @@ namespace Greet {
       virtual void End(const Ref<Renderer2D>& renderer) const override;
 
       void SetEnable(bool enable) { Group::enable = enable;}
-      void SetTransformationMatrix(Mat3 transformationMatrix) {m_transformationMatrix = transformationMatrix;}
+      void SetTransformationMatrix(const Mat3& transformationMatrix) {m_transformationMatrix = transformationMatrix;}
 
-      void SetColor(uint color) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
-      inline uint GetColor() const override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__);return 0xffffffff;}
+      void SetColor(uint32_t color) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
+      inline uint32_t GetColor() const override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__);return 0xffffffff;}
       void SetPosition(const Vec2f& position) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
       inline const Vec2f& GetPosition() const override
       {

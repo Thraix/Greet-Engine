@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Chunk.h"
-#include <common/Types.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/models/EntityModel.h>
 #include <graphics/cameras/Camera3D.h>
@@ -10,13 +9,13 @@ class World : public Greet::Scene
 {
   Greet::Camera3D* camera;
   Greet::Material terrainMaterial;
-  uint width;
-  uint length;
+  uint32_t width;
+  uint32_t length;
 
   Chunk* chunks;
   public:
 
-    World(Greet::Camera3D* camera, uint width, uint length)
+    World(Greet::Camera3D* camera, uint32_t width, uint32_t length)
       : camera{camera}, width{width}, length{length}, terrainMaterial{Greet::Shader::FromFile("res/shaders/terrain.shader")}
     {
       chunks = new Chunk[width * length];

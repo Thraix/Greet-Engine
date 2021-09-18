@@ -1,34 +1,31 @@
 #pragma once
 
-#include <math/Maths.h>
-#include <map>
-#include <vector>
-#include <graphics/models/MeshData.h>
-#include <memory>
-#include <graphics/buffers/VertexArray.h>
 #include <graphics/buffers/Buffer.h>
+#include <graphics/buffers/VertexArray.h>
+#include <graphics/models/MeshData.h>
+
+#include <map>
 
 namespace Greet {
-
 
   class Mesh
   {
     private:
       // Location, vbo
-      std::map<uint, Ref<Buffer>> m_vbos;
+      std::map<uint32_t, Ref<Buffer>> m_vbos;
 
       Ref<VertexArray> vao;
       Ref<Buffer> ibo;
 
-      uint m_vertexCount;
-      uint m_indexCount;
+      uint32_t m_vertexCount;
+      uint32_t m_indexCount;
       DrawType m_drawMode;
       bool m_culling = true;
       bool m_clockwise = false;
       bool wireframe = false;
 
     public:
-      Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices);
+      Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint32_t>& indices);
       Mesh(const MeshData& data);
 
       void Render() const;
@@ -48,9 +45,9 @@ namespace Greet {
 
       void AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data);
 
-      void SetDefaultAttribute4f(uint location, const Vec4f& data);
-      void SetDefaultAttribute3f(uint location, const Vec3f& data);
+      void SetDefaultAttribute4f(uint32_t location, const Vec4f& data);
+      void SetDefaultAttribute3f(uint32_t location, const Vec3f& data);
     private:
-      bool HasVBO(uint location) const;
+      bool HasVBO(uint32_t location) const;
   };
 }

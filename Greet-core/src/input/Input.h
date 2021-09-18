@@ -2,6 +2,7 @@
 
 #include <input/InputDefines.h>
 #include <math/Vec2.h>
+
 #include <unordered_map>
 
 namespace Greet

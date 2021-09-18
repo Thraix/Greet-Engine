@@ -1,10 +1,10 @@
 #pragma once
 
-#include <graphics/textures/Texture2D.h>
-#include <map>
-#include <math/Vec4.h>
-#include <logging/Logger.h>
 #include <common/Memory.h>
+#include <graphics/textures/Texture2D.h>
+#include <math/Vec4.h>
+
+#include <map>
 
 typedef struct FT_LibraryRec_  *FT_Library;
 typedef struct FT_FaceRec_*  FT_Face;
@@ -29,21 +29,21 @@ namespace Greet
       FT_Library mLibrary;
       FT_Face mFace;
       Ref<Texture2D> mAtlas;
-      uint miWidth;
-      uint miHeight;
+      uint32_t miWidth;
+      uint32_t miHeight;
       std::map<char, Glyph> mvGlyphs;
-      std::vector<byte> mvPixels;
+      ImageData mImageData;
 
-      uint miYPos;
-      uint miXPos;
-      uint miNextYPos;
+      uint32_t miYPos;
+      uint32_t miXPos;
+      uint32_t miNextYPos;
 
-      uint miBaselineOffset;
-      uint miMedianOffset;
-      uint miMedianHeight;
+      uint32_t miBaselineOffset;
+      uint32_t miMedianOffset;
+      uint32_t miMedianHeight;
 
     private:
-      FontAtlas(const std::string& asFilename, uint aiFontSize);
+      FontAtlas(const std::string& asFilename, uint32_t aiFontSize);
 
     public:
       ~FontAtlas();
@@ -52,12 +52,12 @@ namespace Greet
       FontAtlas& operator=(const FontAtlas&) = delete;
 
       const Glyph& GetGlyph(char acCharacter);
-      uint GetTextureId() const;
-      uint GetBaselineOffset() const;
-      uint GetMedianOffset() const;
-      uint GetMedianHeight() const;
+      uint32_t GetTextureId() const;
+      uint32_t GetBaselineOffset() const;
+      uint32_t GetMedianOffset() const;
+      uint32_t GetMedianHeight() const;
 
-      static Ref<FontAtlas> Create(const std::string& asFontname, uint aiFontSize);
+      static Ref<FontAtlas> Create(const std::string& asFontname, uint32_t aiFontSize);
     private:
       const Glyph& AddGlyph(char character);
   };
