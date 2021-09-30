@@ -1,8 +1,19 @@
 #include "ECSScene.h"
 
-#include <ecs/ECSComponents.h>
+#include <ecs/components/Camera2DComponent.h>
+#include <ecs/components/Camera3DComponent.h>
+#include <ecs/components/Environment2DComponent.h>
+#include <ecs/components/Environment3DComponent.h>
+#include <ecs/components/MaterialComponent.h>
+#include <ecs/components/MeshComponent.h>
+#include <ecs/components/NativeScriptComponent.h>
+#include <ecs/components/SpriteComponent.h>
+#include <ecs/components/TagComponent.h>
+#include <ecs/components/Transform2DComponent.h>
+#include <ecs/components/Transform3DComponent.h>
 #include <graphics/RenderCommand.h>
 #include <graphics/textures/TextureManager.h>
+#include <graphics/shaders/ShaderFactory.h>
 
 namespace Greet
 {

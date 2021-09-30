@@ -3,6 +3,8 @@
 #include <input/InputDefines.h>
 #include <math/Maths.h>
 
+#include <sstream>
+
 namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(Slider);

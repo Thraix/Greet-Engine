@@ -1,21 +1,7 @@
 #pragma once
 
-#include <stdio.h>  /* defines FILENAME_MAX */
-#include <sys/stat.h>
-#ifdef _WIN32
-#include <direct.h>
-#define GetCurrentDir _getcwd
-#define stat _stat
-#else
-#include <unistd.h>
-#define GetCurrentDir getcwd
-#endif
-
+#include <ostream>
 #include <string>
-#include <cstring>
-#include <logging/Log.h>
-
-// TODO: Move implementation to cpp file
 
 namespace Greet {
 
@@ -36,77 +22,18 @@ namespace Greet {
         else
           return time.tv_sec < rhs.time.tv_sec;
       }
+
       friend std::ostream& operator<<(std::ostream& stream, const TimeModified& time)
       {
         return stream << time.time.tv_sec << "." << time.time.tv_nsec;
       }
     };
 
-    static void PrintWorkingDirectory()
-    {
-      char cCurrentPath[FILENAME_MAX];
-
-      if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath))){
-        Log::Error("Cannot print working directory");
-        return;
-      }
-      Log::Info(cCurrentPath);
-    }
-
-    static TimeModified GetTimeModified(const std::string& filename)
-    {
-      struct stat attrib;
-      stat(filename.c_str(), &attrib);
-      return TimeModified{attrib.st_mtim};
-    }
-
-    static std::string ReadFile(const std::string& filepath)
-    {
-      FILE *file = fopen(filepath.c_str(), "rt");
-      if (!file)
-      {
-        Log::Error("File could not be read: ", filepath);
-        return "";
-      }
-      fseek(file, 0, SEEK_END);
-      unsigned long length = ftell(file);
-      char* data = new char[length + 1];
-      memset(data, 0, length + 1);
-      fseek(file, 0, SEEK_SET);
-      fread(data, 1, length, file);
-      fclose(file);
-      std::string result(data);
-      delete[] data;
-      return result;
-    }
-
-    static void WriteFile(const std::string& filepath, const std::string& write)
-    {
-      FILE *file = fopen(filepath.c_str(),"wt");
-      fseek(file, 0, SEEK_END);
-      fputs(write.c_str(),file);
-      fclose(file);
-    }
-
-    static bool FileExist(const std::string& filepath)
-    {
-      if (FILE *file = fopen(filepath.c_str(), "r"))
-      {
-        fclose(file);
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-    }
-
-    static std::string ReplaceExtension(const std::string& file, const std::string& ext)
-    {
-      size_t pos = file.find_last_of('.');
-      if(pos == std::string::npos)
-        return file + "." + ext;
-      return file.substr(0, pos + 1) + ext;
-    }
+    static void PrintWorkingDirectory();
+    static TimeModified GetTimeModified(const std::string& filename);
+    static std::string ReadFile(const std::string& filepath);
+    static void WriteFile(const std::string& filepath, const std::string& write);
+    static bool FileExist(const std::string& filepath);
+    static std::string ReplaceExtension(const std::string& file, const std::string& ext);
   };
 }

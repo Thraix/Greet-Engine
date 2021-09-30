@@ -1,9 +1,11 @@
 #include "Container.h"
 
-#include <graphics/gui/GUIUtils.h>
-#include <utils/Utils.h>
-#include <utils/AABBUtils.h>
 #include <graphics/gui/Component.h>
+#include <graphics/gui/GUIUtils.h>
+#include <utils/AABBUtils.h>
+#include <utils/StringUtils.h>
+#include <utils/Utils.h>
+
 #include <cstdlib>
 
 namespace Greet

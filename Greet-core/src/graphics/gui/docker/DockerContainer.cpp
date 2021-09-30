@@ -2,7 +2,10 @@
 
 #include <graphics/fonts/FontManager.h>
 #include <graphics/gui/Docker.h>
+#include <graphics/gui/docker/DockerTab.h>
 #include <input/Input.h>
+
+#include <sstream>
 
 namespace Greet
 {
@@ -443,5 +446,20 @@ namespace Greet
     newSplit->SetWeight(oldWeight);
     container->SetWeight(1);
     SetWeight(1);
+  }
+
+  void DockerContainer::DebugPrint(int indent)
+  {
+    std::stringstream ss;
+    for(int i = 0;i<indent;i++)
+    {
+      ss << "-";
+    }
+    if(children.size() == 0)
+      ss << "No children";
+    else
+      ss << children[0]->GetTitle();
+    ss << " w=" << weight;
+    Log::Info(ss.str());
   }
 }

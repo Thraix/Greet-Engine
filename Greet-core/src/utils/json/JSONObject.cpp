@@ -165,8 +165,8 @@ namespace Greet {
 
   std::ostream& operator<<(std::ostream& os, const JSONObject& obj)
   {
-    os << JSON::get_indent() << "{\n";
-    JSON::push_indent();
+    os << JSON::GetIndent() << "{\n";
+    JSON::PushIndent();
     uint32_t vsize = obj.m_values.size();
     uint32_t asize = obj.m_arrays.size();
     uint32_t osize = obj.m_objects.size();
@@ -174,7 +174,7 @@ namespace Greet {
     uint32_t i = 1;
     for (auto it = obj.m_values.begin();it != obj.m_values.end(); ++it, ++i)
     {
-      os << JSON::get_indent() << "\"" << it->first << "\"" << ": ";
+      os << JSON::GetIndent() << "\"" << it->first << "\"" << ": ";
       if (it->second == "null" || it->second == "true" || it->second == "false" || StringUtils::IsNumber(it->second))
       {
         os << it->second;
@@ -193,7 +193,7 @@ namespace Greet {
     i = 1;
     for (auto it = obj.m_arrays.begin();it != obj.m_arrays.end(); ++it, ++i)
     {
-      os << JSON::get_indent() << "\"" << it->first << "\"" << ":\n" << it->second;
+      os << JSON::GetIndent() << "\"" << it->first << "\"" << ":\n" << it->second;
       if (i != asize || osize != 0)
       {
         os << ",\n";
@@ -203,14 +203,14 @@ namespace Greet {
     i = 1;
     for (auto it = obj.m_objects.begin();it != obj.m_objects.end(); ++it, ++i)
     {
-      os << JSON::get_indent() << "\"" << it->first << "\"" << ":\n" << it->second;
+      os << JSON::GetIndent() << "\"" << it->first << "\"" << ":\n" << it->second;
       if (i != osize)
       {
         os << ",\n";
       }
     }
-    JSON::pop_indent();
-    os << "\n" << JSON::get_indent() << "}";
+    JSON::PopIndent();
+    os << "\n" << JSON::GetIndent() << "}";
     return os;
   }
 }

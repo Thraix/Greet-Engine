@@ -51,8 +51,8 @@ namespace Greet {
 
   std::ostream& operator<<(std::ostream& os, const JSONArray& arr)
   {
-    os << JSON::get_indent() << "[\n";
-    JSON::push_indent();
+    os << JSON::GetIndent() << "[\n";
+    JSON::PushIndent();
     uint32_t size = arr.m_objects.size();
     for (uint32_t i = 0;i<size;++i)
     {
@@ -62,8 +62,8 @@ namespace Greet {
         os << ",\n";
       }
     }
-    JSON::pop_indent();
-    os << "\n" << JSON::get_indent() << "]";
+    JSON::PopIndent();
+    os << "\n" << JSON::GetIndent() << "]";
     return os;
   }
 }

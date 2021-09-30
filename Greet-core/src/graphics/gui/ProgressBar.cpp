@@ -1,5 +1,6 @@
 #include "ProgressBar.h"
 
+#include <sstream>
 #include <stdlib.h>
 
 namespace Greet

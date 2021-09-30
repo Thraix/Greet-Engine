@@ -1,6 +1,5 @@
 #pragma once
 
-#include <graphics/gui/docker/DockerTab.h>
 #include <graphics/gui/docker/DockerInterface.h>
 #include <utils/xml/XMLObject.h>
 
@@ -9,6 +8,7 @@
 namespace Greet {
 
   class Docker;
+  class DockerTab;
   class DockerSplit;
 
   class DockerContainer : public DockerInterface
@@ -69,22 +69,7 @@ namespace Greet {
       const Vec2f& GetSplitSize() const;
 
       void AddSplit(DockerTab* tab, bool vertical, bool before);
-
       const Vec2f& GetTabOffset() const;
-
-      void DebugPrint(int indent) override
-      {
-        std::stringstream ss;
-        for(int i = 0;i<indent;i++)
-        {
-          ss << "-";
-        }
-        if(children.size() == 0)
-          ss << "No children";
-        else
-          ss << children[0]->GetTitle();
-        ss << " w=" << weight;
-        Log::Info(ss.str());
-      }
+      void DebugPrint(int indent) override;
   };
 }

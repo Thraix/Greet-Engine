@@ -22,6 +22,34 @@ namespace Greet {
     delete[] pixels;
   }
 
+  const std::string Utils::CurrentDateTime()
+  {
+    time_t now = time(0);
+    struct tm tstruct;
+    char buf[80];
+    tstruct = *localtime(&now);
+    strftime(buf,sizeof(buf),"%Y%m%d%H%M%S",&tstruct);
+    return buf;
+  }
+
+  std::string Utils::GetTime()
+  {
+    time_t currentTime;
+    struct tm *localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    int hour = localTime->tm_hour;
+    int min = localTime->tm_min;
+    std::string res = "";
+    if (hour < 10)
+      res += "0";
+    res += std::to_string(hour)+":";
+    if (min < 10)
+      res += "0";
+    res += std::to_string(min);
+    return res;
+  }
+
   bool Utils::IsInside(const Vec2f& point, const Vec2f& pos, const Vec2f& size)
   {
     return point.x >= pos.x && point.x < pos.x + size.w && point.y >= pos.y && point.y < pos.y + size.h;

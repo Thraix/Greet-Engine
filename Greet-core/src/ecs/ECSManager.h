@@ -10,8 +10,6 @@
 #include <functional>
 #include <typeindex>
 
-// TODO: Move implementation to cpp file
-
 namespace Greet
 {
   class ECSManager final
@@ -22,38 +20,12 @@ namespace Greet
       std::unordered_map<std::type_index, ComponentPoolBase*> componentPool;
       int currentEntityId = 1;
     public:
-      ~ECSManager()
-      {
-        for(auto&& components : componentPool)
-        {
-          delete components.second;
-        }
-        componentPool.clear();
-      }
+      ~ECSManager();
 
-      EntityID CreateEntity()
-      {
-        ASSERT(currentEntityId != (uint32_t)-1, "No more entities available");
-        entities.emplace(currentEntityId);
-        currentEntityId++;
-        return currentEntityId-1;
-      }
-
-      void DestroyEntity(EntityID entity)
-      {
-        auto it = entities.find(entity);
-        ASSERT(it != entities.end(), "Entity does not exist in ECSManager (entity=", entity, ")");
-        entities.erase(it);
-        for(auto&& pool : componentPool)
-        {
-          pool.second->Erase(entity);
-        }
-      }
-
-      bool ValidEntity(EntityID entity)
-      {
-        return entities.find(entity) != entities.end();
-      }
+      EntityID CreateEntity();
+      void DestroyEntity(EntityID entity);
+      bool ValidEntity(EntityID entity);
+      void Each(std::function<void(EntityID)> function);
 
       template <typename... Components, typename... Args>
       std::tuple<Components&...> AddComponents(EntityID entity, Components&&... components)
@@ -153,12 +125,6 @@ namespace Greet
             i++;
           }
         }
-      }
-
-      void Each(std::function<void(EntityID)> function)
-      {
-        for(auto e : entities)
-          function(e);
       }
 
       template <typename T>

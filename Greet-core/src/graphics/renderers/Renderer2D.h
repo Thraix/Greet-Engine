@@ -1,17 +1,12 @@
 #pragma once
 
 #include <graphics/shaders/Shader.h>
-#include <logging/Log.h>
 
 #include <stack>
 
-// TODO: Move implementation to cpp file
-
 namespace Greet{
 
-  class Renderable;
   class Renderable2D;
-  class RenderablePoly;
 
   class Renderer2D
   {
@@ -20,44 +15,21 @@ namespace Greet{
       const Mat3* m_transformationBack;
       Ref<Shader> shader;
     public:
-      Renderer2D(const Ref<Shader>& shader)
-        : shader{shader}
-      {
-        m_transformationStack.push(Mat3::Identity());
-        m_transformationBack = &m_transformationStack.top();
-      }
+      Renderer2D(const Ref<Shader>& shader);
 
-      virtual ~Renderer2D() {}
-      virtual void Begin() {}
+      virtual ~Renderer2D();
+      virtual void Begin();
       virtual void Flush() = 0;
-      virtual void End() {}
+      virtual void End();
 
       virtual void Draw(const Renderable2D& renderable) = 0;
 
-      void PushMatrix(const Mat3 &matrix, bool override = false)
-      {
-        if (override)
-          m_transformationStack.push(matrix);
-        else
-          m_transformationStack.push(*m_transformationBack * matrix);
-        m_transformationBack = &m_transformationStack.top();
+      void PushMatrix(const Mat3 &matrix, bool override = false);
+      void PopMatrix();
 
-      }
-      void PopMatrix()
-      {
-        if (m_transformationStack.size() > 1)
-          m_transformationStack.pop();
-        else
-          Log::Warning("Trying to pop the last matrix.");
-        m_transformationBack = &m_transformationStack.top();
-      }
+      const Mat3& GetMatrix() const;
 
-      const Mat3& GetMatrix() const
-      {
-        return *m_transformationBack;
-      }
-
-      const Ref<Shader>& GetShader() const { return shader; }
-      virtual void SetShader(const Ref<Shader>& aShader) { shader = aShader; }
+      const Ref<Shader>& GetShader() const;
+      virtual void SetShader(const Ref<Shader>& aShader);
   };
 }

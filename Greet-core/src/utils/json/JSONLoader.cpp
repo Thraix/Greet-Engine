@@ -1,5 +1,6 @@
 #include "JSONLoader.h"
 
+#include <logging/Log.h>
 #include <utils/FileUtils.h>
 #include <utils/StringUtils.h>
 
@@ -16,7 +17,7 @@ namespace Greet {
       Log::Error("Invalid format: %s %s",currentPos, file[currentPos] == ' ');
       return JSONObject();
     }
-    while (IsIndent(file, currentPos));
+    while (IsIndent(file, currentPos)) {}
     //if (currentPos != file.size())
     {
       //Log::Info("JSONObject ended but there is more in the file.");

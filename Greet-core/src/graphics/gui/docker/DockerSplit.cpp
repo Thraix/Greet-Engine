@@ -1,8 +1,11 @@
 #include "DockerSplit.h"
 
-#include <chrono>
-#include <thread>
 #include <graphics/gui/Docker.h>
+#include <graphics/gui/docker/DockerContainer.h>
+
+#include <chrono>
+#include <sstream>
+#include <thread>
 
 namespace Greet
 {
@@ -429,6 +432,25 @@ namespace Greet
     for(auto&& child : children)
     {
       child->SetWeight(child->GetWeight() * weightScale);
+    }
+  }
+
+  void DockerSplit::DebugPrint(int indent)
+  {
+    std::stringstream ss;
+    for(int i = 0;i<indent;i++)
+    {
+      ss << "-";
+    }
+    if(vertical)
+      ss << "[vertical]";
+    else
+      ss << "[horizontal]";
+    ss << " w=" << weight;
+    Log::Info(ss.str());
+    for(auto it = children.begin(); it != children.end();++it)
+    {
+      (*it)->DebugPrint(indent+1);
     }
   }
 }

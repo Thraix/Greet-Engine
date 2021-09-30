@@ -1,6 +1,8 @@
 #include "Docker.h"
 
 #include <input/InputDefines.h>
+#include <graphics/gui/docker/DockerTab.h>
+#include <graphics/gui/docker/DockerContainer.h>
 
 namespace Greet
 {

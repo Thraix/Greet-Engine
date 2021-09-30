@@ -6,8 +6,6 @@
 #include <unordered_map>
 #include <vector>
 
-// TODO: Move implementation to cpp file
-
 namespace Greet
 {
   class EntitySet
@@ -16,57 +14,17 @@ namespace Greet
       std::vector<EntityID> entitiesList;
       std::unordered_map<EntityID, size_t> entitiesMap;
     public:
-      bool Emplace(EntityID entity)
-      {
-        auto res = entitiesMap.emplace(entity, entitiesList.size());
+      bool Emplace(EntityID entity);
+      bool Erase(EntityID entity);
+      bool Pop();
+      size_t Find(EntityID entity);
+      size_t Size() const;
+      std::vector<EntityID>& GetList();
+      const std::vector<EntityID>& GetList() const;
 
-        // Check if already exists
-        if(!res.second)
-          return false;
-
-        entitiesList.push_back(entity);
-        return true;
-      }
-
-      bool Erase(EntityID entity)
-      {
-        auto it = entitiesMap.find(entity);
-        if(it == entitiesMap.end())
-          return false;
-        entitiesMap.erase(it);
-        entitiesList.erase(entitiesList.begin() + it->second);
-        return true;
-      }
-
-      bool Pop()
-      {
-        if(entitiesList.size() == 0)
-          return false;
-        entitiesMap.erase(entitiesMap.find(entitiesList.back()));
-        entitiesList.pop_back();
-        return true;
-      }
-
-      size_t Find(EntityID entity)
-      {
-        auto it = entitiesMap.find(entity);
-        if(it == entitiesMap.end())
-          return entitiesList.size();
-        return it->second;
-      }
-
-      size_t Size() const
-      {
-        return entitiesList.size();
-      }
-
-      std::vector<EntityID>& GetList() { return entitiesList; }
-      const std::vector<EntityID>& GetList() const { return entitiesList; }
-
-      std::vector<EntityID>::iterator Begin() { return entitiesList.begin(); }
-      std::vector<EntityID>::iterator End() { return entitiesList.end(); }
-
-      std::vector<EntityID>::iterator begin() { return entitiesList.begin(); }
-      std::vector<EntityID>::iterator end() { return entitiesList.end(); }
+      std::vector<EntityID>::iterator Begin();
+      std::vector<EntityID>::iterator End();
+      std::vector<EntityID>::iterator begin();
+      std::vector<EntityID>::iterator end();
   };
 };

@@ -1,8 +1,6 @@
 #pragma once
 
-#include <logging/Log.h>
-
-// TODO: Move implementation to cpp file
+#include <string>
 
 namespace Greet {
 
@@ -12,20 +10,8 @@ namespace Greet {
       static std::string m_indent;
 
     public:
-      static const std::string& get_indent()
-      {
-        return m_indent;
-      }
-
-      static void push_indent()
-      {
-        m_indent.push_back('\t');
-      }
-
-      static void pop_indent()
-      {
-        ASSERT(m_indent.size() != 0, "Trying to pop JSON indent that is empty");
-        m_indent.pop_back();
-      }
+      static const std::string& GetIndent();
+      static void PushIndent();
+      static void PopIndent();
   };
 }

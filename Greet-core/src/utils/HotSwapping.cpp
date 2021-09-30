@@ -1,5 +1,7 @@
 #include "HotSwapping.h"
 
+#include <logging/Log.h>
+
 namespace Greet
 {
   std::map<uint32_t, Resource*> HotSwapping::resources;

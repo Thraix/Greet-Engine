@@ -1,6 +1,6 @@
 #include "NativeScript.h"
 
-#include <ecs/ECSComponents.h>
+#include <ecs/components/TagComponent.h>
 
 namespace Greet
 {
