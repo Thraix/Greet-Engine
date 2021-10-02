@@ -1,9 +1,12 @@
 #include <scripting/NativeScript.h>
-#include <ecs/ECSComponents.h>
-#include <input/Input.h>
+
+#include <ecs/components/Camera3DComponent.h>
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
+#include <graphics/RenderCommand.h>
 #include <input/Input.h>
+#include <input/Input.h>
+#include <math/Plane.h>
 
 class CameraControllerScript : public Greet::NativeScript
 {
