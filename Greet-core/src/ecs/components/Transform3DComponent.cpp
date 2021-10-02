@@ -9,14 +9,14 @@ namespace Greet
   {}
 
   Transform3DComponent::Transform3DComponent(const Vec3f& pos, const Vec3f& scale, const Vec3f& rot)
-    : transform{Mat4::TransformationMatrix(pos, scale, rot)}
+    : transform{Mat4::TransformationMatrix(pos, scale, rot)}, position{pos}, scale{scale}, rotation{rot}
   {}
 
   Transform3DComponent::Transform3DComponent(const MetaFileClass& metaClass)
-    : transform{Mat4::TransformationMatrix(
+    : Transform3DComponent{
         MetaFileLoading::LoadVec3f(metaClass, "position", {0.0f}),
         MetaFileLoading::LoadVec3f(metaClass, "scale", {1.0f}),
-        MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}).ToRadians())}
+        MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}).ToRadians()}
   {}
 
   void Transform3DComponent::SetPosition(const Vec3f& avPos)
