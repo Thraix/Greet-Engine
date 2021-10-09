@@ -33,6 +33,16 @@ namespace Greet
         id = entityId;
       }
 
+      bool operator==(const Entity& entity)
+      {
+        return id == entity.id;
+      }
+
+      bool operator!=(const Entity& entity)
+      {
+        return id != entity.id;
+      }
+
       operator bool() const
       {
         if(manager)

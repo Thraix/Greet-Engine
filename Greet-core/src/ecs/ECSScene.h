@@ -22,8 +22,8 @@ namespace Greet
 
     public:
       ECSScene();
+      ECSScene(const Ref<ECSManager>& ecsManager);
       ECSScene(const std::string& scenePath);
-      void Init();
       virtual ~ECSScene();
 
       void LoadEntity(const MetaFile& meta);
@@ -34,10 +34,13 @@ namespace Greet
 
       virtual void Render() const override;
       virtual void Render2D() const;
-      virtual void Render3D() const;
-      virtual void UpdateBefore(float timeElapsed) {}
+
+      virtual void Render3DScene() const;
+      virtual void Render3DBegin(const Camera3DComponent& cam, const Environment3DComponent& env) const;
+      virtual void Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const;
+      virtual void Render3DEnd(const Camera3DComponent& cam, const Environment3DComponent& env) const;
+
       virtual void Update(float timeElapsed) override;
-      virtual void UpdateAfter(float timeElapsed) {}
       virtual void OnEvent(Event& event) override;
       const ECSManager* GetManager() const { return manager.get(); }
       ECSManager* GetManager() { return manager.get(); }
