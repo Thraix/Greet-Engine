@@ -71,36 +71,7 @@ namespace Greet{
     return params;
   }
 
-  Ref<CubeMap>& TextureManager::LoadCubeMap(const std::string& metaFile)
-  {
-    auto it = cubeMaps.find(metaFile);
-    if(it != cubeMaps.end())
-    {
-      return it->second;
-    }
-
-    MetaFile meta{metaFile};
-    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("cubemap");
-
-    if(metaClasses.size() > 0)
-    {
-      if(metaClasses.size() > 1)
-      {
-        Log::Warning("Multiple textures defined in meta file: ", metaFile);
-      }
-      return cubeMaps.emplace(metaFile, new CubeMap(metaClasses[0].GetValue("filepath", metaFile))).first->second;
-    }
-    else
-    {
-      uint32_t width, height;
-      auto data = ImageFactory::GetCantReadImage();
-      Log::Error("No texture found in meta file: ", metaFile);
-      static Ref<CubeMap> invalid{new CubeMap(data)};
-      return invalid;
-    }
-  }
-
-  Ref<Texture2D>& TextureManager::LoadTexture2D(const std::string& metaFile)
+  Ref<Texture2D> TextureManager::LoadTexture2DUnsafe(const std::string& metaFile)
   {
     auto it = texture2Ds.find(metaFile);
     if(it != texture2Ds.end())
@@ -120,14 +91,55 @@ namespace Greet{
       TextureParams params = GetMetaParams(metaClasses[0]);
       return texture2Ds.emplace(metaFile, Texture2D::Create(metaClasses[0].GetValue("filepath", metaFile), params)).first->second;
     }
-    else
+    return nullptr;
+  }
+
+  Ref<CubeMap> TextureManager::LoadCubeMapUnsafe(const std::string& metaFile)
+  {
+    auto it = cubeMaps.find(metaFile);
+    if(it != cubeMaps.end())
     {
-      Log::Error("No texture found in meta file: ", metaFile);
-      uint32_t width, height;
-      auto data = ImageFactory::GetCantReadImage();
-      static Ref<Texture2D> invalid{Texture2D::Create(data)};
-      return invalid;
+      return it->second;
     }
+
+    MetaFile meta{metaFile};
+    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("cubemap");
+
+    if(metaClasses.size() > 0)
+    {
+      if(metaClasses.size() > 1)
+      {
+        Log::Warning("Multiple textures defined in meta file: ", metaFile);
+      }
+      return cubeMaps.emplace(metaFile, NewRef<CubeMap>(metaClasses[0].GetValue("filepath", metaFile))).first->second;
+    }
+    return nullptr;
+  }
+
+  Ref<Texture2D> TextureManager::LoadTexture2D(const std::string& metaFile)
+  {
+    Ref<Texture2D> texture = LoadTexture2DUnsafe(metaFile);
+    if(texture)
+      return texture;
+
+    Log::Error("No texture found in meta file: ", metaFile);
+    uint width, height;
+    ImageData imageData = ImageFactory::GetCantReadImage();
+    static Ref<Texture2D> invalid{Texture2D::Create(imageData)};
+    return invalid;
+  }
+
+  Ref<CubeMap> TextureManager::LoadCubeMap(const std::string& metaFile)
+  {
+    Ref<CubeMap> cubeMap = LoadCubeMapUnsafe(metaFile);
+    if(cubeMap)
+      return cubeMap;
+
+    uint width, height;
+    ImageData imageData = ImageFactory::GetCantReadImage();
+    Log::Error("No texture found in meta file: ", metaFile);
+    static Ref<CubeMap> invalid{NewRef<CubeMap>(imageData)};
+    return invalid;
   }
 
   void TextureManager::CleanupUnused()

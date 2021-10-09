@@ -68,6 +68,7 @@ namespace Greet
     public:
       Component(const std::string& name, Component* parent, const std::string& componentType);
       Component(const XMLObject& object, Component* parent);
+      virtual ~Component() = default;
 
       virtual void PostConstruction(){}
 

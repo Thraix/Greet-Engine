@@ -33,6 +33,7 @@ namespace Greet {
 
     public:
       Docker(const XMLObject& object, Component* parent);
+      virtual ~Docker();
 
       void GrabDockerTab(DockerTab* tab);
       void HandleDroppedTab(MouseReleaseEvent& event, const Vec2f& componentPos);

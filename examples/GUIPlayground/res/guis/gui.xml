@@ -30,6 +30,11 @@
         <DockerTab title="Profiler">
           <Container width="fill_parent" height="fill_parent"/>
         </DockerTab>
+        <DockerTab title="Image Viewer">
+          <Container width="fill_parent" height="fill_parent">
+            <Image backgroundColor="#ff00ff" image="../res/textures/viking_room.meta"/>
+          </Container>
+        </DockerTab>
       </DockerContainer>
 
       <DockerContainer weight="2">

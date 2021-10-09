@@ -17,8 +17,11 @@ namespace Greet {
       static void AddTexture2D(const std::string& id, const Ref<Texture2D>& texture);
       static void AddCubeMap(const std::string& id, const Ref<CubeMap>& texture);
 
-      static Ref<Texture2D>& LoadTexture2D(const std::string& metaFile);
-      static Ref<CubeMap>& LoadCubeMap(const std::string& metaFile);
+      static Ref<Texture2D> LoadTexture2DUnsafe(const std::string& metaFile);
+      static Ref<CubeMap> LoadCubeMapUnsafe(const std::string& metaFile);
+
+      static Ref<Texture2D> LoadTexture2D(const std::string& metaFile);
+      static Ref<CubeMap> LoadCubeMap(const std::string& metaFile);
 
       static void CleanupUnused();
       static void Cleanup();

@@ -14,14 +14,16 @@ namespace Greet
   {
     title = GUIUtils::GetStringFromXML(object, "title", "");
     if(object.GetObjectCount() == 0)
+    {
       Log::Warning("DockerTab contains no component");
+      component = new Component({"Component", {}, ""}, docker);
+    }
     else
     {
       component = ComponentFactory::GetComponent(object.GetObject(0), docker);
       if(object.GetObjectCount() >= 2)
       {
         Log::Warning("DockerTab contains more than one component. Only one will display. Put them in a Container");
-        component = new Component({"Component", {}, ""}, docker);
       }
       component->PostConstruction();
     }

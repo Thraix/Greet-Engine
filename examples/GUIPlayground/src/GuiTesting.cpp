@@ -146,6 +146,7 @@ class Core : public App
 
     void Destruct() override
     {
+      editorView->Remove2DScene("2dScene");
       GlobalSceneManager::GetSceneManager().Remove2DScene("GUIScene");
     }
 

@@ -68,6 +68,13 @@ namespace Greet
     splitIcon->Measure({0, 0}, {1, 1});
   }
 
+  Docker::~Docker()
+  {
+    delete splitIcon;
+    delete tabButton;
+    delete split;
+  }
+
   void Docker::GrabDockerTab(DockerTab* tab)
   {
     grabbedDistance = 0;

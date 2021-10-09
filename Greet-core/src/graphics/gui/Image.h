@@ -19,8 +19,17 @@ namespace Greet {
     public:
       Format format;
       Ref<Texture2D> texture;
+
       Image(const std::string& name, Component* parent);
       Image(const XMLObject& object, Component* parent);
+      virtual ~Image() = default;
       void Render(GUIRenderer* renderer) const override;
+
+      void SetTexture(const std::string& metaFile);
+      void SetTexture(const Ref<Texture2D>& texture);
+
+      float GetWrapWidth() const override;
+      float GetWrapHeight() const override;
+
   };
 }

@@ -19,6 +19,24 @@ namespace Greet {
     renderer->GetShader()->Disable();
   }
 
+  GUIScene::~GUIScene()
+  {
+    for(auto& frame : frames)
+    {
+      delete frame;
+    }
+    while(!addQueue.empty())
+    {
+      delete addQueue.front();
+      addQueue.pop();
+    }
+    while(!removeQueue.empty())
+    {
+      delete removeQueue.front();
+      removeQueue.pop();
+    }
+  }
+
   void GUIScene::OnEvent(Event& event)
   {
     Scene::OnEvent(event);

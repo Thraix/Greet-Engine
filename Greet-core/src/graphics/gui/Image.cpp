@@ -74,4 +74,29 @@ namespace Greet {
       }
     }
   }
+
+  void Image::SetTexture(const std::string& textureName)
+  {
+    Ref<Texture2D> texture = TextureManager::LoadTexture2DUnsafe(textureName);
+    if(texture) {
+      this->texture = texture;
+      return;
+    }
+    Log::Error("No texture found in meta file: ", textureName);
+  }
+
+  void Image::SetTexture(const Ref<Texture2D>& texture)
+  {
+    this->texture = texture;
+  }
+
+  float Image::GetWrapWidth() const
+  {
+    return texture->GetWidth();
+  }
+
+  float Image::GetWrapHeight() const
+  {
+    return texture->GetHeight();
+  }
 }

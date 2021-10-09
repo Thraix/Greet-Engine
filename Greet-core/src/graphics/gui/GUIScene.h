@@ -28,6 +28,7 @@ namespace Greet {
 
     public:
       GUIScene();
+      virtual ~GUIScene();
 
       void OnEvent(Event& event) override;
       void OnMousePressEventHandler(MousePressEvent& event);
