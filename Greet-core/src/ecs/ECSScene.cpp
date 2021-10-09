@@ -17,14 +17,22 @@
 
 namespace Greet
 {
-  ECSScene::ECSScene()
+  ECSScene::ECSScene() :
+    ECSScene{NewRef<ECSManager>()}
   {
-    Init();
   }
 
-  ECSScene::ECSScene(const std::string& scenePath)
+  ECSScene::ECSScene(const Ref<ECSManager>& ecsManager) :
+    manager{ecsManager},
+    renderer2d{NewRef<BatchRenderer>(ShaderFactory::Shader2D())},
+    framebuffer{NewRef<Framebuffer>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), true)},
+    bloom{NewRef<Bloom>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), 6)}
   {
-    Init();
+  }
+
+  ECSScene::ECSScene(const std::string& scenePath) :
+    ECSScene{NewRef<ECSManager>()}
+  {
     MetaFile meta{scenePath};
     const std::vector<MetaFileClass>& entities = meta.GetMetaClass("Entity");
     for(auto&& entity : entities)
@@ -32,14 +40,6 @@ namespace Greet
       if(entity.HasValue("entitypath"))
         LoadEntity(MetaFile{entity.GetValue("entitypath")});
     }
-  }
-
-  void ECSScene::Init()
-  {
-    manager = NewRef<ECSManager>();
-    renderer2d = NewRef<BatchRenderer>(ShaderFactory::Shader2D());
-    framebuffer = NewRef<Framebuffer>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), true);
-    bloom = NewRef<Bloom>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), 6);
   }
 
   ECSScene::~ECSScene()
@@ -93,7 +93,7 @@ namespace Greet
 
   void ECSScene::Render() const
   {
-    Render3D();
+    Render3DScene();
     Render2D();
   }
 
@@ -143,7 +143,7 @@ namespace Greet
     renderer2d->Flush();
   }
 
-  void ECSScene::Render3D() const
+  void ECSScene::Render3DScene() const
   {
     Entity camera{manager.get()};
     camera = manager->Find<Camera3DComponent>(
@@ -158,7 +158,6 @@ namespace Greet
       return;
     }
 
-    framebuffer->Bind();
     Entity environment{manager.get()};
     environment = manager->Find<Environment3DComponent>(
       [&](EntityID id, Environment3DComponent& env)
@@ -170,8 +169,20 @@ namespace Greet
     const Environment3DComponent* env = &defaultEnv;
     if(environment)
       env = &environment.GetComponent<Environment3DComponent>();
-    env->Skybox(cam);
 
+    Render3DBegin(cam, *env);
+    Render3D(cam, *env);
+    Render3DEnd(cam, *env);
+  }
+
+  void ECSScene::Render3DBegin(const Camera3DComponent& cam, const Environment3DComponent& env) const
+  {
+    framebuffer->Bind();
+    env.Skybox(cam);
+  }
+
+  void ECSScene::Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const
+  {
     manager->Each<Transform3DComponent, MeshComponent, MaterialComponent>(
       [&](EntityID id, Transform3DComponent& transform, MeshComponent& mesh, MaterialComponent& material)
       {
@@ -180,20 +191,22 @@ namespace Greet
         material.material.GetShader()->SetUniformMat4("uTransformationMatrix", transform.transform);
         material.material.GetShader()->SetUniform3f("uLightPosition", Vec3f(30.0f, 50.0f, 40.0f));
         material.material.GetShader()->SetUniform3f("uLightColor", Vec3f(0.7, 0.7, 0.7));
-        env->SetShaderUniforms(material.material.GetShader());
+        env.SetShaderUniforms(material.material.GetShader());
         mesh.mesh->Bind();
         mesh.mesh->Render();
         mesh.mesh->Unbind();
         material.material.Unbind();
       });
+  }
 
+  void ECSScene::Render3DEnd(const Camera3DComponent& cam, const Environment3DComponent& env) const
+  {
     framebuffer->Unbind();
-    bloom->Render(framebuffer->GetColorTexture(), *env);
+    bloom->Render(framebuffer->GetColorTexture(), env);
   }
 
   void ECSScene::Update(float timeElapsed)
   {
-    UpdateBefore(timeElapsed);
     manager->Each<NativeScriptComponent>([&](EntityID id, NativeScriptComponent& script)
     {
       if(!script.script->HasBoundEntity())
@@ -204,7 +217,6 @@ namespace Greet
       }
       script.Update(timeElapsed);
     });
-    UpdateAfter(timeElapsed);
   }
 
   void ECSScene::OnEvent(Greet::Event& event)

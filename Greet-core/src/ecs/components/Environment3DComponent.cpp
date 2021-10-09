@@ -52,7 +52,7 @@ namespace Greet
     skyboxMesh->SetClockwiseRender(true);
   }
 
-  void Environment3DComponent::Skybox(Camera3DComponent& camera) const
+  void Environment3DComponent::Skybox(const Camera3DComponent& camera) const
   {
     RenderCommand::EnableDepthTest(false);
     skybox->Enable();

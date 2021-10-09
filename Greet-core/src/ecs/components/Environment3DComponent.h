@@ -30,7 +30,7 @@ namespace Greet
       Environment3DComponent();
       Environment3DComponent(const MetaFileClass& metaClass);
 
-      void Skybox(Camera3DComponent& camera) const;
+      void Skybox(const Camera3DComponent& camera) const;
       void SetShaderUniforms(const Ref<Shader>& shader) const;
   };
 }

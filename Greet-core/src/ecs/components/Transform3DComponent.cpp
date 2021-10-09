@@ -33,7 +33,7 @@ namespace Greet
 
   void Transform3DComponent::SetRotation(const Vec3f& avRotation)
   {
-    position = avRotation;
+    rotation = avRotation;
     RecalcTransform();
   }
 

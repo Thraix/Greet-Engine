@@ -63,8 +63,8 @@ namespace Greet
   void Camera3DComponent::SetShaderUniforms(const Ref<Shader>& shader) const
   {
     shader->SetUniform3f("uCameraPos", cameraPos);
-    shader->SetUniformMat4("uViewMatrix", viewMatrix);
     shader->SetUniformMat4("uProjectionMatrix", projectionMatrix);
+    shader->SetUniformMat4("uViewMatrix", viewMatrix);
     shader->SetUniformMat4("uInvPVMatrix", invPVMatrix);
   }
 

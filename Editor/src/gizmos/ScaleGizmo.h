@@ -2,17 +2,16 @@
 
 #include <Greet.h>
 
+#include "TransformGizmo.h"
 
-class ScaleGizmo
+
+class ScaleGizmo : public TransformGizmo
 {
   enum class InputType
   {
     XAxis = 0, YAxis = 1, ZAxis = 2, XPlane= 3, YPlane = 4, ZPlane = 5, FreeMove = 6, None
   };
 
-  public:
-    Greet::Vec3f position;
-    Greet::Vec3f scale;
   private:
     Greet::Ref<Greet::Mesh> axisMesh;
     Greet::Ref<Greet::Mesh> planeMesh;
@@ -66,7 +65,7 @@ class ScaleGizmo
       boundingBoxes.emplace_back(cubeMesh->GetBoundingBox(), InputType::FreeMove);
     }
 
-    void Render(const Greet::Camera3DComponent& camera) const
+    void Render(const Greet::Camera3DComponent& camera) const override
     {
       shader->Enable();
       Greet::Mat4 mirrorMatrix = Greet::Mat4::Scale({
@@ -84,49 +83,7 @@ class ScaleGizmo
       RenderPlanes(mirrorMatrix);
     }
 
-    void RenderArrows(const Greet::Mat4& mirrorMatrix) const
-    {
-      axisMesh->Bind();
-
-      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix);
-      axisMesh->Render();
-
-      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateX(M_PI / 2));
-      axisMesh->Render();
-
-      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateZ(-M_PI / 2));
-      axisMesh->Render();
-    }
-
-    void RenderPlanes(const Greet::Mat4& mirrorMatrix) const
-    {
-      planeMesh->Bind();
-
-      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2, 0.5));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix);
-      planeMesh->Render();
-
-      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8, 0.5));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateX(-M_PI / 2));
-      planeMesh->Render();
-
-      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2, 0.5));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateZ(M_PI / 2));
-      planeMesh->Render();
-    }
-
-    void RenderCube() const
-    {
-      cubeMesh->Bind();
-      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.8,0.8, 1.0));
-      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position));
-      cubeMesh->Render();
-    }
-
-    bool OnEvent(Greet::Event& event, const Greet::Camera3DComponent& cameraComponent)
+    bool OnEvent(Greet::Event& event, const Greet::Camera3DComponent& cameraComponent) override
     {
       if(EVENT_IS_TYPE(event, Greet::EventType::MOUSE_PRESS))
       {
@@ -205,6 +162,49 @@ class ScaleGizmo
       return false;
     }
 
+
+  private:
+    void RenderArrows(const Greet::Mat4& mirrorMatrix) const
+    {
+      axisMesh->Bind();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix);
+      axisMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateX(M_PI / 2));
+      axisMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateZ(-M_PI / 2));
+      axisMesh->Render();
+    }
+
+    void RenderPlanes(const Greet::Mat4& mirrorMatrix) const
+    {
+      planeMesh->Bind();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.8,0.2, 0.5));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix);
+      planeMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.2,0.2,0.8, 0.5));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateX(-M_PI / 2));
+      planeMesh->Render();
+
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.2,0.2, 0.5));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position) * mirrorMatrix * Greet::Mat4::RotateZ(M_PI / 2));
+      planeMesh->Render();
+    }
+
+    void RenderCube() const
+    {
+      cubeMesh->Bind();
+      shader->SetUniformColor4("uMaterialColor", Greet::Color(0.8,0.8,0.8, 1.0));
+      shader->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate(position));
+      cubeMesh->Render();
+    }
 
     bool IsInputTypeAxis(InputType type)
     {
