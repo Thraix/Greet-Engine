@@ -1,6 +1,13 @@
 #pragma once
 
-#include "entity/EntityManager.h"
+#include <internal/App.h>
+
+namespace Greet
+{
+  class GUIScene;
+};
+
+class EntityManager;
 
 class Editor : public Greet::App
 {

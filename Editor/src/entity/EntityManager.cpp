@@ -1,36 +1,27 @@
 #include "EntityManager.h"
 
+#include "EntityScene.h"
+#include "EntityGUI.h"
+
 #include <ecs/Entity.h>
-#include <graphics/gui/Container.h>
-#include <graphics/gui/Frame.h>
-#include <graphics/gui/TreeNode.h>
-#include <graphics/gui/TreeView.h>
+#include <ecs/components/MaterialComponent.h>
+#include <ecs/components/MeshComponent.h>
+#include <ecs/components/TagComponent.h>
+#include <graphics/gui/SceneView.h>
+#include <graphics/models/MeshFactory.h>
+#include <graphics/shaders/ShaderFactory.h>
 
 using namespace Greet;
 
 EntityManager::EntityManager(Frame* frame) :
-  ecs{NewRef<ECSManager>()}, scene{NewRef<EditorScene>(this)}
+  ecs{NewRef<ECSManager>()},
+  selectedEntity{ecs.get()},
+  scene{NewRef<EntityScene>(this)},
+  gui{NewRef<EntityGUI>(this, frame)}
 {
-  // TODO: Move all gui handling to its own class
-  settingsContainer = frame->GetComponentByName<Container>("settings");
-  settingsContainer->AddComponent(ComponentFactory::GetComponent("res/guis/Transformation3DCompontent.xml", settingsContainer));
-  settingsContainer->AddComponent(ComponentFactory::GetComponent("res/guis/Transformation2DCompontent.xml", settingsContainer));
-  settingsContainer->LoadFrameStyle(frame->GetStylingFile());
-
   sceneView = frame->GetComponentByName<SceneView>("sceneView");
-  sceneTreeView = frame->GetComponentByName<TreeView>("treeView");
-  Button* addEntityButton = frame->GetComponentByName<Button>("addEntityButton");
-
-  ASSERT(sceneTreeView, "Could not load Scene TreeView");
-  ASSERT(addEntityButton, "Could not load Add Entity Button");
   ASSERT(sceneView, "Could not load Scene View");
-
   sceneView->GetSceneManager().Add3DScene(scene, "scene");
-
-  sceneTree = new TreeNode({});
-  sceneTreeView->SetTreeNode(sceneTree);
-
-  addEntityButton->SetOnPressCallback([this](Component* component) { CreateEntity(); } );
 
   // TODO: Remove debug stuff
   CreateEntity();
@@ -45,8 +36,9 @@ EntityManager::~EntityManager()
 
 void EntityManager::SelectEntity(Entity entity)
 {
-  selectedEntity = entity;
+  selectedEntity = entity.GetID();
   scene->SelectEntity(entity);
+  gui->SelectEntity(entity);
 }
 
 void EntityManager::CreateEntity()
@@ -54,10 +46,7 @@ void EntityManager::CreateEntity()
   static int entityId = 0;
   std::string name = "Entity#" + std::to_string(++entityId);
 
-  TreeNode* selected = sceneTreeView->GetRootTreeNode();
-  if(sceneTreeView->HasSelectedNode())
-    selected = sceneTreeView->GetSelectedNode();
-  selected->AddChildNode(TreeNode{name});
+  gui->CreateEntity(name);
 
   Entity entity = Entity::Create(ecs.get());
   entity.AddComponent<TagComponent>(name);
@@ -66,6 +55,14 @@ void EntityManager::CreateEntity()
   MeshData data = MeshFactory::Cube({0,0,0}, {1,2,1.5});
   entity.AddComponent<MeshComponent>(NewRef<Mesh>(data));
   entity.AddComponent<MaterialComponent>(Material{ShaderFactory::Shader3D()});
+}
+
+void EntityManager::UpdateSelectedTransform3D(NotifyOrigin notifyOrigin)
+{
+  if(notifyOrigin != NotifyOrigin::GUI)
+    gui->UpdateSelectedTransform3D();
+  if(notifyOrigin != NotifyOrigin::Scene)
+    scene->UpdateSelectedTransform3D();
 }
 
 Greet::Entity EntityManager::GetSelectedEntity() const

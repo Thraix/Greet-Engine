@@ -1,14 +1,14 @@
 <Container width="1w" vertical="true" padding="10" spacing="5">
   <Label name="transformation3DLabel" width="1w">Transformation3DComponent</Label>
   <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
-    <Label name="translateLabel" width="1w">Translation</Label>
+    <Label name="translationLabel" width="1w">Translation</Label>
     <Container width="1w" vertical="false">
-      <Label name="translateXLabel" height="1w" align="center">X</Label>
-      <TextBox name="translateX" width="1w"/>
-      <Label name="translateYLabel" height="1w" align="center">Y</Label>
-      <TextBox name="translateY" width="1w"/>
-      <Label name="translateZLabel" height="1w" align="center">Z</Label>
-      <TextBox name="translateZ" width="1w"/>
+      <Label name="translationXLabel" height="1w" align="center">X</Label>
+      <TextBox name="translationX" width="1w"/>
+      <Label name="translationYLabel" height="1w" align="center">Y</Label>
+      <TextBox name="translationY" width="1w"/>
+      <Label name="translationZLabel" height="1w" align="center">Z</Label>
+      <TextBox name="translationZ" width="1w"/>
     </Container>
 
     <Label name="scalingLabel" width="1w">Scaling</Label>

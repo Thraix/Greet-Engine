@@ -1,5 +1,12 @@
 #include "Editor.h"
 
+#include "entity/EntityManager.h"
+
+#include <graphics/GlobalSceneManager.h>
+#include <graphics/fonts/FontManager.h>
+#include <graphics/gui/ComponentFactory.h>
+#include <graphics/gui/GUIScene.h>
+
 using namespace Greet;
 
 Editor::Editor()

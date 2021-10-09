@@ -1,24 +1,24 @@
 #pragma once
 
-#include <graphics/shaders/Shader.h>
+#include <ecs/ECSScene.h>
 
-#include "EntityRendering.h"
-
+class EntityRendering;
 class EntityManager;
 
-class EditorScene : public Greet::ECSScene
+class EntityScene : public Greet::ECSScene
 {
   EntityManager* entityManager;
 
   Greet::Ref<EntityRendering> entityRendering;
 
   public:
-    EditorScene(EntityManager* entityManager);
+    EntityScene(EntityManager* entityManager);
 
     void OnEvent(Greet::Event& event) override;
     void Render3D(const Greet::Camera3DComponent& cam, const Greet::Environment3DComponent& env) const override;
 
     void SelectEntity(Greet::Entity entity);
+    void UpdateSelectedTransform3D();
 
     Greet::Entity GetCameraEntity() const;
 

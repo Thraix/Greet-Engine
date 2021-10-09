@@ -2,9 +2,16 @@
 
 #include "../gizmos/ScaleGizmo.h"
 #include "../gizmos/TranslationGizmo.h"
+#include <ecs/Entity.h>
 
-#include <graphics/shaders/Shader.h>
-#include <graphics/models/Mesh.h>
+namespace Greet
+{
+  class ECSManager;
+  class Mesh;
+  class Shader;
+};
+
+class EntityManager;
 
 class EntityRendering
 {

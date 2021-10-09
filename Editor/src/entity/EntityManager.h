@@ -1,28 +1,32 @@
 #pragma once
 
-#include "EditorScene.h"
-
+#include <common/Memory.h>
 #include <ecs/Entity.h>
-#include <graphics/gui/Container.h>
-#include <graphics/gui/Frame.h>
-#include <graphics/gui/TreeNode.h>
-#include <graphics/gui/TreeView.h>
+
+namespace Greet {
+  class ECSManager;
+  class Frame;
+  class SceneView;
+}
+
+enum class NotifyOrigin
+{
+  GUI, Scene
+};
+
+class EntityGUI;
+class EntityScene;
 
 class EntityManager
 {
   private:
-    // GUI references
-    Greet::TreeNode* sceneTree;
-    Greet::TreeView* sceneTreeView;
-    Greet::Container* settingsContainer;
     Greet::SceneView* sceneView;
 
     Greet::Ref<Greet::ECSManager> ecs;
-
     Greet::Entity selectedEntity;
 
-    // Scene
-    Greet::Ref<EditorScene> scene;
+    Greet::Ref<EntityScene> scene;
+    Greet::Ref<EntityGUI> gui;
 
   public:
     EntityManager(Greet::Frame* frame);
@@ -30,11 +34,10 @@ class EntityManager
 
     DELETE_COPY_AND_MOVE(EntityManager);
 
+    void UpdateSelectedTransform3D(NotifyOrigin notifyOrigin);
     void SelectEntity(Greet::Entity entity);
 
     void CreateEntity();
-
     Greet::Entity GetSelectedEntity() const;
-
     const Greet::Ref<Greet::ECSManager>& GetECS() const;
 };
