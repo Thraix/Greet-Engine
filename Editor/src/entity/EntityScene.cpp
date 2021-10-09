@@ -1,12 +1,21 @@
-#include "EditorScene.h"
-
-#include "EntityManager.h"
+#include "EntityScene.h"
 
 #include "../scripts/CameraController.h"
+#include "EntityManager.h"
+#include "EntityRendering.h"
+#include "gui/GUITransform3D.h"
+
+#include <ecs/components/MaterialComponent.h>
+#include <ecs/components/MeshComponent.h>
+#include <ecs/components/NativeScriptComponent.h>
+#include <ecs/components/Transform3DComponent.h>
+#include <graphics/shaders/ShaderFactory.h>
+#include <graphics/textures/TextureManager.h>
+#include <scripting/NativeScriptHandler.h>
 
 using namespace Greet;
 
-EditorScene::EditorScene(EntityManager* entityManager)
+EntityScene::EntityScene(EntityManager* entityManager)
   : ECSScene{entityManager->GetECS()}, entityManager{entityManager}
 {
   ASSERT(manager.get() != nullptr, "ECSManager was not initialized");
@@ -19,7 +28,7 @@ EditorScene::EditorScene(EntityManager* entityManager)
 
 }
 
-void EditorScene::Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const
+void EntityScene::Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const
 {
   ECSScene::Render3D(cam, env);
 
@@ -27,7 +36,7 @@ void EditorScene::Render3D(const Camera3DComponent& cam, const Environment3DComp
   entityRendering->RenderGizmo(cam, entityManager->GetSelectedEntity());
 }
 
-void EditorScene::OnEvent(Event& event)
+void EntityScene::OnEvent(Event& event)
 {
   ECSScene::OnEvent(event);
   Entity camera = GetCameraEntity();
@@ -49,6 +58,7 @@ void EditorScene::OnEvent(Event& event)
       transform.SetPosition(gizmo.position);
       transform.SetScale(gizmo.scale);
       transform.SetRotation(gizmo.rotation);
+      entityManager->UpdateSelectedTransform3D(NotifyOrigin::Scene);
       event.AddFlag(EVENT_HANDLED);
       return;
     }
@@ -70,7 +80,7 @@ void EditorScene::OnEvent(Event& event)
   }
 }
 
-void EditorScene::SelectEntity(Greet::Entity entity)
+void EntityScene::SelectEntity(Greet::Entity entity)
 {
   if(entity.HasComponent<Transform3DComponent>())
   {
@@ -82,7 +92,19 @@ void EditorScene::SelectEntity(Greet::Entity entity)
   }
 }
 
-Entity EditorScene::GetCameraEntity() const
+void EntityScene::UpdateSelectedTransform3D()
+{
+  if(entityManager->GetSelectedEntity().HasComponent<Transform3DComponent>())
+  {
+    Transform3DComponent& transform = entityManager->GetSelectedEntity().GetComponent<Transform3DComponent>();
+    TransformGizmo& gizmo = entityRendering->GetTransformGizmo();
+    gizmo.position = transform.GetPosition();
+    gizmo.scale = transform.GetScale();
+    gizmo.rotation = transform.GetRotation();
+  }
+}
+
+Entity EntityScene::GetCameraEntity() const
 {
   Entity camera{manager.get()};
   camera = manager->Find<Camera3DComponent>(
@@ -96,7 +118,7 @@ Entity EditorScene::GetCameraEntity() const
   return camera;
 }
 
-Entity EditorScene::GetNearestRaycastedEntity(Camera3DComponent& cameraComponent, const Vec2f& pos, float farDistance)
+Entity EntityScene::GetNearestRaycastedEntity(Camera3DComponent& cameraComponent, const Vec2f& pos, float farDistance)
 {
   Entity collisionEntity{manager.get()};
   manager->Each<Transform3DComponent, MeshComponent, MaterialComponent>(

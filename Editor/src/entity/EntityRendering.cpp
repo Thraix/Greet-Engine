@@ -1,5 +1,14 @@
 #include "EntityRendering.h"
 
+#include <ecs/components/MaterialComponent.h>
+#include <ecs/components/MeshComponent.h>
+#include <ecs/components/Transform3DComponent.h>
+#include <ecs/components/Camera3DComponent.h>
+#include <graphics/RenderCommand.h>
+#include <graphics/models/Mesh.h>
+#include <graphics/shaders/Shader.h>
+#include <internal/GreetGL.h>
+
 using namespace Greet;
 
 EntityRendering::EntityRendering(ECSManager* manager)

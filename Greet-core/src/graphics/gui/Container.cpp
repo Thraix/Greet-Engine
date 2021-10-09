@@ -1,5 +1,6 @@
 #include "Container.h"
 
+#include <graphics/gui/Frame.h>
 #include <graphics/gui/Component.h>
 #include <graphics/gui/GUIUtils.h>
 #include <utils/AABBUtils.h>
@@ -258,6 +259,11 @@ namespace Greet
       return;
     }
     m_components.push_back(component);
+    Frame* frameRoot = dynamic_cast<Frame*>(GetRootNode());
+    if(frameRoot)
+    {
+      component->LoadFrameStyle(frameRoot->GetStylingFile());
+    }
     if(guiScene)
       component->SetGUIScene(guiScene);
   }
@@ -286,6 +292,11 @@ namespace Greet
     }
     Log::Warning("Couldn't find component");
     return NULL;
+  }
+
+  void Container::RemoveAllComponents()
+  {
+    m_components.clear();
   }
 
   Component* Container::GetComponent(uint32_t index)

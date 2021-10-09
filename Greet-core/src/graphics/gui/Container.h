@@ -38,6 +38,10 @@ namespace Greet {
       void AddComponent(Component* component);
       Component* RemoveComponent(uint32_t index);
       Component* RemoveComponent(Component* component);
+
+      // This does not delete memory
+      void RemoveAllComponents();
+
       Component* GetComponent(uint32_t index);
       size_t GetComponentCount() const;
 

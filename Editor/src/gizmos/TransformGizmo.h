@@ -2,7 +2,12 @@
 
 #include <math/Vec2.h>
 #include <math/Vec3.h>
-#include <ecs/components/Camera3DComponent.h>
+
+namespace Greet
+{
+  class Camera3DComponent;
+  class Event;
+}
 
 class TransformGizmo
 {
