@@ -5,6 +5,7 @@
 
 #include <graphics/gui/Button.h>
 #include <ecs/components/TagComponent.h>
+#include <ecs/components/MeshComponent.h>
 
 using namespace Greet;
 
@@ -27,6 +28,7 @@ EntityGUI::EntityGUI(EntityManager* entityManager, Frame* frame) :
   guiTransform3D = NewRef<GUITransform3D>(entityManager, settingsContainer);
 
   guiTransform2DComponent = ComponentFactory::GetComponent("res/guis/Transformation2DCompontent.xml", settingsContainer);
+  guiMeshComponent = ComponentFactory::GetComponent("res/guis/MeshComponent.xml", settingsContainer);
 }
 
 void EntityGUI::UpdateSelectedTransform3D()
@@ -55,6 +57,11 @@ void EntityGUI::SelectEntity(Entity entity)
   if(entity.HasComponent<Transform3DComponent>())
   {
     guiTransform3D->AttachTo(settingsContainer, entity.GetComponent<Transform3DComponent>());
+  }
+
+  if(entity.HasComponent<MeshComponent>())
+  {
+    settingsContainer->AddComponent(guiMeshComponent);
   }
 }
 

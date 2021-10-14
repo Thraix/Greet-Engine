@@ -73,6 +73,7 @@
 #include <graphics/gui/Container.h>
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/Docker.h>
+#include <graphics/gui/DropDownMenu.h>
 #include <graphics/gui/Frame.h>
 #include <graphics/gui/GUIMouseListener.h>
 #include <graphics/gui/GUIProperty.h>

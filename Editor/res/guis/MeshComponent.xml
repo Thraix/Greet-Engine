@@ -1,0 +1,14 @@
+<Container width="1w" vertical="true" padding="10" spacing="5">
+  <Label name="meshComponentLabel" width="1w">MeshComponent</Label>
+  <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
+    <Label name="meshLabel" width="1w">Mesh Type</Label>
+    <DropDownMenu width="1w">
+      <DropDownItem>Cube</DropDownItem>
+      <DropDownItem>Sphere</DropDownItem>
+      <DropDownItem>Plane</DropDownItem>
+      <DropDownItem>Model</DropDownItem>
+    </DropDownMenu>
+    <Label name="meshPathLabel" width="1w">Mesh Path</Label>
+    <TextBox name="meshPath" width="1w"/>
+  </Container>
+</Container>

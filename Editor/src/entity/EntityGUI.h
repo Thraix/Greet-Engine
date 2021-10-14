@@ -23,6 +23,7 @@ class EntityGUI
     // GUI Ecs components
     Greet::Ref<GUITransform3D> guiTransform3D;
     Greet::Component* guiTransform2DComponent;
+    Greet::Component* guiMeshComponent;
 
   public:
     EntityGUI(EntityManager* entityManager, Greet::Frame* frame);
