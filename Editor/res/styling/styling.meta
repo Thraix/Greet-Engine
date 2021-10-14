@@ -145,3 +145,31 @@ radius=8
 width=fill_parent
 height=fill_parent
 backgroundColor=$gray-2
+
+[DropDownMenu]
+width=200
+height=30
+backgroundColor=$primaryColor
+borderColor=$darkPrimaryColor
+hover-backgroundColor=$darkPrimaryColor
+hover-borderColor=$darkerPrimaryColor
+border=2
+font=noto:16
+textColor=$textPrimaryColor
+padding=0 10 0 0
+
+dropBorder=0 0 0 0
+dropPadding=0 12 0 0
+dropBackgroundColor=$gray-4
+dropBorderColor=$gray-3
+dropTextColor=$textPrimaryColor
+dropFont=noto:16
+dropHeight=30
+
+hover-dropBorder=0 2 0 0
+hover-dropBackgroundColor=$gray-3
+hover-dropBorderColor=$primaryColor
+
+press-dropBorder=0 2 0 0
+press-dropBackgroundColor=$gray-2
+press-dropBorderColor=$primaryColor

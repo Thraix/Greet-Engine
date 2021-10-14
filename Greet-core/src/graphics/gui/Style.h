@@ -169,6 +169,17 @@ namespace Greet
         sizes.AddVariables(style.sizes);
       }
 
+      void SetVariables(const StylingVariables& style)
+      {
+        colors.SetVariables(style.colors);
+        tlbrs.SetVariables(style.tlbrs);
+        floats.SetVariables(style.floats);
+        ints.SetVariables(style.ints);
+        bools.SetVariables(style.bools);
+        fonts.SetVariables(style.fonts);
+        sizes.SetVariables(style.sizes);
+      }
+
       REGISTER_STYLE_FUNCTIONS(Color, Color, colors);
       REGISTER_STYLE_FUNCTIONS(TLBR, TLBR, tlbrs);
       REGISTER_STYLE_FUNCTIONS(float, Float, floats);

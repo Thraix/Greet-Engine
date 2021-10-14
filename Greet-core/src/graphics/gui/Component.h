@@ -140,6 +140,7 @@ namespace Greet
       const ComponentStyle& GetStyle(const std::string& stylename) const;
       Component& AddStyle(const std::string& stylename, const std::string& inherit = "");
       Component& AddStyleVariables(const StylingVariables& variables);
+      Component& SetStyleVariables(const StylingVariables& variables);
       void LoadStyles(const XMLObject& xmlObject);
       virtual void LoadFrameStyle(const MetaFile& metaFile);
       Component& LoadStyle(const std::string& stylename, const Styling& styling);
@@ -158,6 +159,7 @@ namespace Greet
       virtual void Unfocused(){}
       virtual void MouseEntered(){}
       virtual void MouseExited(){}
+      bool IsFocused() const { return isFocused; }
 
       virtual void ChildChangedFocus(bool focused) {}
 

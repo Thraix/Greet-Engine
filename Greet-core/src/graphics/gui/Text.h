@@ -32,15 +32,17 @@ namespace Greet
       Align align;
       OverlapMode overlapMode;
 
-      Text(const std::string& str, const Font& font = FontManager::Get("noto", 18), const Color& color = {0, 0, 0}, Gravity gravity = Gravity::Center, Align align = Align::Left, OverlapMode overlapMode = OverlapMode::Dots);
+      Text(const std::string& str = "", const Font& font = FontManager::Get("noto", 18), const Color& color = {0, 0, 0}, Gravity gravity = Gravity::Center, Align align = Align::Left, OverlapMode overlapMode = OverlapMode::Dots);
 
       void Render(GUIRenderer* renderer, const Vec2f& contentSize) const;
+      void Render(GUIRenderer* renderer, Vec2f offset, const Vec2f& contentSize) const;
 
       void SetFont(const std::string& fontname)
       {
         font = FontManager::Get(fontname, font.GetSize());
       }
 
+      std::vector<std::string> GetStringLines(float maxWidth, const std::string& str) const;
       std::vector<std::string> GetStringLines(float maxWidth) const;
 
       float GetWrapWidth() const;

@@ -18,6 +18,9 @@ namespace Greet
       MetaFileClass(const std::string& className);
 
     public:
+      MetaFileClass(const std::string& className, const std::unordered_map<std::string, std::string>& values)
+        : className{className}, values{values}
+      {}
       std::string GetValue(const std::string& key, const std::string& val) const;
       bool HasValue(const std::string& key) const;
       const std::string& GetValue(const std::string& key) const;

@@ -10,7 +10,6 @@ namespace Greet
     : Component{object, parent}, attachedColor{nullptr}
   {
     picker = new ColorPickerWindow(Vec2f(0,0), GUIUtils::GetColorFromXML(object, "color", Color{1,1,1,1}));
-    using namespace std::placeholders;
     picker->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChanged));
   }
 

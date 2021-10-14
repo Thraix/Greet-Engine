@@ -65,6 +65,11 @@ void EntityManager::UpdateSelectedTransform3D(NotifyOrigin notifyOrigin)
     scene->UpdateSelectedTransform3D();
 }
 
+void EntityManager::UpdateSelectedMesh(const Ref<Mesh>& mesh)
+{
+  selectedEntity.GetComponent<MeshComponent>().mesh = mesh;
+}
+
 Greet::Entity EntityManager::GetSelectedEntity() const
 {
   return selectedEntity;

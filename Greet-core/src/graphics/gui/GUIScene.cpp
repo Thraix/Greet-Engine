@@ -151,9 +151,9 @@ namespace Greet {
       frame->PostConstruction();
       addQueue.pop();
     }
-    if(focusQueue)
-      RequestFocus(focusQueue);
-    focusQueue = nullptr;
+    if(focusQueue.has_value())
+      RequestFocus(focusQueue.value());
+    focusQueue.reset();
 
     while(!removeQueue.empty())
     {

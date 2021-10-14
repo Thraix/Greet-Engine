@@ -10,14 +10,18 @@ overlapMode = OverlapMode::Wrap;
 
   void Text::Render(GUIRenderer* renderer, const Vec2f& contentSize) const
   {
+    Render(renderer, {}, contentSize);
+  }
+
+  void Text::Render(GUIRenderer* renderer, Vec2f offset, const Vec2f& contentSize) const
+  {
     std::vector<std::string> lines = GetStringLines(contentSize.w);
-    Vec2f offset{};
 
     if(gravity == Gravity::Top)
-      offset.y = font.GetBaselineOffset();
+      offset.y += font.GetBaselineOffset();
     else if(gravity == Gravity::Center)
     {
-      offset.y = contentSize.h;
+      offset.y += contentSize.h;
       if(lines.size() % 2 == 0)
         offset.y -= lines.size() * font.GetSize();
       else
@@ -26,17 +30,17 @@ overlapMode = OverlapMode::Wrap;
       offset.y +=  font.GetBaselineOffset();
     }
     else
-      offset.y = contentSize.h - lines.size() * font.GetSize() + font.GetBaselineOffset();
+      offset.y += contentSize.h - lines.size() * font.GetSize() + font.GetBaselineOffset();
 
     for(auto&& line : lines)
     {
       uint32_t widthOfText = font.GetWidthOfText(line);
       if(align == Align::Left)
-        offset.x = 0;
+        ;
       else if(align == Align::Center)
-        offset.x = (contentSize.w - widthOfText) / 2;
+        offset.x += (contentSize.w - widthOfText) / 2;
       else
-        offset.x = contentSize.w - widthOfText;
+        offset.x += contentSize.w - widthOfText;
 
       renderer->DrawText(std::string(line), offset, font, color, false);
 

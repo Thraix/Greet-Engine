@@ -154,7 +154,8 @@ namespace Greet
   {
     if(!guiScene)
       Log::Error("GuiScene not initialized");
-    guiScene->RequestFocusQueued(this);
+    if(!IsFocused())
+      guiScene->RequestFocusQueued(this);
     if(event.GetButton() == GREET_MOUSE_1)
     {
       pressed = true;
@@ -387,6 +388,16 @@ namespace Greet
     for(auto&& style : styles)
     {
       style.second.AddVariables(variables);
+    }
+    return *this;
+  }
+
+  Component& Component::SetStyleVariables(const StylingVariables& variables)
+  {
+    styleVariables = variables;
+    for(auto&& style : styles)
+    {
+      style.second.SetVariables(variables);
     }
     return *this;
   }

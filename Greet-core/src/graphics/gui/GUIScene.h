@@ -7,6 +7,7 @@
 #include <graphics/renderers/GUIRenderer.h>
 
 #include <list>
+#include <optional>
 #include <queue>
 
 namespace Greet {
@@ -24,7 +25,7 @@ namespace Greet {
 
       std::queue<Frame*> addQueue;
       std::queue<Frame*> removeQueue;
-      Component* focusQueue;
+      std::optional<Component*> focusQueue;
 
     public:
       GUIScene();

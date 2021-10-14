@@ -40,12 +40,11 @@ void EntityRendering::RenderOutlines(const Camera3DComponent& cameraComponent, E
   manager->Each<Transform3DComponent, MaterialComponent, MeshComponent>(
     [&](EntityID id, const Transform3DComponent& transform, const MaterialComponent&, const MeshComponent& mesh)
     {
-      if(id == selectedEntity.GetID())
-        lineShader->SetUniformColor4("uMaterialColor", Color{0.8, 0.2, 0.8});
-      else
-        lineShader->SetUniformColor4("uMaterialColor", Color{0.2, 0.2, 0.2});
+      if(id != selectedEntity.GetID())
+        return;
+      lineShader->SetUniformColor4("uMaterialColor", Color{0.8, 0.2, 0.8});
       const BoundingBox& boundingBox = mesh.mesh->GetBoundingBox();
-      lineShader->SetUniformMat4("uTransformationMatrix", transform.transform *  Mat4::Scale(boundingBox.GetSize() + 0.01) * Mat4::Translate(-0.5));
+      lineShader->SetUniformMat4("uTransformationMatrix", transform.transform *  Mat4::Translate(boundingBox.boundingBoxMin - 0.005) * Mat4::Scale(boundingBox.GetSize() + 0.01));
       lineMesh->Render();
     });
   lineMesh->Unbind();

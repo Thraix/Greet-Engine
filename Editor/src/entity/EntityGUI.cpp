@@ -4,7 +4,13 @@
 #include "gui/GUITransform3D.h"
 
 #include <graphics/gui/Button.h>
+#include <graphics/gui/DropDownMenu.h>
+#include <graphics/gui/TextBox.h>
 #include <ecs/components/TagComponent.h>
+#include <ecs/components/MeshComponent.h>
+#include <utils/MetaFileLoading.h>
+
+#include <fstream>
 
 using namespace Greet;
 
@@ -27,6 +33,9 @@ EntityGUI::EntityGUI(EntityManager* entityManager, Frame* frame) :
   guiTransform3D = NewRef<GUITransform3D>(entityManager, settingsContainer);
 
   guiTransform2DComponent = ComponentFactory::GetComponent("res/guis/Transformation2DCompontent.xml", settingsContainer);
+  guiMeshComponent = ComponentFactory::GetComponent("res/guis/MeshComponent.xml", settingsContainer);
+  guiMeshComponent->GetComponentByName<DropDownMenu>("meshType")->SetOnSelectionChangeCallback(BIND_MEMBER_FUNC(GUIDropDownMenuMeshType));
+  guiMeshComponent->GetComponentByName<TextBox>("meshPath")->SetOnTextChangedCallback(BIND_MEMBER_FUNC(GUITextBoxMeshPath));
 }
 
 void EntityGUI::UpdateSelectedTransform3D()
@@ -56,6 +65,11 @@ void EntityGUI::SelectEntity(Entity entity)
   {
     guiTransform3D->AttachTo(settingsContainer, entity.GetComponent<Transform3DComponent>());
   }
+
+  if(entity.HasComponent<MeshComponent>())
+  {
+    settingsContainer->AddComponent(guiMeshComponent);
+  }
 }
 
 void EntityGUI::GUITreeViewEntitySelected(TreeView* view, TreeNode* node, bool selected)
@@ -75,4 +89,40 @@ void EntityGUI::GUITreeViewEntitySelected(TreeView* view, TreeNode* node, bool s
 void EntityGUI::GUIButtonCreateEntity(Component* component)
 {
   entityManager->CreateEntity();
+}
+
+void EntityGUI::GUIDropDownMenuMeshType(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)
+{
+  meshType = newLabel;
+  if(meshType != "model" || FileUtils::FileExist(newLabel))
+  {
+    if(entityManager->GetSelectedEntity())
+    {
+      MetaFileClass meta{
+        "MeshComponent",
+        {{"mesh", meshType},
+         {"mesh-path", meshPath}}
+      };
+      Ref<Mesh> mesh = MetaFileLoading::LoadMesh(meta, "mesh");
+      entityManager->UpdateSelectedMesh(mesh);
+    }
+  }
+}
+
+void EntityGUI::GUITextBoxMeshPath(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)
+{
+  meshPath = newLabel;
+  if(meshType != "model" || FileUtils::FileExist(newLabel))
+  {
+    if(entityManager->GetSelectedEntity())
+    {
+      MetaFileClass meta{
+        "MeshComponent",
+        {{"mesh", meshType},
+         {"mesh-path", meshPath}}
+      };
+      Ref<Mesh> mesh = MetaFileLoading::LoadMesh(meta, "mesh");
+      entityManager->UpdateSelectedMesh(mesh);
+    }
+  }
 }

@@ -23,6 +23,11 @@ class EntityGUI
     // GUI Ecs components
     Greet::Ref<GUITransform3D> guiTransform3D;
     Greet::Component* guiTransform2DComponent;
+    Greet::Component* guiMeshComponent;
+
+    // GUI data
+    std::string meshType;
+    std::string meshPath;
 
   public:
     EntityGUI(EntityManager* entityManager, Greet::Frame* frame);
@@ -34,4 +39,6 @@ class EntityGUI
   private:
     void GUITreeViewEntitySelected(Greet::TreeView* view, Greet::TreeNode* node, bool selected);
     void GUIButtonCreateEntity(Greet::Component* component);
+    void GUIDropDownMenuMeshType(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel);
+    void GUITextBoxMeshPath(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel);
 };

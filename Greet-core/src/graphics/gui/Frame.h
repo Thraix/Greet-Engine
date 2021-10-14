@@ -41,7 +41,6 @@ namespace Greet {
       Frame(const XMLObject& object);
       virtual ~Frame();
 
-      virtual bool IsMouseInside(const Vec2f& mousePos) const override;
       virtual void SetPosition(const Vec2f& pos) override;
 
       // Check if the mouse is within the resize window
@@ -75,5 +74,6 @@ namespace Greet {
         return styleFile;
       }
 
+      void SetStylingFile(const MetaFile& metaFile);
   };
 }

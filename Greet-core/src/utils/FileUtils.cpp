@@ -63,15 +63,10 @@ namespace Greet {
 
     bool FileUtils::FileExist(const std::string& filepath)
     {
-      if (FILE *file = fopen(filepath.c_str(), "r"))
-      {
-        fclose(file);
-        return true;
-      }
-      else
-      {
-        return false;
-      }
+      struct stat attrib;
+      if(stat(filepath.c_str(), &attrib) != -1)
+        return S_ISREG(attrib.st_mode);
+      return false;
     }
 
     std::string FileUtils::ReplaceExtension(const std::string& file, const std::string& ext)

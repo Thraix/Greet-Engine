@@ -31,9 +31,9 @@ borderColor=#626262
 border=2
 
 [SliderIndicator]
-width=fill_parent 
-height=3 
-border=1 0 
+width=fill_parent
+height=3
+border=1 0
 backgroundColor=#ffffff
 borderColor=#000000
 )"

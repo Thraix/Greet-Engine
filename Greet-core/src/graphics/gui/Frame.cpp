@@ -217,12 +217,6 @@ namespace Greet {
     Remeasure();
   }
 
-  bool Frame::IsMouseInside(const Vec2f& mousePos) const
-  {
-    Vec2f resizeMargin = Vec2f(RESIZING_MARGIN, RESIZING_MARGIN);
-    return AABBUtils::PointInsideBox(mousePos, -resizeMargin, GetSize() + resizeMargin*2);
-  }
-
   void Frame::SetPosition(const Vec2f& pos)
   {
     if(m_stayInsideWindow)
@@ -248,5 +242,11 @@ namespace Greet {
     {
       guiScene->RemoveFrameQueued(name);
     }
+  }
+
+  void Frame::SetStylingFile(const MetaFile& metaFile)
+  {
+    styleFile = metaFile;
+    LoadFrameStyle(styleFile);
   }
 }

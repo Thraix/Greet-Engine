@@ -25,6 +25,7 @@ namespace Greet {
     if(!input.is_open())
     {
       Log::Error("Obj File not found: ", filename);
+      return MeshFactory::Cube();
     }
     std::map<std::string, uint32_t> verticesMap;
 

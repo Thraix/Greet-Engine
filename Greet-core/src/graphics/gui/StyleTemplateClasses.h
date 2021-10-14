@@ -105,6 +105,15 @@ namespace Greet
       }
     }
 
+    void SetVariables(const StyleVariableMap<T>& avValues)
+    {
+      values.clear();
+      for(auto&& value : avValues.values)
+      {
+        values.emplace(value.first, StyleVariable{false, value.second});
+      }
+    }
+
     bool HasValue(const std::string& key)
     {
       return values.find(key) != values.end();
