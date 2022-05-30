@@ -5,6 +5,7 @@
 #include <graphics/models/MeshFactory.h>
 #include <utils/OBJUtils.h>
 
+#include <regex>
 #include <sstream>
 
 namespace Greet
@@ -58,6 +59,29 @@ namespace Greet
         return f;
       }
       return f;
+    }
+
+    uint64_t MetaFileLoading::LoadHex64(const MetaFileClass& metaClass, const std::string& key, uint64_t defaultValue)
+    {
+      uint64_t val = defaultValue;
+      if(metaClass.HasValue(key))
+      {
+        const std::string& value = metaClass.GetValue(key);
+        std::regex regex{"#[0-9a-f]{6}([0-9a-f]{2})?"};
+        if(std::regex_match(value, regex))
+        {
+          val = value.length() == 7 ? 0xff : 0;
+          for(int i = 1; i < value.length(); i++)
+          {
+            if(value[i] >= 'a' && value[i] <= 'f')
+              val = (val << 4) | (value[i] - 'a');
+            else
+              val = (val << 4) | (value[i] - '0');
+          }
+        }
+        return val;
+      }
+      return val;
     }
 
     bool MetaFileLoading::LoadBool(const MetaFileClass& metaClass, const std::string& key, bool defaultValue)

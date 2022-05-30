@@ -5,6 +5,7 @@
 #include <cstring>
 #include <ostream>
 #include <string>
+#include <string_view>
 
 namespace Greet {
 

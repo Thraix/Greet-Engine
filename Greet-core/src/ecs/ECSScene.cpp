@@ -2,6 +2,7 @@
 
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>
+#include <ecs/components/ColorComponent.h>
 #include <ecs/components/Environment2DComponent.h>
 #include <ecs/components/Environment3DComponent.h>
 #include <ecs/components/MaterialComponent.h>
@@ -68,6 +69,7 @@ namespace Greet
     LoadComponent<SpriteComponent>(e, meta, "SpriteComponent");
     LoadComponent<Camera2DComponent>(e, meta, "Camera2DComponent");
     LoadComponent<Environment2DComponent>(e, meta, "Environment2DComponent");
+    LoadComponent<ColorComponent>(e, meta, "ColorComponent");
 
     LoadComponent<NativeScriptComponent>(e, meta, "NativeScriptComponent");
 
@@ -136,8 +138,12 @@ namespace Greet
         SpriteComponent& sprite = e.GetComponent<SpriteComponent>();
         renderer2d->DrawRect(transform.transform, sprite.texture, sprite.texPos, sprite.texSize);
       }
-      else
+      else if(e.HasComponent<ColorComponent>())
+      {
         renderer2d->DrawRect(transform.transform);
+        ColorComponent& color = e.GetComponent<ColorComponent>();
+        renderer2d->DrawRect(transform.transform, color.color);
+      }
     });
     renderer2d->End();
     renderer2d->Flush();
@@ -154,7 +160,6 @@ namespace Greet
 
     if(!camera)
     {
-      Log::Warning("No camera in scene");
       return;
     }
 

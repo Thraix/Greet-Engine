@@ -24,6 +24,7 @@
 #include <ecs/EntitySet.h>
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>
+#include <ecs/components/ColorComponent.h>
 #include <ecs/components/Environment2DComponent.h>
 #include <ecs/components/Environment3DComponent.h>
 #include <ecs/components/MaterialComponent.h>

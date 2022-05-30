@@ -19,6 +19,7 @@ namespace Greet
     static Vec2f LoadVec2f(const MetaFileClass& metaClass, const std::string& key, const Vec2f& defaultValue);
     static Vec2f LoadTextureCoord(const MetaFileClass& metaClass, const Ref<Texture2D>& texture, const std::string& key, const Vec2f& defaultValue);
     static float LoadFloat(const MetaFileClass& metaClass, const std::string& key, float defaultValue);
+    static uint64_t LoadHex64(const MetaFileClass& metaClass, const std::string& key, uint64_t defaultValue);
     static bool LoadBool(const MetaFileClass& metaClass, const std::string& key, bool defaultValue);
     static Color LoadColor(const MetaFileClass& metaClass, const std::string& key, const Color& defaultValue);
     static std::string LoadString(const MetaFileClass& metaClass, const std::string& key, const std::string& defaultValue);

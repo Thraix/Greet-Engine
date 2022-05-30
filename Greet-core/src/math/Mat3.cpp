@@ -55,6 +55,16 @@ namespace Greet{
     return result;
   }
 
+  Mat3 Mat3::Orthographic(float width, float aspect)
+  {
+    Mat3 result(1.0f);
+
+    result.elements[0] = 2.0f / width;
+    result.elements[4] = aspect * 2.0f / width;
+
+    return result;
+  }
+
   Mat3 Mat3::OrthographicViewport()
   {
     Mat3 result(1.0f);
@@ -65,7 +75,16 @@ namespace Greet{
     result.elements[7] = 1;
 
     return result;
+  }
 
+  Mat3 Mat3::OrthographicViewport(float width)
+  {
+    Mat3 result(1.0f);
+
+    result.elements[0] = 2.0f / width;
+    result.elements[4] = RenderCommand::GetViewportAspect() * 2.0f / width;
+
+    return result;
   }
 
   Mat3 Mat3::TransformationMatrix(const Vec2f& pos, const Vec2f& scale, float rot)

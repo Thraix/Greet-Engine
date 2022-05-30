@@ -16,6 +16,7 @@ namespace Greet
     Entity entity{nullptr};
     virtual ~NativeScript() {}
 
+    // TODO: This should return a bool to verify that creation worked
     virtual void OnCreate() {}
     virtual void OnUpdate(float timeElapsed) {}
     virtual void OnEvent(Event& event) {}
