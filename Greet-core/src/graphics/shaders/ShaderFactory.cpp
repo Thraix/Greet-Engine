@@ -8,6 +8,10 @@ namespace Greet {
 #include "factory/shader2d.glsl"
     ;
 
+  const char* shader2dUI =
+#include "factory/shader2dUI.glsl"
+    ;
+
   const char* shader3d =
 #include "factory/shader3d.glsl"
     ;
@@ -44,6 +48,11 @@ namespace Greet {
   Ref<Shader> ShaderFactory::Shader2D()
   {
     return Shader::FromSource(shader2d);
+  }
+
+  Ref<Shader> ShaderFactory::Shader2DUI()
+  {
+    return Shader::FromSource(shader2dUI);
   }
 
   Ref<Shader> ShaderFactory::Shader3D()

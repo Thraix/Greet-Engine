@@ -10,6 +10,7 @@ namespace Greet {
     static const char* shaderErrorFrag;
 
     static Ref<Shader> Shader2D();
+    static Ref<Shader> Shader2DUI();
     static Ref<Shader> Shader3D();
     static Ref<Shader> ShaderGUI();
     static Ref<Shader> ShaderSkybox();

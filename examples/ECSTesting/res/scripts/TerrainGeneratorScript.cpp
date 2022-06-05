@@ -1,5 +1,6 @@
 #include <scripting/NativeScript.h>
-#include <ecs/ECSComponents.h>
+
+#include <ecs/components/MeshComponent.h>
 #include <graphics/models/MeshFactory.h>
 #include <utils/Noise.h>
 

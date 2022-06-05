@@ -57,6 +57,7 @@ namespace Greet {
       GLCall(glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer));
       GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height));
       GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer));
+      GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
     }
   }
 }

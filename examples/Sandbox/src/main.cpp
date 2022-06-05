@@ -9,6 +9,19 @@
 using namespace Greet;
 
 
+class UILayer : public Layer
+{
+  public:
+  UILayer(const Ref<Renderer2D>& renderer, const Mat3& projectionMatrix)
+    : Layer{renderer, projectionMatrix}
+  {
+  }
+
+  virtual void ViewportResize(ViewportResizeEvent& event) override
+  {
+    SetProjectionMatrix(Mat3::OrthographicViewport());
+  }
+};
 
 #if 1
 class Core : public App
@@ -40,7 +53,7 @@ class Core : public App
 
     float progressFloat;
 
-    Ref<Layer> uilayer;
+    Ref<UILayer> uilayer;
     Ref<Layer3D> layer3d;
     Ref<Renderable2D> cursor;
 
@@ -164,7 +177,7 @@ class Core : public App
       light.SetToUniform(flatShader, "Light");
       flatShader->Disable();
 
-      uilayer = NewRef<Layer>(NewRef<BatchRenderer>(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
+      uilayer = NewRef<UILayer>(NewRef<BatchRenderer>(ShaderFactory::Shader2DUI()), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
       cursor = NewRef<Renderable2D>(Vec2f(0,0), Vec2f(32,32), 0xffffffff, Ref<Sprite>{new Sprite{TextureManager::LoadTexture2D("res/textures/cursor.meta")}});
       uilayer->Add(cursor);
@@ -345,7 +358,7 @@ class Core : public App
       {
         // Temporary add viewport since we are not inside the layer
         RenderCommand::PushViewportStack(sceneView->GetRealPosition(), Vec2f(Window::GetWidth(), Window::GetHeight()) - sceneView->GetRealPosition());
-        cursor->SetPosition(Input::GetMousePosPixel());
+        cursor->SetPosition(~uilayer->GetProjectionMatrix() * Input::GetMousePos());
         RenderCommand::PopViewportStack();
       }
       else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
@@ -370,12 +383,6 @@ class Core : public App
       else if(EVENT_IS_TYPE(event, EventType::JOYSTICK_DISCONNECT))
       {
         Log::Info("Controller %s disconnected!", ((JoystickDisconnectEvent&)event).GetJoystick());
-      }
-      else if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
-      {
-        Log::Info("Resize");
-        ViewportResizeEvent& e = static_cast<ViewportResizeEvent&>(event);
-        uilayer->SetProjectionMatrix(Mat3::OrthographicViewport());
       }
       else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
       {

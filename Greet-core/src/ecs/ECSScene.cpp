@@ -1,5 +1,6 @@
 #include "ECSScene.h"
 
+#include <ecs/components/AnimationComponent.h>
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>
 #include <ecs/components/ColorComponent.h>
@@ -65,6 +66,7 @@ namespace Greet
     LoadComponent<Camera3DComponent>(e, meta, "Camera3DComponent");
     LoadComponent<Environment3DComponent>(e, meta, "Environment3DComponent");
 
+    LoadComponent<AnimationComponent>(e, meta, "AnimationComponent");
     LoadComponent<Transform2DComponent>(e, meta, "Transform2DComponent");
     LoadComponent<SpriteComponent>(e, meta, "SpriteComponent");
     LoadComponent<Camera2DComponent>(e, meta, "Camera2DComponent");
@@ -136,7 +138,7 @@ namespace Greet
       if(e.HasComponent<SpriteComponent>())
       {
         SpriteComponent& sprite = e.GetComponent<SpriteComponent>();
-        renderer2d->DrawRect(transform.transform, sprite.texture, sprite.texPos, sprite.texSize);
+        renderer2d->DrawRect(transform.transform, sprite.texture, sprite.GetTexPos(), sprite.GetTexSize());
       }
       else if(e.HasComponent<ColorComponent>())
       {
@@ -221,6 +223,17 @@ namespace Greet
         script.Create();
       }
       script.Update(timeElapsed);
+    });
+    manager->Each<AnimationComponent, SpriteComponent>([&](EntityID id, AnimationComponent& animation, SpriteComponent& sprite) {
+      animation.timeElapsed += timeElapsed;
+      if(animation.timeElapsed > animation.keytime)
+      {
+        animation.timeElapsed -= animation.keytime;
+        animation.aminationIndex++;
+        animation.aminationIndex %= animation.animationCount;
+        // TODO: Figure out a better way of handling the spriteSheet position
+        sprite.spriteSheetX = animation.aminationIndex;
+      }
     });
   }
 

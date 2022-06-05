@@ -20,9 +20,6 @@ class ECSSceneExt : public ECSScene
 
     void LoadExtComponents(Entity& entity, const MetaFile& metaClass) override
     {}
-
-    void UpdateAfter(float timeElapsed) override
-    {}
 };
 
 ECSTesting::ECSTesting()

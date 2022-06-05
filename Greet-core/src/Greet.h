@@ -22,6 +22,7 @@
 #include <ecs/ECSScene.h>
 #include <ecs/Entity.h>
 #include <ecs/EntitySet.h>
+#include <ecs/components/AnimationComponent.h>
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>
 #include <ecs/components/ColorComponent.h>

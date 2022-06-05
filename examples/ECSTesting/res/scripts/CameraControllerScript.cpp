@@ -1,5 +1,9 @@
 #include <scripting/NativeScript.h>
-#include <ecs/ECSComponents.h>
+#include <ecs/components/Camera3DComponent.h>
+#include <ecs/components/Transform3DComponent.h>
+#include <ecs/components/Transform2DComponent.h>
+#include <ecs/components/SpriteComponent.h>
+#include <graphics/textures/TextureManager.h>
 #include <input/Input.h>
 #include <event/KeyEvent.h>
 
@@ -64,7 +68,7 @@ class CameraControllerScript : public Greet::NativeScript
       rot += rotVel * timeElapsed;
       cam.SetViewMatrix(Greet::Mat4::ViewMatrix(pos, rot));
       Greet::Transform2DComponent& transform = radar.GetComponent<Greet::Transform2DComponent>();
-      transform.transform = Greet::Mat3::TransformationMatrix({74.0f}, {128.0f}, rot.y);
+      transform.transform = Greet::Mat3::TransformationMatrix({74.0f}, {128.0f}, 0);
     }
 
     void OnEvent(Greet::Event& event) override

@@ -61,6 +61,18 @@ namespace Greet
       return f;
     }
 
+    int MetaFileLoading::LoadInt(const MetaFileClass& metaClass, const std::string& key, int defaultValue)
+    {
+      float i = defaultValue;
+      if(metaClass.HasValue(key))
+      {
+        std::stringstream ss{metaClass.GetValue(key)};
+        ss >> i;
+        return i;
+      }
+      return i;
+    }
+
     uint64_t MetaFileLoading::LoadHex64(const MetaFileClass& metaClass, const std::string& key, uint64_t defaultValue)
     {
       uint64_t val = defaultValue;
@@ -166,6 +178,8 @@ namespace Greet
           return ShaderFactory::Shader3D();
         else if(type == "shader2d")
           return ShaderFactory::Shader2D();
+        else if(type == "shader2dui")
+          return ShaderFactory::Shader2DUI();
         else if(type == "skybox")
           return ShaderFactory::ShaderSkybox();
         else if(type == "gui")
@@ -180,6 +194,8 @@ namespace Greet
         return ShaderFactory::Shader3D();
       else if(defaultShader == "shader2d")
         return ShaderFactory::Shader2D();
+      else if(defaultShader == "shader2dui")
+        return ShaderFactory::Shader2DUI();
       else if(defaultShader == "skybox")
         return ShaderFactory::ShaderSkybox();
       else if(defaultShader == "gui")

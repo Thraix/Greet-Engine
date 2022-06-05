@@ -19,7 +19,7 @@ void main()
 {
 	gl_Position = vec4(uProjectionMatrix * uViewMatrix * vec3(aPosition, 1.0), 1.0);
 	vPos = vec2(vec3(aPosition, 1.0));
-	vTexCoord = vec2(aTexCoord.x, aTexCoord.y);
+	vTexCoord = vec2(aTexCoord.x, 1 - aTexCoord.y);
 	vTexID = aTexID;
 	vColor = vec4(aColor.z, aColor.y, aColor.x, aColor.w);
 }
