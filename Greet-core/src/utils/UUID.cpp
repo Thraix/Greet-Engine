@@ -1,41 +1,84 @@
 #include "UUID.h"
 
-#include <logging/Log.h>
+#include <utils/LogUtils.h>
+#include <iomanip>
 
 namespace Greet {
 
-  UUID UUID::s_instance;
+  std::default_random_engine UUID::randomEngine{std::random_device{}()};
+  std::uniform_int_distribution<uint64_t> UUID::distribution;
 
   UUID::UUID()
-    : m_randomEngine(time(NULL)), m_distribution()
-  {
-  }
+    : msb{distribution(randomEngine)}, lsb{distribution(randomEngine)}
+  {}
 
-  uint32_t UUID::GetUUID()
-  {
-    return GenNewUUID();
-  }
+  UUID::UUID(uint64_t msb, uint64_t lsb)
+    : msb{msb}, lsb{lsb}
+  {}
 
-  // generates a random 32 bit number
-  uint32_t UUID::GetRandomNumber()
+  UUID::UUID(const std::string& s)
   {
-    return m_distribution(m_randomEngine);
-  }
-
-  uint32_t UUID::GenNewUUID()
-  {
-    uint32_t i = 1000;
-    uint32_t number;
-    while (i--)
+    std::regex regex{"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"};
+    if(!std::regex_match(s, regex))
     {
-      number = GetRandomNumber();
-      if (number != 0 && m_usedUUID.count(number) == 0)
-      {
-        m_usedUUID.insert(number);
-        return number;
-      }
+      Log::Warning("Invalid UUID format \"%s\"", s);
+      Log::Warning("Valid format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+      Log::Warning("where x is 0-9 or a-f");
+      msb = 0;
+      lsb = 0;
+      return;
     }
-    Log::Warning("Could not generate random UUID. Try again.");
-    return 0;
+
+    std::stringstream ss{s};
+    char c;
+
+    // Standard UUID format names
+    uint64_t time_low;
+    uint64_t time_mid;
+    uint64_t time_hi_and_version;
+    uint64_t clock_seq_hi_and_res_clock_seq_low;
+    uint64_t node;
+
+    ss >> std::hex >> time_low >> c >> time_mid >> c >> time_hi_and_version >> c >> clock_seq_hi_and_res_clock_seq_low >> c >> node;
+    msb = (time_low << 32) | (time_mid << 16) | time_hi_and_version;
+    lsb = (clock_seq_hi_and_res_clock_seq_low << 48) | node;
+  }
+
+  bool operator<(const UUID& lhs, const UUID& rhs)
+  {
+    if(lhs.msb == rhs.msb)
+      return lhs.lsb < rhs.lsb;
+    return lhs.msb < rhs.msb;
+  }
+
+  uint64_t UUID::GetMsb()
+  {
+    return msb;
+  }
+
+  uint64_t UUID::GetLsb()
+  {
+    return lsb;
+  }
+
+  std::string UUID::GetString() const
+  {
+    std::stringstream ss;
+    ss << *this;
+    return ss.str();
+  }
+
+
+  std::ostream& operator<<(std::ostream& stream, const UUID& uuid)
+  {
+    stream << std::hex << std::setfill('0');
+    stream << std::setw(8) << ((uuid.msb >> 32) & 0xffffffff) << '-';
+    stream << std::setw(4) <<  ((uuid.msb >> 16) & 0xffff) << '-';
+    stream << std::setw(4) << (uuid.msb & 0xffff) << '-';
+    stream << std::setw(4) << ((uuid.lsb >> 48) & 0xffff) << '-';
+    stream << std::setw(12) << (uuid.lsb & 0xffffffffffff);
+
+    stream << std::dec;
+    return stream;
   }
 }

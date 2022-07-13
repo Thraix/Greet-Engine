@@ -7,24 +7,25 @@
 namespace Greet {
 
 
-  class UUID
+  class UUID final
   {
-    public:
-      friend class Window;
     private:
-      std::default_random_engine m_randomEngine;
-      std::uniform_int_distribution<uint32_t> m_distribution;
-      std::set<uint32_t> m_usedUUID;
+      static std::default_random_engine randomEngine;
+      static std::uniform_int_distribution<uint64_t> distribution;
 
     public:
-      uint32_t GetUUID();
-    public:
-      static UUID& GetInstance() { return s_instance; }
-    private:
       UUID();
-      ~UUID() { }
-      uint32_t GetRandomNumber();
-      uint32_t GenNewUUID();
-      static UUID s_instance;
+      UUID(uint64_t msb, uint64_t lsb);
+      // Format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      UUID(const std::string& s);
+      uint64_t msb;
+      uint64_t lsb;
+
+      uint64_t GetMsb();
+      uint64_t GetLsb();
+      std::string GetString() const;
+
+      friend bool operator<(const UUID& lhs, const UUID& rhs);
+      friend std::ostream& operator<<(std::ostream& stream, const UUID& uuid);
   };
 }

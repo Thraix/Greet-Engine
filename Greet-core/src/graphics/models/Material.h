@@ -2,6 +2,7 @@
 
 #include <graphics/shaders/Shader.h>
 #include <graphics/textures/Texture2D.h>
+#include <utils/UUID.h>
 
 namespace Greet {
 
@@ -9,7 +10,7 @@ namespace Greet {
   {
     private:
       Ref<Shader> m_shader;
-      uint32_t uuid;
+      UUID uuid;
       Ref<Texture2D> m_texture;
       float specularExponent = 10;
       float specularStrength = 0.5;

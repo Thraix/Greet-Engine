@@ -6,13 +6,13 @@
 namespace Greet {
 
   Material::Material(const Ref<Shader>& shader, const Ref<Texture2D>& texture)
-    : m_shader{shader}, m_texture{texture}, color{Color{1,1,1,1}}, uuid{UUID::GetInstance().GetUUID()}
+    : m_shader{shader}, m_texture{texture}, color{Color{1,1,1,1}}, uuid{}
   {
     UpdateTexture();
   }
 
   Material::Material(const Ref<Shader>& shader)
-    : m_shader{shader}, m_texture{nullptr}, color{Color{1,1,1,1}}, uuid{UUID::GetInstance().GetUUID()}
+    : m_shader{shader}, m_texture{nullptr}, color{Color{1,1,1,1}}, uuid{}
   {
     UpdateTexture();
   }

@@ -54,7 +54,7 @@ namespace Greet
 
 
   Component::Component(const XMLObject& xmlObject, Component* parent)
-    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent, xmlObject.GetName()}
+    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + UUID{}.GetString()), parent, xmlObject.GetName()}
   {
     LoadStyles(xmlObject);
   }
