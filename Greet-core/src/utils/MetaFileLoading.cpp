@@ -168,39 +168,24 @@ namespace Greet
       return Ref<Mesh>(new Mesh{MeshFactory::Cube()});
     }
 
-    Ref<Shader> MetaFileLoading::LoadShader(const MetaFileClass& metaClass, const std::string& defaultShader, const std::string& prefix)
+    Ref<Shader> MetaFileLoading::LoadShader(const MetaFileClass& metaClass, const std::string& key, const std::string& defaultValue)
     {
-      std::string typeKey = prefix == "" ? "shadertype" : prefix + "-shadertype";
-      if(metaClass.HasValue(typeKey))
-      {
-        const std::string& type = metaClass.GetValue(typeKey);
-        if(type == "shader3d")
-          return ShaderFactory::Shader3D();
-        else if(type == "shader2d")
-          return ShaderFactory::Shader2D();
-        else if(type == "shader2dui")
-          return ShaderFactory::Shader2DUI();
-        else if(type == "skybox")
-          return ShaderFactory::ShaderSkybox();
-        else if(type == "gui")
-          return ShaderFactory::ShaderGUI();
-        else if(type == "file")
-        {
-          std::string pathKey = prefix == "" ? "shaderpath" : prefix + "-shaderpath";
-          return Shader::FromFile(LoadString(metaClass, pathKey, ""));
-        }
-      }
-      if(defaultShader == "shader3d")
+      std::string type = defaultValue;
+      if(metaClass.HasValue(key))
+        type = metaClass.GetValue(key);
+
+      if(type == "shader3d")
         return ShaderFactory::Shader3D();
-      else if(defaultShader == "shader2d")
+      else if(type == "shader2d")
         return ShaderFactory::Shader2D();
-      else if(defaultShader == "shader2dui")
+      else if(type == "shader2dui")
         return ShaderFactory::Shader2DUI();
-      else if(defaultShader == "skybox")
+      else if(type == "skybox")
         return ShaderFactory::ShaderSkybox();
-      else if(defaultShader == "gui")
+      else if(type == "gui")
         return ShaderFactory::ShaderGUI();
-      return ShaderFactory::Shader3D();
+      else
+        return Shader::FromFile(LoadString(metaClass, key, ""));
     }
 
     Ref<Texture2D> MetaFileLoading::LoadTexture2D(const MetaFileClass& metaClass)
@@ -225,7 +210,7 @@ namespace Greet
 
     Material MetaFileLoading::LoadMaterial(const MetaFileClass& metaClass)
     {
-      Material mat{LoadShader(metaClass), LoadTexture2D(metaClass)};
+      Material mat{LoadShader(metaClass, "shader"), LoadTexture2D(metaClass)};
       mat.SetColor(LoadColor(metaClass, "color", Color{1, 1, 1}));
       mat.SetAmbient(LoadFloat(metaClass, "ambient", 0.3));
       mat.SetIntensity(LoadFloat(metaClass, "intensity", 1.0));

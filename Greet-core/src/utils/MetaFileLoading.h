@@ -26,7 +26,7 @@ namespace Greet
     static std::string LoadString(const MetaFileClass& metaClass, const std::string& key, const std::string& defaultValue);
     static Vec2i LoadVec2i(const MetaFileClass& metaClass, const std::string& key, const Vec2i& defaultValue);
     static Ref<Mesh> LoadMesh(const MetaFileClass& metaClass, const std::string& key);
-    static Ref<Shader> LoadShader(const MetaFileClass& metaClass, const std::string& defaultShader = "shader3d", const std::string& prefix = "");
+    static Ref<Shader> LoadShader(const MetaFileClass& metaClass, const std::string& key, const std::string& defaultValue = "shader3d");
     static Ref<Texture2D> LoadTexture2D(const MetaFileClass& metaClass);
     static Ref<CubeMap> LoadCubeMap(const MetaFileClass& metaClass, const std::string& key);
     static Material LoadMaterial(const MetaFileClass& metaClass);

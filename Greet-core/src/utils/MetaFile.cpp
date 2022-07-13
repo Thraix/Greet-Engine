@@ -6,10 +6,6 @@
 
 namespace Greet
 {
-  MetaFileClass::MetaFileClass(const std::string& className)
-    : className{className}
-  {}
-
   std::string MetaFileClass::GetValue(const std::string& key, const std::string& val) const
   {
     auto it = values.find(key);
@@ -26,7 +22,7 @@ namespace Greet
   const std::string& MetaFileClass::GetValue(const std::string& key) const
   {
     auto it = values.find(key);
-    ASSERT(it != values.end(), "Values does not exist in meta file");
+    ASSERT(it != values.end(), "Values does not exist in meta file: %s", key);
     return it->second;
   }
 
@@ -35,9 +31,13 @@ namespace Greet
     return values;
   }
 
+  void MetaFileClass::AddValue(const std::string& key, const std::string& val)
+  {
+    values.emplace(key, val);
+  }
+
   std::ostream& operator<<(std::ostream& stream, const MetaFileClass& file)
   {
-    stream << "[" << file.className << "]" << std::endl;
     for(auto value : file.GetValues())
     {
       stream << value.first << "=" << value.second << std::endl;
@@ -67,38 +67,55 @@ namespace Greet
     LoadMetaFile(stream);
   }
 
-  bool MetaFile::HasMetaClass(const std::string& className)
+  bool MetaFile::HasMetaClass(const std::string& className) const
   {
     return classes.find(className) != classes.end();
   }
 
-  std::vector<MetaFileClass>& MetaFile::GetMetaClass(const std::string& className)
+  MetaFileClass& MetaFile::GetMetaClass(const std::string& className)
   {
-    static std::vector<MetaFileClass> empty;
+    static MetaFileClass null;
     auto it = classes.find(className);
     if(it != classes.end())
       return it->second;
-    return empty;
+    return null;
   }
 
-  const std::vector<MetaFileClass>& MetaFile::GetMetaClass(const std::string& className) const
+  std::optional<MetaFileClass> MetaFile::TryGetMetaClass(const std::string& className) const
   {
-    static std::vector<MetaFileClass> empty;
     auto it = classes.find(className);
     if(it != classes.end())
       return it->second;
-    return empty;
+    return std::optional<MetaFileClass>{};
+  }
+
+  const MetaFileClass& MetaFile::GetMetaClass(const std::string& className) const
+  {
+    static MetaFileClass null;
+    auto it = classes.find(className);
+    if(it != classes.end())
+      return it->second;
+    return null;
+  }
+
+  void MetaFile::AddMetaClass(const std::string& name, const MetaFileClass& metaClass)
+  {
+    classes[name] = metaClass;
   }
 
   std::ostream& operator<<(std::ostream& stream, const MetaFile& file)
   {
-    for(auto metaClasses : file.classes)
+    for(auto metaClass : file.classes)
     {
-      for(auto metaClass : metaClasses.second)
-      {
-        stream << metaClass;
-      }
+      stream << metaClass.second;
     }
+    return stream;
+  }
+
+  std::istream& operator>>(std::istream& stream, MetaFile& file)
+  {
+    file.classes.clear();
+    file.LoadMetaFile(stream);
     return stream;
   }
 
@@ -109,8 +126,14 @@ namespace Greet
     std::string line;
     while(std::getline(stream, line))
     {
-      if(line.empty())
+      std::string_view trimmedLine = StringUtils::Trim(line);
+      if(trimmedLine.empty())
         continue;
+
+      if(trimmedLine == "---")
+      {
+        return;
+      }
 
       if(line[StringUtils::GetTrimStartPos(line)] == '[' && line[StringUtils::GetTrimEndPos(line)] == ']' )
       {
@@ -118,9 +141,9 @@ namespace Greet
         currentClass = currentClass.substr(1, currentClass.size() - 2);
         metaClassIt = classes.find(currentClass);
         if(metaClassIt == classes.end())
-          metaClassIt = classes.emplace(currentClass, std::vector<MetaFileClass>{{currentClass}}).first;
+          metaClassIt = classes.emplace(currentClass, MetaFileClass{}).first;
         else
-          metaClassIt->second.push_back({currentClass});
+          Log::Error("Meta files contains two off the same classes: %s", currentClass);
         continue;
       }
 
@@ -140,7 +163,7 @@ namespace Greet
       }
       if(metaClassIt != classes.end())
       {
-        auto res = metaClassIt->second[metaClassIt->second.size()-1].values.emplace(key, value);
+        auto res = metaClassIt->second.values.emplace(key, value);
         if(!res.second)
         {
           Log::Warning("Meta file key is defined twice: ", key);
@@ -151,5 +174,17 @@ namespace Greet
         Log::Error("No meta file header specified: ", filepath);
       }
     }
+  }
+
+  std::vector<MetaFile> MetaFile::ReadList(const std::string& file)
+  {
+    std::vector<MetaFile> metaFiles;
+    std::ifstream stream{file};
+    MetaFile meta;
+    while(!stream.eof())
+    {
+      stream >> metaFiles.emplace_back(MetaFile{});
+    }
+    return metaFiles;
   }
 }

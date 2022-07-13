@@ -99,7 +99,6 @@ void EntityGUI::GUIDropDownMenuMeshType(Greet::Component* component, const std::
     if(entityManager->GetSelectedEntity())
     {
       MetaFileClass meta{
-        "MeshComponent",
         {{"mesh", meshType},
          {"mesh-path", meshPath}}
       };
@@ -117,7 +116,6 @@ void EntityGUI::GUITextBoxMeshPath(Greet::Component* component, const std::strin
     if(entityManager->GetSelectedEntity())
     {
       MetaFileClass meta{
-        "MeshComponent",
         {{"mesh", meshType},
          {"mesh-path", meshPath}}
       };

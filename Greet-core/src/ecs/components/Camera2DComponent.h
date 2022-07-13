@@ -13,17 +13,18 @@ namespace Greet
 
     public:
       bool active;
+      Vec2f position;
+      Vec2f scale;
+      float rotation;
 
     private:
       Mat3 projectionMatrix;
-      Mat3 viewMatrix;
-      Vec2f cameraPos;
 
     public:
-      Camera2DComponent(const Mat3& viewMatrix, bool active);
+      Camera2DComponent(const Vec2f& pos, const Vec2f& scale, float rotation, bool active);
       Camera2DComponent(const MetaFileClass& metaClass);
 
-      const Mat3& GetViewMatrix() const;
+      Mat3 GetViewMatrix() const;
       const Mat3& GetProjectionMatrix() const;
       void SetProjectionMatrix(const Mat3& amProjectionMatrix);
       void SetViewMatrix(const Mat3& amViewMatrix);

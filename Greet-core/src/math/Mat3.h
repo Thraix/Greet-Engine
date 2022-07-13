@@ -29,6 +29,7 @@ namespace Greet{
     static Mat3 Orthographic(float width, float aspect);
     static Mat3 OrthographicViewport();
     static Mat3 OrthographicViewport(float width);
+    static Mat3 InverseTransformationMatrix(const Vec2f& pos, const Vec2f& scale, float rot);
     static Mat3 TransformationMatrix(const Vec2f& pos, const Vec2f& scale, float rot);
 
     static Mat3 Translate(const Vec2f& translation);

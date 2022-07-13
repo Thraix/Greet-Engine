@@ -16,6 +16,7 @@
 #include <graphics/RenderCommand.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/shaders/ShaderFactory.h>
+#include <utils/UUID.h>
 
 namespace Greet
 {
@@ -35,12 +36,19 @@ namespace Greet
   ECSScene::ECSScene(const std::string& scenePath) :
     ECSScene{NewRef<ECSManager>()}
   {
-    MetaFile meta{scenePath};
-    const std::vector<MetaFileClass>& entities = meta.GetMetaClass("Entity");
+    std::vector<MetaFile> entities = MetaFile::ReadList(scenePath);
     for(auto&& entity : entities)
     {
-      if(entity.HasValue("entitypath"))
-        LoadEntity(MetaFile{entity.GetValue("entitypath")});
+      Entity e = Entity::Create(manager.get());;
+      LoadEntity(entity, e);
+      if(!e.HasComponent<TagComponent>())
+      {
+        UUID uuid;
+        Log::Warning("Entity does not contain TagComponent");
+        Log::Warning("Assigning a name=%s", uuid);
+        e.AddComponent<TagComponent>(uuid.GetString());
+      }
+      Log::Info("Loaded entity: %s", e.GetComponent<TagComponent>().tag);
     }
   }
 
@@ -49,33 +57,42 @@ namespace Greet
     TextureManager::CleanupUnused();
   }
 
-  void ECSScene::LoadEntity(const MetaFile& meta)
+  // Cyclic Blueprints will currently infinite loop, so depth is used to avoid infinite recursion
+  void ECSScene::LoadEntity(const MetaFile& meta, Entity entity, int depth)
   {
-    const std::vector<MetaFileClass>& tag = meta.GetMetaClass("TagComponent");
-    if(tag.size() == 0)
+    const int MAX_RECURSION = 10;
+    if(depth >= MAX_RECURSION)
     {
-      Log::Error("Entity does not contain TagComponent");
+      Log::Warning("Maximum blueprint recursion (%s) reached (cyclic dependency?)", MAX_RECURSION);
       return;
     }
-    Entity e = Entity::Create(manager.get());
-    e.AddComponent<TagComponent>(tag[0]);
+    if(meta.HasMetaClass("Blueprint"))
+    {
+      const MetaFileClass& blueprint = meta.GetMetaClass("Blueprint");
+      if(blueprint.HasValue("path"))
+      {
+        LoadEntity(MetaFile{blueprint.GetValue("path")}, entity, ++depth);
+      }
+    }
 
-    LoadComponent<Transform3DComponent>(e, meta, "Transform3DComponent");
-    LoadComponent<MeshComponent>(e, meta, "MeshComponent");
-    LoadComponent<MaterialComponent>(e, meta, "MaterialComponent");
-    LoadComponent<Camera3DComponent>(e, meta, "Camera3DComponent");
-    LoadComponent<Environment3DComponent>(e, meta, "Environment3DComponent");
+    LoadComponent<TagComponent>(entity, meta, "TagComponent");
 
-    LoadComponent<AnimationComponent>(e, meta, "AnimationComponent");
-    LoadComponent<Transform2DComponent>(e, meta, "Transform2DComponent");
-    LoadComponent<SpriteComponent>(e, meta, "SpriteComponent");
-    LoadComponent<Camera2DComponent>(e, meta, "Camera2DComponent");
-    LoadComponent<Environment2DComponent>(e, meta, "Environment2DComponent");
-    LoadComponent<ColorComponent>(e, meta, "ColorComponent");
+    LoadComponent<Transform3DComponent>(entity, meta, "Transform3DComponent");
+    LoadComponent<MeshComponent>(entity, meta, "MeshComponent");
+    LoadComponent<MaterialComponent>(entity, meta, "MaterialComponent");
+    LoadComponent<Camera3DComponent>(entity, meta, "Camera3DComponent");
+    LoadComponent<Environment3DComponent>(entity, meta, "Environment3DComponent");
 
-    LoadComponent<NativeScriptComponent>(e, meta, "NativeScriptComponent");
+    LoadComponent<AnimationComponent>(entity, meta, "AnimationComponent");
+    LoadComponent<Transform2DComponent>(entity, meta, "Transform2DComponent");
+    LoadComponent<SpriteComponent>(entity, meta, "SpriteComponent");
+    LoadComponent<Camera2DComponent>(entity, meta, "Camera2DComponent");
+    LoadComponent<Environment2DComponent>(entity, meta, "Environment2DComponent");
+    LoadComponent<ColorComponent>(entity, meta, "ColorComponent");
 
-    LoadExtComponents(e, meta);
+    LoadComponent<NativeScriptComponent>(entity, meta, "NativeScriptComponent");
+
+    LoadExtComponents(entity, meta);
   }
 
   Entity ECSScene::AddEntity(const std::string& tag)
@@ -135,16 +152,23 @@ namespace Greet
     manager->Each<Transform2DComponent>([&](EntityID id, Transform2DComponent& transform)
     {
       Entity e{manager.get(), id};
+
       if(e.HasComponent<SpriteComponent>())
       {
+        Color color{1, 1, 1};
+        if(e.HasComponent<ColorComponent>())
+        {
+          color = e.GetComponent<ColorComponent>().color;
+        }
         SpriteComponent& sprite = e.GetComponent<SpriteComponent>();
-        renderer2d->DrawRect(transform.transform, sprite.texture, sprite.GetTexPos(), sprite.GetTexSize());
+        renderer2d->DrawRect(transform.GetTransform(), sprite.texture, sprite.GetTexPos(), sprite.GetTexSize(), color.AsUInt());
       }
       else if(e.HasComponent<ColorComponent>())
       {
-        renderer2d->DrawRect(transform.transform);
+        Mat3 matrix = transform.GetTransform();
+        renderer2d->DrawRect(matrix);
         ColorComponent& color = e.GetComponent<ColorComponent>();
-        renderer2d->DrawRect(transform.transform, color.color);
+        renderer2d->DrawRect(matrix, color.color);
       }
     });
     renderer2d->End();
@@ -232,7 +256,7 @@ namespace Greet
         animation.aminationIndex++;
         animation.aminationIndex %= animation.animationCount;
         // TODO: Figure out a better way of handling the spriteSheet position
-        sprite.spriteSheetX = animation.aminationIndex;
+        sprite.spriteSheetPos.x = animation.aminationIndex;
       }
     });
   }

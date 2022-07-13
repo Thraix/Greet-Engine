@@ -10,5 +10,7 @@ namespace Greet
 
     ColorComponent(uint64_t color);
     ColorComponent(const MetaFileClass& metaClass);
+
+    friend MetaFile& operator<<(MetaFile& metaFile, const ColorComponent& component);
   };
 }

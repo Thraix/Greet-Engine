@@ -79,7 +79,7 @@ namespace Greet
       }
     }
 
-    void Load(const std::string& mode, MetaFileClass* stylingType, MetaFileClass* stylingName, MetaFileClass* stylingVariables)
+    void Load(const std::string& mode, const std::optional<MetaFileClass>& stylingType, const std::optional<MetaFileClass>& stylingName, const std::optional<MetaFileClass>& stylingVariables)
     {
       for(auto&& value : values)
       {
@@ -151,7 +151,7 @@ namespace Greet
     }
 
     private:
-      void LoadStylingVariable(const std::string& mode, const std::string& variable, MetaFileClass* styling, MetaFileClass* stylingVariables)
+      void LoadStylingVariable(const std::string& mode, const std::string& variable, const std::optional<MetaFileClass>& styling, const std::optional<MetaFileClass>& stylingVariables)
       {
         std::string attribute = GetAttributeName(mode, variable);
         if(styling)

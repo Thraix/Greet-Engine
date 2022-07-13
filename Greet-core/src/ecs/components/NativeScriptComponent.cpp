@@ -9,7 +9,8 @@ namespace Greet
   {}
 
   NativeScriptComponent::NativeScriptComponent(const MetaFileClass& metaClass)
-    : script{Ref<NativeScriptHandler>(new NativeScriptHandler{MetaFileLoading::LoadString(metaClass, "path", "")})}
+    : script{Ref<NativeScriptHandler>(new NativeScriptHandler{MetaFileLoading::LoadString(metaClass, "path", "")})},
+    scriptPath{MetaFileLoading::LoadString(metaClass, "path", "")}
   {}
 
   void NativeScriptComponent::BindEntity(const Entity& entity)
@@ -38,5 +39,13 @@ namespace Greet
   {
     script->OnDestroy();
     created = false;
+  }
+
+  MetaFile& operator<<(MetaFile& metaFile, const NativeScriptComponent& component)
+  {
+    MetaFileClass meta;
+    meta.AddValue("tag", component.scriptPath);
+    metaFile.AddMetaClass("NativeScriptComponent", meta);
+    return metaFile;
   }
 }

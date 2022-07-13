@@ -80,16 +80,11 @@ namespace Greet{
     }
 
     MetaFile meta{metaFile};
-    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("texture2d");
-
-    if(metaClasses.size() > 0)
+    if(meta.HasMetaClass("texture2d"))
     {
-      if(metaClasses.size() > 1)
-      {
-        Log::Warning("Multiple textures defined in meta file: ", metaFile);
-      }
-      TextureParams params = GetMetaParams(metaClasses[0]);
-      return texture2Ds.emplace(metaFile, Texture2D::Create(metaClasses[0].GetValue("filepath", metaFile), params)).first->second;
+      const MetaFileClass& texture2d = meta.GetMetaClass("texture2d");
+      TextureParams params = GetMetaParams(texture2d);
+      return texture2Ds.emplace(metaFile, Texture2D::Create(texture2d.GetValue("filepath", metaFile), params)).first->second;
     }
     return nullptr;
   }
@@ -103,15 +98,10 @@ namespace Greet{
     }
 
     MetaFile meta{metaFile};
-    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("cubemap");
-
-    if(metaClasses.size() > 0)
+    if(meta.HasMetaClass("cubemap"))
     {
-      if(metaClasses.size() > 1)
-      {
-        Log::Warning("Multiple textures defined in meta file: ", metaFile);
-      }
-      return cubeMaps.emplace(metaFile, NewRef<CubeMap>(metaClasses[0].GetValue("filepath", metaFile))).first->second;
+      const MetaFileClass& cubemap = meta.GetMetaClass("cubemap");
+      return cubeMaps.emplace(metaFile, NewRef<CubeMap>(cubemap.GetValue("filepath", metaFile))).first->second;
     }
     return nullptr;
   }

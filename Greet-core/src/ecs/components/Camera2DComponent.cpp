@@ -4,22 +4,22 @@
 
 namespace Greet
 {
-  Camera2DComponent::Camera2DComponent(const Mat3& viewMatrix, bool active)
-    : active{active}, projectionMatrix{Mat3::OrthographicViewport()}, viewMatrix{viewMatrix}
+  Camera2DComponent::Camera2DComponent(const Vec2f& pos, const Vec2f& scale, float rotation, bool active)
+    : active{active}, projectionMatrix{Mat3::OrthographicViewport()}, position{pos}, scale{scale}, rotation{rotation}
   {}
 
   Camera2DComponent::Camera2DComponent(const MetaFileClass& metaClass)
     : active{MetaFileLoading::LoadBool(metaClass, "active", false)},
-    projectionMatrix{Mat3::OrthographicViewport()},
-
-    viewMatrix{~Mat3::TransformationMatrix(
-        MetaFileLoading::LoadVec2f(metaClass, "position", {0, 0}),
-        MetaFileLoading::LoadVec2f(metaClass, "scale", {1, 1}),
-        MetaFileLoading::LoadFloat(metaClass, "rotation", 0.0f)
-        )}
+    position{MetaFileLoading::LoadVec2f(metaClass, "position", {0, 0})},
+    scale{MetaFileLoading::LoadVec2f(metaClass, "scale", {1, 1})},
+    rotation{MetaFileLoading::LoadFloat(metaClass, "rotation", 0.0f)},
+    projectionMatrix{Mat3::OrthographicViewport()}
   {}
 
-  const Mat3& Camera2DComponent::GetViewMatrix() const { return viewMatrix; }
+  Mat3 Camera2DComponent::GetViewMatrix() const
+  {
+    return Mat3::InverseTransformationMatrix(position, scale, rotation);
+  }
   const Mat3& Camera2DComponent::GetProjectionMatrix() const { return projectionMatrix; }
 
   void Camera2DComponent::SetProjectionMatrix(const Mat3& amProjectionMatrix)
@@ -27,22 +27,26 @@ namespace Greet
     projectionMatrix = amProjectionMatrix;
   }
 
-  void Camera2DComponent::SetViewMatrix(const Mat3& amViewMatrix)
-  {
-    Mat3 invMatrix = ~viewMatrix;
-    cameraPos = Vec2f{invMatrix.columns[2]};
-    viewMatrix = amViewMatrix;
-  }
-
   void Camera2DComponent::SetShaderUniforms(const Ref<Shader>& shader) const
   {
-    shader->SetUniform2f("uCameraPos", cameraPos);
-    shader->SetUniformMat3("uViewMatrix", viewMatrix);
+    shader->SetUniform2f("uCameraPos", position);
+    shader->SetUniformMat3("uViewMatrix", GetViewMatrix());
     shader->SetUniformMat3("uProjectionMatrix", projectionMatrix);
   }
 
   void Camera2DComponent::ViewportResize(ViewportResizeEvent& event)
   {
     SetProjectionMatrix(Mat3::OrthographicViewport());
+  }
+
+  MetaFile& operator<<(MetaFile& metaFile, const Camera2DComponent& component)
+  {
+    MetaFileClass meta;
+    meta.AddValue("position", std::to_string(component.position.x) + " " + std::to_string(component.position.y));
+    meta.AddValue("scale", std::to_string(component.scale.x) + " " + std::to_string(component.scale.y));
+    meta.AddValue("rotation", std::to_string(component.rotation));
+    meta.AddValue("active", std::to_string(component.active));
+    metaFile.AddMetaClass("Camera2DComponent", meta);
+    return metaFile;
   }
 }

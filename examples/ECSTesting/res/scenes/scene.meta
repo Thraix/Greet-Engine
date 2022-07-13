@@ -1,29 +1,50 @@
-[Entity]
-entitypath=res/entities/camera.meta
+[Blueprint]
+path=res/entities/camera.meta
 
-[Entity]
-entitypath=res/entities/block.meta
+---
 
-[Entity]
-entitypath=res/entities/block2.meta
+[Blueprint]
+path=res/entities/block.meta
 
-[Entity]
-entitypath=res/entities/terrain.meta
+---
 
-[Entity]
-entitypath=res/entities/water.meta
+[Blueprint]
+path=res/entities/block.meta
 
-[Entity]
-entitypath=res/entities/radar.meta
+[Transform3DComponent]
+scale=10 10 10
 
-[Entity]
-entitypath=res/entities/rectangle.meta
+---
 
-[Entity]
-entitypath=res/entities/camera2d.meta
+[Blueprint]
+path=res/entities/terrain.meta
 
-[Entity]
-entitypath=res/entities/glowcube.meta
+---
 
-[Entity]
-entitypath=res/entities/model.meta
+[Blueprint]
+path=res/entities/water.meta
+
+---
+
+[Blueprint]
+path=res/entities/radar.meta
+
+---
+
+[Blueprint]
+path=res/entities/rectangle.meta
+
+---
+
+[Blueprint]
+path=res/entities/camera2d.meta
+
+---
+
+[Blueprint]
+path=res/entities/glowcube.meta
+
+---
+
+[Blueprint]
+path=res/entities/model.meta

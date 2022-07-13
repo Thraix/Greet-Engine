@@ -6,6 +6,7 @@
 #include <graphics/gui/TLBR.h>
 #include <utils/MetaFile.h>
 
+#include <optional>
 #include <unordered_map>
 
 #define REGISTER_STYLE_FUNCTIONS(ret, name, map) \
@@ -123,31 +124,9 @@ namespace Greet
       void Load(const std::string& componentType, const std::string& componentName, const std::string& mode, const MetaFile& object)
       {
         auto classesType = object.GetMetaClass(componentType);
-        MetaFileClass* stylingType = nullptr;
-        if(classesType.size() != 0)
-        {
-          stylingType = &classesType[0];
-          if(classesType.size() > 1)
-            Log::Warning("More than one style specified in style file for component \"%s\"", classesType);
-        }
-
-        auto classesName = object.GetMetaClass(componentName);
-        MetaFileClass* stylingName = nullptr;
-        if(classesName.size() != 0)
-        {
-          stylingName = &classesName[0];
-          if(classesName.size() > 1)
-            Log::Warning("More than one style specified in style file for component \"%s\"", classesName);
-        }
-
-        auto classesVariables = object.GetMetaClass("Variables");
-        MetaFileClass* stylingVariables = nullptr;
-        if(classesVariables.size() != 0)
-        {
-          stylingVariables = &classesVariables[0];
-          if(classesVariables.size() > 1)
-            Log::Warning("More than one variable meta class specified in style file for component \"%s\"", stylingVariables);
-        }
+        std::optional<MetaFileClass> stylingType = object.TryGetMetaClass(componentType);
+        std::optional<MetaFileClass> stylingName = object.TryGetMetaClass(componentName);
+        std::optional<MetaFileClass> stylingVariables = object.TryGetMetaClass("Variables");
 
         colors.Load(mode, stylingType, stylingName, stylingVariables);
         tlbrs.Load(mode, stylingType, stylingName, stylingVariables);

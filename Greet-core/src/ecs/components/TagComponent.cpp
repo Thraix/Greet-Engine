@@ -16,4 +16,12 @@ namespace Greet
     else
       Log::Error("tag does not exist in TagComponent");
   }
+
+  MetaFile& operator<<(MetaFile& metaFile, const TagComponent& component)
+  {
+    MetaFileClass meta;
+    meta.AddValue("tag", component.tag);
+    metaFile.AddMetaClass("TagComponent", meta);
+    return metaFile;
+  }
 }

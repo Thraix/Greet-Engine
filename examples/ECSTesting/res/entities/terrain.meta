@@ -11,8 +11,7 @@ mesh-gridSize=99 99
 mesh-gridScale=99 99
 
 [MaterialComponent]
-shadertype=file
-shaderpath=res/shaders/terrain.glsl
+shader=res/shaders/terrain.glsl
 
 [NativeScriptComponent]
 path=res/scripts/TerrainGeneratorScript.cpp

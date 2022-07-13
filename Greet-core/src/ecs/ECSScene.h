@@ -26,7 +26,7 @@ namespace Greet
       ECSScene(const std::string& scenePath);
       virtual ~ECSScene();
 
-      void LoadEntity(const MetaFile& meta);
+      void LoadEntity(const MetaFile& meta, Entity entity, int depth = 0);
 
       Entity AddEntity(const std::string& tag);
       void RemoveEntity(const Entity& entity);
@@ -49,9 +49,18 @@ namespace Greet
       template <typename T>
       void LoadComponent(Entity& entity, const MetaFile& meta, const std::string& componentName)
       {
-        const std::vector<MetaFileClass>& metaClass = meta.GetMetaClass(componentName);
-        if(metaClass.size() > 0)
-          entity.AddComponent<T>(metaClass[0]);
+        if(meta.HasMetaClass(componentName))
+        {
+          const MetaFileClass& metaClass = meta.GetMetaClass(componentName);
+          if(entity.HasComponent<T>())
+          {
+            entity.GetComponent<T>() = T{metaClass};
+          }
+          else
+          {
+            entity.AddComponent<T>(metaClass);
+          }
+        }
       }
 
       // Loads external components not handled by the engine.

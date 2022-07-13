@@ -10,8 +10,7 @@ mesh-gridSize=99 99
 mesh-gridScale=99 99
 
 [MaterialComponent]
-shadertype=file
-shaderpath=res/shaders/water.glsl
+shader=res/shaders/water.glsl
 
 [NativeScriptComponent]
 path=res/scripts/WaterScript.cpp

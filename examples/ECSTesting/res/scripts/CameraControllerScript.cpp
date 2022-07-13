@@ -52,7 +52,7 @@ class CameraControllerScript : public Greet::NativeScript
         Greet::Log::Warning("Radar could not be found");
         radar = Greet::Entity::Create(entity.GetManager());
         radar.AddComponent<Greet::Transform2DComponent>(Greet::Vec2f{74.0f}, Greet::Vec2f{128.0f}, 0.0f);
-        radar.AddComponent<Greet::SpriteComponent>(Greet::TextureManager::LoadTexture2D("res/textures/radar.meta"), Greet::Vec2f{0.0f}, Greet::Vec2f{1.0f});
+        radar.AddComponent<Greet::SpriteComponent>("res/textures/radar.meta");
       }
       else if(!radar.HasComponent<Greet::Transform2DComponent>())
       {
@@ -68,7 +68,7 @@ class CameraControllerScript : public Greet::NativeScript
       rot += rotVel * timeElapsed;
       cam.SetViewMatrix(Greet::Mat4::ViewMatrix(pos, rot));
       Greet::Transform2DComponent& transform = radar.GetComponent<Greet::Transform2DComponent>();
-      transform.transform = Greet::Mat3::TransformationMatrix({74.0f}, {128.0f}, 0);
+      transform.rotation = rot.y;
     }
 
     void OnEvent(Greet::Event& event) override

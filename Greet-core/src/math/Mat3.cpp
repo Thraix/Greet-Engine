@@ -92,6 +92,11 @@ namespace Greet{
     return Mat3::Translate(pos) * Mat3::Rotate(rot) * Mat3::Scale(scale);
   }
 
+  Mat3 Mat3::InverseTransformationMatrix(const Vec2f& pos, const Vec2f& scale, float rot)
+  {
+    return Mat3::Scale(1.0f / scale) * Mat3::Rotate(-rot) * Mat3::Translate(-pos);
+  }
+
   Mat3 Mat3::Translate(const Vec2f& translation)
   {
     Mat3 result(1.0f);
