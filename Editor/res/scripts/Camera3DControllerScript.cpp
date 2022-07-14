@@ -116,3 +116,5 @@ class CameraControllerScript : public Greet::NativeScript
       return Greet::Mat4::Translate(0, 0, -distance) * Greet::Mat4::RotateX(rot.x) * Greet::Mat4::RotateY(rot.y) * Greet::Mat4::Translate(pos);
     }
 };
+
+REGISTER_NATIVE_SCRIPT(CameraControllerScript)

@@ -1,0 +1,34 @@
+[TagComponent]
+tag=EditorCamera3D
+
+[UUIDComponent]
+uuid=862f1b54-649c-3775-a53d-5834a7e1135b
+
+[Camera3DComponent]
+active=false
+
+[Environment3DComponent]
+skybox-texture=res/textures/skybox.meta
+
+[NativeScriptComponent]
+path=res/scripts/Camera3DControllerScript.cpp
+
+---
+
+[UUIDComponent]
+uuid=a4396de6-dbd9-6dc4-1e1d-3e662b62ddab
+
+[TagComponent]
+tag=EditorCamera2D
+
+[Camera2DComponent]
+active=false
+position=0 0
+scale=1 1
+rotation=0
+
+[Environment2DComponent]
+shader=shader2d
+
+[NativeScriptComponent]
+path=res/scripts/Camera2DControllerScript.cpp

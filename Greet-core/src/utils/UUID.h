@@ -26,6 +26,8 @@ namespace Greet {
       std::string GetString() const;
 
       friend bool operator<(const UUID& lhs, const UUID& rhs);
+      friend bool operator==(const UUID& lhs, const UUID& rhs);
+      friend bool operator!=(const UUID& lhs, const UUID& rhs);
       friend std::ostream& operator<<(std::ostream& stream, const UUID& uuid);
   };
 }

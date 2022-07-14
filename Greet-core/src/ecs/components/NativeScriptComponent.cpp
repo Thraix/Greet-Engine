@@ -44,7 +44,7 @@ namespace Greet
   MetaFile& operator<<(MetaFile& metaFile, const NativeScriptComponent& component)
   {
     MetaFileClass meta;
-    meta.AddValue("tag", component.scriptPath);
+    meta.AddValue("path", component.scriptPath);
     metaFile.AddMetaClass("NativeScriptComponent", meta);
     return metaFile;
   }

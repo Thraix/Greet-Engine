@@ -1,5 +1,7 @@
 #include "ECSScene.h"
 
+#include <fstream>
+
 #include <ecs/components/AnimationComponent.h>
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>
@@ -13,44 +15,79 @@
 #include <ecs/components/TagComponent.h>
 #include <ecs/components/Transform2DComponent.h>
 #include <ecs/components/Transform3DComponent.h>
+#include <ecs/components/UUIDComponent.h>
 #include <graphics/RenderCommand.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <utils/UUID.h>
+#include <utils/Utils.h>
 
 namespace Greet
 {
+  template <typename T>
+  static void LoadComponent(Entity& entity, const MetaFile& meta, const std::string& componentName)
+  {
+    if(meta.HasMetaClass(componentName))
+    {
+      const MetaFileClass& metaClass = meta.GetMetaClass(componentName);
+      if(entity.HasComponent<T>())
+      {
+        entity.GetComponent<T>() = T{metaClass};
+      }
+      else
+      {
+        entity.AddComponent<T>(metaClass);
+      }
+    }
+  }
+
+  template <typename T>
+  static void SerializeComponent(Entity& entity, MetaFile& meta)
+  {
+    if(entity.HasComponent<T>())
+    {
+      meta << entity.GetComponent<T>();
+    }
+  }
+
   ECSScene::ECSScene() :
     ECSScene{NewRef<ECSManager>()}
   {
   }
 
-  ECSScene::ECSScene(const Ref<ECSManager>& ecsManager) :
-    manager{ecsManager},
+  ECSScene::ECSScene(const Ref<ECSManager>& ecsManager)
+    : ECSScene{ecsManager, ""}
+  {}
+
+  ECSScene::ECSScene(const std::string& scenePath) :
+    ECSScene{NewRef<ECSManager>(), scenePath}
+  {}
+
+  ECSScene::ECSScene(const Ref<ECSManager>& ecsManager, const std::string& scenePath)
+    : manager{ecsManager},
     renderer2d{NewRef<BatchRenderer>(ShaderFactory::Shader2D())},
     framebuffer{NewRef<Framebuffer>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), true)},
     bloom{NewRef<Bloom>(RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight(), 6)}
   {
-  }
-
-  ECSScene::ECSScene(const std::string& scenePath) :
-    ECSScene{NewRef<ECSManager>()}
-  {
-    std::vector<MetaFile> entities = MetaFile::ReadList(scenePath);
-    for(auto&& entity : entities)
+    if(!scenePath.empty())
     {
-      Entity e = Entity::Create(manager.get());;
-      LoadEntity(entity, e);
-      if(!e.HasComponent<TagComponent>())
+      std::vector<MetaFile> entities = MetaFile::ReadList(scenePath);
+      for(auto&& entity : entities)
       {
-        UUID uuid;
-        Log::Warning("Entity does not contain TagComponent");
-        Log::Warning("Assigning a name=%s", uuid);
-        e.AddComponent<TagComponent>(uuid.GetString());
+        Entity e = Entity::Create(manager.get());;
+        LoadEntity(entity, e);
+        if(!e.HasComponent<TagComponent>())
+        {
+          UUID uuid;
+          Log::Warning("Entity does not contain TagComponent");
+          Log::Warning("Assigning a name=%s", uuid);
+          e.AddComponent<TagComponent>(uuid.GetString());
+        }
+        Log::Info("Loaded entity: %s", e.GetComponent<TagComponent>().tag);
       }
-      Log::Info("Loaded entity: %s", e.GetComponent<TagComponent>().tag);
     }
   }
+
 
   ECSScene::~ECSScene()
   {
@@ -71,7 +108,7 @@ namespace Greet
       const MetaFileClass& blueprint = meta.GetMetaClass("Blueprint");
       if(blueprint.HasValue("path"))
       {
-        LoadEntity(MetaFile{blueprint.GetValue("path")}, entity, ++depth);
+        LoadEntity(MetaFile{blueprint.GetValue("path")}, entity, depth + 1);
       }
     }
 
@@ -92,7 +129,51 @@ namespace Greet
 
     LoadComponent<NativeScriptComponent>(entity, meta, "NativeScriptComponent");
 
+    if(depth == 0)
+    {
+      if(meta.HasMetaClass("UUIDComponent"))
+      {
+        LoadComponent<UUIDComponent>(entity, meta, "UUIDComponent");
+      }
+      else
+      {
+        UUID uuid{};
+        Log::Warning("No UUID specified for entity, generating one: %s", uuid);
+        if(entity.HasComponent<UUIDComponent>())
+        {
+          entity.GetComponent<UUIDComponent>() = UUIDComponent{uuid};
+        }
+        else
+        {
+          entity.AddComponent<UUIDComponent>(uuid);
+        }
+      }
+    }
+
     LoadExtComponents(entity, meta);
+  }
+
+  void ECSScene::Serialize(const std::string& path)
+  {
+    std::vector<MetaFile> entities;
+    manager->Each([&](EntityID entityId){
+      Entity entity{manager.get(), entityId};
+      MetaFile& file = entities.emplace_back(MetaFile{});
+      SerializeComponent<AnimationComponent>(entity, file);
+      SerializeComponent<Camera2DComponent>(entity, file);
+      SerializeComponent<ColorComponent>(entity, file);
+      SerializeComponent<Environment2DComponent>(entity, file);
+      SerializeComponent<SpriteComponent>(entity, file);
+      SerializeComponent<TagComponent>(entity, file);
+      SerializeComponent<Transform2DComponent>(entity, file);
+      SerializeComponent<UUIDComponent>(entity, file);
+      SerializeComponent<NativeScriptComponent>(entity, file);
+    });
+    std::ofstream of{path};
+    for(auto& entity : entities)
+    {
+      of << entity << "---" << std::endl;
+    }
   }
 
   Entity ECSScene::AddEntity(const std::string& tag)
@@ -120,16 +201,7 @@ namespace Greet
 
   void ECSScene::Render2D() const
   {
-    Entity camera{manager.get()};
-    manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
-    {
-      if(cam.active)
-      {
-        if(camera)
-          Log::Warning("More than one active 2D camera in scene");
-        camera.SetID(id);
-      }
-    });
+    Entity camera = GetCamera2DEntity();
 
     // No camera found, so cannot render anything
     if(!camera)
@@ -177,12 +249,7 @@ namespace Greet
 
   void ECSScene::Render3DScene() const
   {
-    Entity camera{manager.get()};
-    camera = manager->Find<Camera3DComponent>(
-      [&](EntityID id, Camera3DComponent& cam)
-      {
-        return cam.active;
-      });
+    Entity camera = GetCamera3DEntity();
 
     if(!camera)
     {
@@ -283,4 +350,25 @@ namespace Greet
         script.OnEvent(event);
     });
   }
+
+  Entity ECSScene::GetCamera2DEntity() const
+  {
+    Entity camera{manager.get()};
+    camera = manager->Find<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
+    {
+      return cam.active;
+    });
+    return camera;
+  }
+
+  Entity ECSScene::GetCamera3DEntity() const
+  {
+    Entity camera{manager.get()};
+    camera = manager->Find<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
+    {
+      return cam.active;
+    });
+    return camera;
+  }
+
 }

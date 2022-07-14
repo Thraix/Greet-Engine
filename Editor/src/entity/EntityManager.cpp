@@ -7,6 +7,11 @@
 #include <ecs/components/MaterialComponent.h>
 #include <ecs/components/MeshComponent.h>
 #include <ecs/components/TagComponent.h>
+#include <ecs/components/Transform2DComponent.h>
+#include <ecs/components/Transform3DComponent.h>
+#include <ecs/components/ColorComponent.h>
+#include <ecs/components/SpriteComponent.h>
+#include <ecs/components/UUIDComponent.h>
 #include <graphics/gui/SceneView.h>
 #include <graphics/models/MeshFactory.h>
 #include <graphics/shaders/ShaderFactory.h>
@@ -24,9 +29,9 @@ EntityManager::EntityManager(Frame* frame) :
   sceneView->GetSceneManager().Add3DScene(scene, "scene");
 
   // TODO: Remove debug stuff
-  CreateEntity();
-  CreateEntity();
-  CreateEntity();
+  CreateEntity2D();
+  CreateEntity2D();
+  CreateEntity2D();
 }
 
 EntityManager::~EntityManager()
@@ -41,14 +46,28 @@ void EntityManager::SelectEntity(Entity entity)
   gui->SelectEntity(entity);
 }
 
-void EntityManager::CreateEntity()
+void EntityManager::CreateEntity2D()
 {
-  static int entityId = 0;
+  Entity entity = Entity::Create(ecs.get());
+  std::string name = "Entity#" + std::to_string(++entityId);
+
+  gui->CreateEntity(name);
+
+  entity.AddComponent<UUIDComponent>(UUID{});
+  entity.AddComponent<TagComponent>(name);
+
+  entity.AddComponent<Transform2DComponent>(Vec2f{entityId * 150.0f, 80}, Vec2f{100,100}, 0);
+  entity.AddComponent<ColorComponent>(0xffffffff);
+}
+
+void EntityManager::CreateEntity3D()
+{
   std::string name = "Entity#" + std::to_string(++entityId);
 
   gui->CreateEntity(name);
 
   Entity entity = Entity::Create(ecs.get());
+  entity.AddComponent<UUIDComponent>(UUID{});
   entity.AddComponent<TagComponent>(name);
 
   entity.AddComponent<Transform3DComponent>(Vec3f{entityId * 1.5f, 0, 0}, Vec3f{1,1,1}, Vec3f{0,0,0});

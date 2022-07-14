@@ -22,11 +22,13 @@ namespace Greet
 
     public:
       ECSScene();
+      ECSScene(const Ref<ECSManager>& ecsManager, const std::string& scenePath);
       ECSScene(const Ref<ECSManager>& ecsManager);
       ECSScene(const std::string& scenePath);
       virtual ~ECSScene();
 
       void LoadEntity(const MetaFile& meta, Entity entity, int depth = 0);
+      void Serialize(const std::string& path);
 
       Entity AddEntity(const std::string& tag);
       void RemoveEntity(const Entity& entity);
@@ -45,23 +47,10 @@ namespace Greet
       const ECSManager* GetManager() const { return manager.get(); }
       ECSManager* GetManager() { return manager.get(); }
 
+      virtual Entity GetCamera2DEntity() const;
+      virtual Entity GetCamera3DEntity() const;
+
     private:
-      template <typename T>
-      void LoadComponent(Entity& entity, const MetaFile& meta, const std::string& componentName)
-      {
-        if(meta.HasMetaClass(componentName))
-        {
-          const MetaFileClass& metaClass = meta.GetMetaClass(componentName);
-          if(entity.HasComponent<T>())
-          {
-            entity.GetComponent<T>() = T{metaClass};
-          }
-          else
-          {
-            entity.AddComponent<T>(metaClass);
-          }
-        }
-      }
 
       // Loads external components not handled by the engine.
       // Gives the developer more control over what components can be used

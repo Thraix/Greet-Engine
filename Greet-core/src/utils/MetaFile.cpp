@@ -107,6 +107,7 @@ namespace Greet
   {
     for(auto metaClass : file.classes)
     {
+      stream << "[" << metaClass.first << "]" << std::endl;
       stream << metaClass.second;
     }
     return stream;
@@ -143,7 +144,7 @@ namespace Greet
         if(metaClassIt == classes.end())
           metaClassIt = classes.emplace(currentClass, MetaFileClass{}).first;
         else
-          Log::Error("Meta files contains two off the same classes: %s", currentClass);
+          Log::Error("Meta files contains two of the same classes: %s", currentClass);
         continue;
       }
 
@@ -183,7 +184,11 @@ namespace Greet
     MetaFile meta;
     while(!stream.eof())
     {
-      stream >> metaFiles.emplace_back(MetaFile{});
+      MetaFile meta{};
+      stream >> meta;
+      if(meta.classes.empty())
+        continue;
+      metaFiles.emplace_back(meta);
     }
     return metaFiles;
   }

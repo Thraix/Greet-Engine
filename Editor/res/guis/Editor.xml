@@ -12,14 +12,14 @@
       <DockerTab title="Scene Heirarchy">
         <Container width="fill_parent" height="fill_parent" padding="10">
           <TreeView name="treeView" width="fill_parent" height="fill_parent"/>
-          <Button name="addSceneButton">Add Scene</Button>
-          <Button name="addEntityButton">Add Entity</Button>
+          <Button name="addEntity2DButton">Add Entity2D</Button>
+          <Button name="addEntity3DButton">Add Entity3D</Button>
         </Container>
       </DockerTab>
     </DockerContainer>
 
     <DockerContainer weight="1">
-      <DockerTab title="Scenes">
+      <DockerTab title="Scene">
         <SceneView name="sceneView" width="1w" height="1w"/>
       </DockerTab>
     </DockerContainer>

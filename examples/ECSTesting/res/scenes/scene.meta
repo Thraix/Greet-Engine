@@ -1,15 +1,24 @@
 [Blueprint]
 path=res/entities/camera.meta
 
----
-
-[Blueprint]
-path=res/entities/block.meta
+[UUIDComponent]
+uuid=b19e3d95-d144-52bd-2fd1-3dd2e51f8c56
 
 ---
 
 [Blueprint]
 path=res/entities/block.meta
+
+[UUIDComponent]
+uuid=8286c414-314d-3b35-8f68-e1e81fed63b4
+
+---
+
+[Blueprint]
+path=res/entities/block.meta
+
+[UUIDComponent]
+uuid=7ae2cafa-936e-a233-a255-7addaa97903a
 
 [Transform3DComponent]
 scale=10 10 10
@@ -19,32 +28,53 @@ scale=10 10 10
 [Blueprint]
 path=res/entities/terrain.meta
 
+[UUIDComponent]
+uuid=c140e846-13a2-4cf3-abba-4989f77d9d3a
+
 ---
 
 [Blueprint]
 path=res/entities/water.meta
+
+[UUIDComponent]
+uuid=9fb3bea1-2484-2e8a-4412-6f7a1c60f3af
 
 ---
 
 [Blueprint]
 path=res/entities/radar.meta
 
+[UUIDComponent]
+uuid=6a0e7cd5-1212-c999-0058-2a3b3718a80e
+
 ---
 
 [Blueprint]
 path=res/entities/rectangle.meta
+
+[UUIDComponent]
+uuid=47e6e49c-efbb-bcbb-584f-f76ef2bcb444
 
 ---
 
 [Blueprint]
 path=res/entities/camera2d.meta
 
+[UUIDComponent]
+uuid=d22b3708-5daa-aa06-b913-3b4e56eb1b38
+
 ---
 
 [Blueprint]
 path=res/entities/glowcube.meta
 
+[UUIDComponent]
+uuid=7bf4b6c9-0e47-787d-aded-f25209cac14c
+
 ---
 
 [Blueprint]
 path=res/entities/model.meta
+
+[UUIDComponent]
+uuid=568c8744-6dd8-86ac-6ccd-1ffd6aabaf9f

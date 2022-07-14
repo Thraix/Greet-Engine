@@ -36,7 +36,7 @@ namespace Greet
     MetaFileClass meta;
     meta.AddValue("texture", component.texturePath);
     meta.AddValue("spritesheet-pos", std::to_string(component.spriteSheetPos.x) + " " + std::to_string(component.spriteSheetPos.y));
-    meta.AddValue("spritesheet-size", std::to_string(component.spriteSheetPos.x) + " " + std::to_string(component.spriteSheetPos.y));
+    meta.AddValue("spritesheet-size", std::to_string(component.spriteSheetSize.x) + " " + std::to_string(component.spriteSheetSize.y));
     metaFile.AddMetaClass("SpriteComponent", meta);
     return metaFile;
   }

@@ -29,6 +29,8 @@ class EntityManager
     Greet::Ref<EntityScene> scene;
     Greet::Ref<EntityGUI> gui;
 
+    int entityId = 0;
+
   public:
     EntityManager(Greet::Frame* frame);
     virtual ~EntityManager();
@@ -39,7 +41,8 @@ class EntityManager
     void UpdateSelectedMesh(const Greet::Ref<Greet::Mesh>& mesh);
     void SelectEntity(Greet::Entity entity);
 
-    void CreateEntity();
+    void CreateEntity3D();
+    void CreateEntity2D();
     Greet::Entity GetSelectedEntity() const;
     const Greet::Ref<Greet::ECSManager>& GetECS() const;
 };

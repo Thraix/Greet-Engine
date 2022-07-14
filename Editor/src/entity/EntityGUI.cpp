@@ -20,16 +20,19 @@ EntityGUI::EntityGUI(EntityManager* entityManager, Frame* frame) :
   settingsContainer = frame->GetComponentByName<Container>("settings");
 
   treeView = frame->GetComponentByName<TreeView>("treeView");
-  Button* addEntityButton = frame->GetComponentByName<Button>("addEntityButton");
+  Button* addEntity2DButton = frame->GetComponentByName<Button>("addEntity2DButton");
+  Button* addEntity3DButton = frame->GetComponentByName<Button>("addEntity3DButton");
 
   ASSERT(treeView, "Could not load Scene TreeView");
-  ASSERT(addEntityButton, "Could not load Add Entity Button");
+  ASSERT(addEntity2DButton, "Could not load Add Entity Button");
+  ASSERT(addEntity3DButton, "Could not load Add Entity Button");
 
   treeNode = new TreeNode({});
   treeView->SetTreeNode(treeNode);
 
   treeView->SetOnNodeSelectedCallback(BIND_MEMBER_FUNC(GUITreeViewEntitySelected));
-  addEntityButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity));
+  addEntity2DButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity2D));
+  addEntity3DButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity3D));
   guiTransform3D = NewRef<GUITransform3D>(entityManager, settingsContainer);
 
   guiTransform2DComponent = ComponentFactory::GetComponent("res/guis/Transformation2DCompontent.xml", settingsContainer);
@@ -86,9 +89,14 @@ void EntityGUI::GUITreeViewEntitySelected(TreeView* view, TreeNode* node, bool s
   entityManager->SelectEntity(entity);
 }
 
-void EntityGUI::GUIButtonCreateEntity(Component* component)
+void EntityGUI::GUIButtonCreateEntity2D(Component* component)
 {
-  entityManager->CreateEntity();
+  entityManager->CreateEntity2D();
+}
+
+void EntityGUI::GUIButtonCreateEntity3D(Component* component)
+{
+  entityManager->CreateEntity3D();
 }
 
 void EntityGUI::GUIDropDownMenuMeshType(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)

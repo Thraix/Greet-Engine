@@ -51,6 +51,16 @@ namespace Greet {
     return lhs.msb < rhs.msb;
   }
 
+  bool operator==(const UUID& lhs, const UUID& rhs)
+  {
+    return lhs.msb == rhs.msb && lhs.lsb == rhs.lsb;
+  }
+
+  bool operator!=(const UUID& lhs, const UUID& rhs)
+  {
+    return !(lhs == rhs);
+  }
+
   uint64_t UUID::GetMsb()
   {
     return msb;

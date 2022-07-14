@@ -30,5 +30,7 @@ namespace Greet
       void SetViewMatrix(const Mat3& amViewMatrix);
       void SetShaderUniforms(const Ref<Shader>& shader) const;
       void ViewportResize(ViewportResizeEvent& event);
+
+      friend MetaFile& operator<<(MetaFile& metaFile, const Camera2DComponent& component);
   };
 }

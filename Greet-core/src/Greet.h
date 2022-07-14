@@ -35,6 +35,7 @@
 #include <ecs/components/TagComponent.h>
 #include <ecs/components/Transform2DComponent.h>
 #include <ecs/components/Transform3DComponent.h>
+#include <ecs/components/UUIDComponent.h>
 #include <event/Event.h>
 #include <event/EventDispatcher.h>
 #include <event/JoystickEvent.h>

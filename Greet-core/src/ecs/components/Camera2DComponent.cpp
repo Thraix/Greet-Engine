@@ -45,7 +45,7 @@ namespace Greet
     meta.AddValue("position", std::to_string(component.position.x) + " " + std::to_string(component.position.y));
     meta.AddValue("scale", std::to_string(component.scale.x) + " " + std::to_string(component.scale.y));
     meta.AddValue("rotation", std::to_string(component.rotation));
-    meta.AddValue("active", std::to_string(component.active));
+    meta.AddValue("active", component.active ? "true" : "false");
     metaFile.AddMetaClass("Camera2DComponent", meta);
     return metaFile;
   }

@@ -38,7 +38,8 @@ class EntityGUI
 
   private:
     void GUITreeViewEntitySelected(Greet::TreeView* view, Greet::TreeNode* node, bool selected);
-    void GUIButtonCreateEntity(Greet::Component* component);
+    void GUIButtonCreateEntity2D(Greet::Component* component);
+    void GUIButtonCreateEntity3D(Greet::Component* component);
     void GUIDropDownMenuMeshType(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel);
     void GUITextBoxMeshPath(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel);
 };
