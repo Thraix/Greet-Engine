@@ -38,6 +38,7 @@ class EntityManager
     DELETE_COPY_AND_MOVE(EntityManager);
 
     void UpdateSelectedTransform3D(NotifyOrigin notifyOrigin);
+    void UpdateSelectedTransform2D(NotifyOrigin notifyOrigin);
     void UpdateSelectedMesh(const Greet::Ref<Greet::Mesh>& mesh);
     void SelectEntity(Greet::Entity entity);
 

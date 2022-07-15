@@ -26,6 +26,9 @@ namespace Greet
     private:
       StylingVariables styleVariables;
 
+    public:
+      bool ownedByGUISystem = true; // If false the GUI system will not free the memory of this component
+
     protected:
       std::string name;
       std::string componentType;

@@ -58,6 +58,7 @@ namespace Greet
         Log::Error("Could not find meta file: ", filepath);
         return;
       }
+      Log::Info("Loading %s", filepath);
       LoadMetaFile(stream);
     }
   }

@@ -9,6 +9,7 @@ class EntityManager;
 class GUITransform3D
 {
   EntityManager* entityManager;
+
   Greet::Component* transform3D;
 
   DELETE_COPY_AND_MOVE(GUITransform3D);

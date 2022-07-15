@@ -115,10 +115,20 @@ void EntityScene::SelectEntity(Greet::Entity entity)
   }
 }
 
+void EntityScene::UpdateSelectedTransform2D()
+{
+  if(entityManager->GetSelectedEntity().HasComponent<Transform3DComponent>())
+  {
+    // TODO: Update gizmos when they are implemented
+  }
+}
+
 void EntityScene::UpdateSelectedTransform3D()
 {
   if(entityManager->GetSelectedEntity().HasComponent<Transform3DComponent>())
   {
+    // TODO: Can't we render this where the entity is every time instead?
+    //       Seems unnecessary to update when changed
     Transform3DComponent& transform = entityManager->GetSelectedEntity().GetComponent<Transform3DComponent>();
     TransformGizmo& gizmo = entityRendering->GetTransformGizmo();
     gizmo.position = transform.GetPosition();

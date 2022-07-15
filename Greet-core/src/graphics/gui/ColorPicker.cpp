@@ -10,6 +10,7 @@ namespace Greet
     : Component{object, parent}, attachedColor{nullptr}
   {
     picker = new ColorPickerWindow(Vec2f(0,0), GUIUtils::GetColorFromXML(object, "color", Color{1,1,1,1}));
+    picker->ownedByGUISystem = false; // Don't allow GUIScene to delete the memory if the picker is opened
     picker->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChanged));
   }
 
@@ -64,6 +65,11 @@ namespace Greet
   {
     if(onColorChangeCallback)
       onColorChangeCallback(this, previous, current);
+  }
+
+  void ColorPicker::SetColor(const Color& color)
+  {
+    picker->SetColor(color);
   }
 
   const Color& ColorPicker::GetColor() const

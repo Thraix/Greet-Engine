@@ -55,7 +55,12 @@ namespace Greet
   Container::~Container()
   {
     for(auto& component : m_components)
-      delete component;
+    {
+      if(component->ownedByGUISystem)
+      {
+        delete component;
+      }
+    }
   }
 
   void Container::PostConstruction()

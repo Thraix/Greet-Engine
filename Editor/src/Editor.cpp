@@ -34,6 +34,7 @@ void Editor::Destruct()
 {
   GlobalSceneManager::GetSceneManager().Remove2DScene("gui");
   entityManager.reset();
+  gui.reset();
 }
 
 void Editor::Tick()

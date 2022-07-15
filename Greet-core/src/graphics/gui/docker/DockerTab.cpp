@@ -31,7 +31,8 @@ namespace Greet
 
   DockerTab::~DockerTab()
   {
-    delete component;
+    if(component->ownedByGUISystem)
+      delete component;
   }
 
 

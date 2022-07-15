@@ -30,6 +30,7 @@ namespace Greet
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
       void CallOnColorChangeCallback(const Color& previous, const Color& current);
 
+      void SetColor(const Color& color);
       const Color& GetColor() const;
   };
 

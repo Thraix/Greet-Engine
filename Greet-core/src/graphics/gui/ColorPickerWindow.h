@@ -42,7 +42,7 @@ namespace Greet
       void RGBTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
       void HSVTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
       void HexTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
-      void UpdateColor(const Color& avColor, InputChangeType type, bool rgb);
+      void UpdateColor(const Color& avColor, InputChangeType type, bool rgb, bool callback);
 
     public:
       ColorPickerWindow();
@@ -51,6 +51,7 @@ namespace Greet
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
       void CallOnColorChangeCallback(const Color& previous, const Color& current);
 
+      void SetColor(const Color&);
       const Color& GetColor() const;
   };
 }

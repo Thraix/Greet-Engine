@@ -1,0 +1,9 @@
+<Container name="TagComponent" width="1w" vertical="true" padding="10" spacing="5">
+  <Label name="tagLabel">Name</Label>
+  <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
+    <Container width="1w" vertical="false">
+      <Label name="tagNameLabel" height="1w" align="center">Name</Label>
+      <TextBox name="tag" width="1w"/>
+    </Container>
+  </Container>
+</Container>

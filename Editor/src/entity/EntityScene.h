@@ -29,6 +29,7 @@ class EntityScene : public Greet::ECSScene
     void Render3D(const Greet::Camera3DComponent& cam, const Greet::Environment3DComponent& env) const override;
 
     void SelectEntity(Greet::Entity entity);
+    void UpdateSelectedTransform2D();
     void UpdateSelectedTransform3D();
 
     Greet::Entity GetCamera3DEntity() const override;

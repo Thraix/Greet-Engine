@@ -33,7 +33,7 @@ namespace Greet {
     static size_t GetTrimStartPos(const std::string_view& str)
     {
       size_t pos = 0;
-      while((str[pos] == ' ' || str[pos] == '\t') && pos < str.size())
+      while(pos < str.size() && (str[pos] == ' ' || str[pos] == '\t'))
         pos++;
 
       return pos;
@@ -41,8 +41,10 @@ namespace Greet {
 
     static size_t GetTrimEndPos(const std::string_view& str)
     {
+      if(str.empty())
+        return 0;
       size_t pos = str.size() - 1;
-      while((str[pos] == ' ' || str[pos] == '\t') && pos > 0)
+      while(pos > 0 && (str[pos] == ' ' || str[pos] == '\t'))
         pos--;
       return pos;
     }
@@ -51,7 +53,7 @@ namespace Greet {
     {
       size_t start = GetTrimStartPos(str);
       size_t end = GetTrimEndPos(str);
-      if(start == str.size())
+      if(start == str.size() || start > end)
         return "";
       return std::string_view(str.begin() + start, end - start + 1);
     }
@@ -60,6 +62,8 @@ namespace Greet {
     {
       size_t start = GetTrimStartPos(str);
       size_t end = GetTrimEndPos(str);
+      if(start == str.size() || start > end)
+        return "";
       return std::string_view(str.c_str() + start, end - start + 1);
     }
 

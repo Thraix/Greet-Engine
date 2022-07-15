@@ -23,16 +23,19 @@ namespace Greet {
   {
     for(auto& frame : frames)
     {
-      delete frame;
+      if(frame->ownedByGUISystem)
+        delete frame;
     }
     while(!addQueue.empty())
     {
-      delete addQueue.front();
+      if(addQueue.front()->ownedByGUISystem)
+        delete addQueue.front();
       addQueue.pop();
     }
     while(!removeQueue.empty())
     {
-      delete removeQueue.front();
+      if(removeQueue.front()->ownedByGUISystem)
+        delete removeQueue.front();
       removeQueue.pop();
     }
   }

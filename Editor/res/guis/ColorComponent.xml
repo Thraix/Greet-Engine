@@ -1,0 +1,9 @@
+<Container name="ColorCommponent" width="1w" vertical="true" padding="10" spacing="5">
+  <Label name="colorLabel">Color</Label>
+  <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
+    <Container width="1w" vertical="false">
+      <Label name="colorColorLabel" height="1w" align="center">Color</Label>
+      <ColorPicker name="color" width="1w" backgroundColor="#ffffff"/>
+    </Container>
+  </Container>
+</Container>
