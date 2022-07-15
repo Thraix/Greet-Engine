@@ -81,5 +81,3 @@ class Camera2DControllerScript : public NativeScript
       }
     }
 };
-
-REGISTER_NATIVE_SCRIPT(Camera2DControllerScript)

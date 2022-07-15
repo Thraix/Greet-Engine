@@ -58,7 +58,6 @@ namespace Greet
         Log::Error("Could not find meta file: ", filepath);
         return;
       }
-      Log::Info("Loading %s", filepath);
       LoadMetaFile(stream);
     }
   }
@@ -182,15 +181,19 @@ namespace Greet
   {
     std::vector<MetaFile> metaFiles;
     std::ifstream stream{file};
-    MetaFile meta;
-    while(!stream.eof())
+    if(stream)
     {
-      MetaFile meta{};
-      stream >> meta;
-      if(meta.classes.empty())
-        continue;
-      metaFiles.emplace_back(meta);
+      MetaFile meta;
+      while(!stream.eof())
+      {
+        MetaFile meta{};
+        stream >> meta;
+        if(meta.classes.empty())
+          continue;
+        metaFiles.emplace_back(meta);
+      }
+      return metaFiles;
     }
-    return metaFiles;
+    return {};
   }
 }

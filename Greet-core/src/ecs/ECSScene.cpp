@@ -11,6 +11,7 @@
 #include <ecs/components/MaterialComponent.h>
 #include <ecs/components/MeshComponent.h>
 #include <ecs/components/NativeScriptComponent.h>
+#include <ecs/components/SerializeComponent.h>
 #include <ecs/components/SpriteComponent.h>
 #include <ecs/components/TagComponent.h>
 #include <ecs/components/Transform2DComponent.h>
@@ -42,7 +43,7 @@ namespace Greet
   }
 
   template <typename T>
-  static void SerializeComponent(Entity& entity, MetaFile& meta)
+  static void SaveComponent(Entity& entity, MetaFile& meta)
   {
     if(entity.HasComponent<T>())
     {
@@ -76,6 +77,7 @@ namespace Greet
       {
         Entity e = Entity::Create(manager.get());;
         LoadEntity(entity, e);
+        e.AddComponent<SerializeComponent>();
         if(!e.HasComponent<TagComponent>())
         {
           UUID uuid;
@@ -156,18 +158,21 @@ namespace Greet
   void ECSScene::Serialize(const std::string& path)
   {
     std::vector<MetaFile> entities;
-    manager->Each([&](EntityID entityId){
-      Entity entity{manager.get(), entityId};
-      MetaFile& file = entities.emplace_back(MetaFile{});
-      SerializeComponent<AnimationComponent>(entity, file);
-      SerializeComponent<Camera2DComponent>(entity, file);
-      SerializeComponent<ColorComponent>(entity, file);
-      SerializeComponent<Environment2DComponent>(entity, file);
-      SerializeComponent<SpriteComponent>(entity, file);
-      SerializeComponent<TagComponent>(entity, file);
-      SerializeComponent<Transform2DComponent>(entity, file);
-      SerializeComponent<UUIDComponent>(entity, file);
-      SerializeComponent<NativeScriptComponent>(entity, file);
+    manager->Each<SerializeComponent>([&](EntityID entityId, SerializeComponent& serialize){
+      if(serialize.serialize)
+      {
+        Entity entity{manager.get(), entityId};
+        MetaFile& file = entities.emplace_back(MetaFile{});
+        SaveComponent<AnimationComponent>(entity, file);
+        SaveComponent<Camera2DComponent>(entity, file);
+        SaveComponent<ColorComponent>(entity, file);
+        SaveComponent<Environment2DComponent>(entity, file);
+        SaveComponent<SpriteComponent>(entity, file);
+        SaveComponent<TagComponent>(entity, file);
+        SaveComponent<Transform2DComponent>(entity, file);
+        SaveComponent<UUIDComponent>(entity, file);
+        SaveComponent<NativeScriptComponent>(entity, file);
+      }
     });
     std::ofstream of{path};
     for(auto& entity : entities)
@@ -179,6 +184,7 @@ namespace Greet
   Entity ECSScene::AddEntity(const std::string& tag)
   {
     Entity e = Entity::Create(manager.get());
+    e.AddComponent<UUIDComponent>(UUID{});
     e.AddComponent<TagComponent>(tag);
     return e;
   }
@@ -207,13 +213,7 @@ namespace Greet
     if(!camera)
       return;
 
-    Entity environment{manager.get()};
-    manager->Each<Environment2DComponent>([&](EntityID id, Environment2DComponent& env)
-        {
-          if(environment)
-            Log::Warning("More than one environment in 2D scene");
-          environment.SetID(id);
-        });
+    Entity environment = GetEnvironment2DEntity();
 
     Camera2DComponent& cam = camera.GetComponent<Camera2DComponent>();
     if(environment)
@@ -256,12 +256,7 @@ namespace Greet
       return;
     }
 
-    Entity environment{manager.get()};
-    environment = manager->Find<Environment3DComponent>(
-      [&](EntityID id, Environment3DComponent& env)
-      {
-        return true;
-      });
+    Entity environment = GetEnvironment3DEntity();
 
     Camera3DComponent& cam = camera.GetComponent<Camera3DComponent>();
     const Environment3DComponent* env = &defaultEnv;
@@ -371,4 +366,24 @@ namespace Greet
     return camera;
   }
 
+  Entity ECSScene::GetEnvironment2DEntity() const
+  {
+    Entity environment{manager.get()};
+    environment = manager->Find<Environment2DComponent>([&](EntityID id, Environment2DComponent& env)
+    {
+      return true;
+    });
+    return environment;
+  }
+
+  Entity ECSScene::GetEnvironment3DEntity() const
+  {
+    Entity environment{manager.get()};
+    environment = manager->Find<Environment3DComponent>(
+      [&](EntityID id, Environment3DComponent& env)
+      {
+        return true;
+      });
+    return environment;
+  }
 }

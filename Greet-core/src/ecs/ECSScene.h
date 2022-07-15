@@ -49,6 +49,8 @@ namespace Greet
 
       virtual Entity GetCamera2DEntity() const;
       virtual Entity GetCamera3DEntity() const;
+      virtual Entity GetEnvironment2DEntity() const;
+      virtual Entity GetEnvironment3DEntity() const;
 
     private:
 

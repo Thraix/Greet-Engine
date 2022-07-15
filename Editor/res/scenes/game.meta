@@ -1,0 +1,132 @@
+[ColorComponent]
+color=#ffffffff
+[TagComponent]
+tag=Entity#1
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=393.500031 390.500000
+[UUIDComponent]
+uuid=5f6b45f3-79cf-3b5b-0f87-1fc9a2539e52
+---
+[ColorComponent]
+color=#ffffffff
+[TagComponent]
+tag=Entity#2
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=393.500031 390.500000
+[UUIDComponent]
+uuid=f8074a31-6d16-975b-0cc5-3da39f8eca82
+---
+[ColorComponent]
+color=#ffffffff
+[TagComponent]
+tag=Entity#3
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=393.500031 390.500000
+[UUIDComponent]
+uuid=9e6b47d2-b0c6-2a08-f149-d6c008401d22
+---
+[ColorComponent]
+color=#ffbe4c4c
+[TagComponent]
+tag=Entity#4
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=100.000000 390.500000
+[UUIDComponent]
+uuid=b163ddde-e16a-029b-ba0a-0c22eb203722
+---
+[ColorComponent]
+color=#ffffffff
+[TagComponent]
+tag=Entity#5
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=393.500031 390.500000
+[UUIDComponent]
+uuid=8f21ffbe-c5b5-0892-f515-fe21196a2611
+---
+[ColorComponent]
+color=#ffffffff
+[TagComponent]
+tag=Entity#6
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=393.500031 390.500000
+[UUIDComponent]
+uuid=dd1bfba0-3bdd-512f-542c-469a7ceed518
+---
+[ColorComponent]
+color=#ff936f25
+[TagComponent]
+tag=Entity#7
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.349066
+position=300.000000 390.500000
+[UUIDComponent]
+uuid=82727e91-4bdf-1a42-ced1-a0a20dceb975
+---
+[ColorComponent]
+color=#ff39818b
+[TagComponent]
+tag=Entity#8
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=205.500015 650.500000
+[UUIDComponent]
+uuid=789aedb2-a46d-12b2-2ae9-337dbcc2ca16
+---
+[ColorComponent]
+color=#ff955c9b
+[TagComponent]
+tag=Entity#9
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=354.500031 603.500000
+[UUIDComponent]
+uuid=8a4ea1de-b791-ff39-327a-812a4782ccdc
+---
+[ColorComponent]
+color=#ff7b7741
+[TagComponent]
+tag=Entity#10
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=501.500031 466.500000
+[UUIDComponent]
+uuid=16c3e079-507d-689f-6f44-d28ae1a3b78e
+---
+[ColorComponent]
+color=#ff646b9a
+[TagComponent]
+tag=Entity#11
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=231.500015 333.500000
+[UUIDComponent]
+uuid=36075480-de5d-2b01-4abf-010158bb6233
+---
+[ColorComponent]
+color=#ff377337
+[TagComponent]
+tag=Entity#12
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.785398
+position=346.500031 418.500000
+[UUIDComponent]
+uuid=45eb7427-3280-d696-94c4-eee6472f6645
+---

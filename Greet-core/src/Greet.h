@@ -31,6 +31,7 @@
 #include <ecs/components/MaterialComponent.h>
 #include <ecs/components/MeshComponent.h>
 #include <ecs/components/NativeScriptComponent.h>
+#include <ecs/components/SerializeComponent.h>
 #include <ecs/components/SpriteComponent.h>
 #include <ecs/components/TagComponent.h>
 #include <ecs/components/Transform2DComponent.h>

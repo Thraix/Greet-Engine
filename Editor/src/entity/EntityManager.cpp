@@ -4,13 +4,15 @@
 #include "EntityGUI.h"
 
 #include <ecs/Entity.h>
+#include <ecs/components/Camera2DComponent.h>
+#include <ecs/components/ColorComponent.h>
 #include <ecs/components/MaterialComponent.h>
 #include <ecs/components/MeshComponent.h>
+#include <ecs/components/SerializeComponent.h>
+#include <ecs/components/SpriteComponent.h>
 #include <ecs/components/TagComponent.h>
 #include <ecs/components/Transform2DComponent.h>
 #include <ecs/components/Transform3DComponent.h>
-#include <ecs/components/ColorComponent.h>
-#include <ecs/components/SpriteComponent.h>
 #include <ecs/components/UUIDComponent.h>
 #include <graphics/gui/SceneView.h>
 #include <graphics/models/MeshFactory.h>
@@ -21,17 +23,12 @@ using namespace Greet;
 EntityManager::EntityManager(Frame* frame) :
   ecs{NewRef<ECSManager>()},
   selectedEntity{ecs.get()},
-  scene{NewRef<EntityScene>(this)},
-  gui{NewRef<EntityGUI>(this, frame)}
+  gui{NewRef<EntityGUI>(this, frame)},
+  scene{NewRef<EntityScene>(this)}
 {
   sceneView = frame->GetComponentByName<SceneView>("sceneView");
   ASSERT(sceneView, "Could not load Scene View");
   sceneView->GetSceneManager().Add3DScene(scene, "scene");
-
-  // TODO: Remove debug stuff
-  CreateEntity2D();
-  CreateEntity2D();
-  CreateEntity2D();
 }
 
 EntityManager::~EntityManager()
@@ -46,27 +43,34 @@ void EntityManager::SelectEntity(Entity entity)
   gui->SelectEntity(entity);
 }
 
+void EntityManager::Serialize(const std::string& str)
+{
+  scene->Serialize(str);
+}
+
 void EntityManager::CreateEntity2D()
 {
   Entity entity = Entity::Create(ecs.get());
-  std::string name = "Entity#" + std::to_string(++entityId);
+  std::string name = "Entity#" + std::to_string(ecs->GetEntityCount() - 2);
 
   gui->CreateEntity(name);
 
   entity.AddComponent<UUIDComponent>(UUID{});
   entity.AddComponent<TagComponent>(name);
+  entity.AddComponent<SerializeComponent>();
 
-  entity.AddComponent<Transform2DComponent>(Vec2f{entityId * 150.0f, 80}, Vec2f{100,100}, 0);
+  Camera2DComponent& camera = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>();
+  entity.AddComponent<Transform2DComponent>(~(camera.GetProjectionMatrix() * camera.GetViewMatrix()) * Vec2f{0, 0}, Vec2f{100,100}, 0);
   entity.AddComponent<ColorComponent>(0xffffffff);
 }
 
 void EntityManager::CreateEntity3D()
 {
-  std::string name = "Entity#" + std::to_string(++entityId);
+  Entity entity = Entity::Create(ecs.get());
+  std::string name = "Entity#" + std::to_string(ecs->GetEntityCount() - 2);
 
   gui->CreateEntity(name);
 
-  Entity entity = Entity::Create(ecs.get());
   entity.AddComponent<UUIDComponent>(UUID{});
   entity.AddComponent<TagComponent>(name);
 
@@ -95,6 +99,16 @@ void EntityManager::UpdateSelectedTransform2D(NotifyOrigin notifyOrigin)
 void EntityManager::UpdateSelectedMesh(const Ref<Mesh>& mesh)
 {
   selectedEntity.GetComponent<MeshComponent>().mesh = mesh;
+}
+
+const Greet::Ref<EntityGUI> EntityManager::GetEntityGUI() const
+{
+  return gui;
+}
+
+Greet::Ref<EntityGUI> EntityManager::GetEntityGUI()
+{
+  return gui;
 }
 
 Greet::Entity EntityManager::GetSelectedEntity() const

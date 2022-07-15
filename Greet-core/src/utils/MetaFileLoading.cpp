@@ -86,7 +86,7 @@ namespace Greet
           for(int i = 1; i < value.length(); i++)
           {
             if(value[i] >= 'a' && value[i] <= 'f')
-              val = (val << 4) | (value[i] - 'a');
+              val = (val << 4) | (value[i] - 'a' + 10);
             else
               val = (val << 4) | (value[i] - '0');
           }

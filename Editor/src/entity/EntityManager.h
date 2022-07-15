@@ -26,8 +26,8 @@ class EntityManager
     Greet::Ref<Greet::ECSManager> ecs;
     Greet::Entity selectedEntity;
 
-    Greet::Ref<EntityScene> scene;
     Greet::Ref<EntityGUI> gui;
+    Greet::Ref<EntityScene> scene;
 
     int entityId = 0;
 
@@ -41,9 +41,13 @@ class EntityManager
     void UpdateSelectedTransform2D(NotifyOrigin notifyOrigin);
     void UpdateSelectedMesh(const Greet::Ref<Greet::Mesh>& mesh);
     void SelectEntity(Greet::Entity entity);
+    void Serialize(const std::string& str);
 
     void CreateEntity3D();
     void CreateEntity2D();
     Greet::Entity GetSelectedEntity() const;
     const Greet::Ref<Greet::ECSManager>& GetECS() const;
+
+    const Greet::Ref<EntityGUI> GetEntityGUI() const;
+    Greet::Ref<EntityGUI> GetEntityGUI();
 };

@@ -15,7 +15,6 @@ namespace Greet
   class ECSManager final
   {
     private:
-      bool destroyingEntityID;
       std::unordered_set<EntityID> entities;
       std::unordered_map<std::type_index, ComponentPoolBase*> componentPool;
       int currentEntityId = 1;
@@ -24,6 +23,7 @@ namespace Greet
 
       EntityID CreateEntity();
       void DestroyEntity(EntityID entity);
+      size_t GetEntityCount() const { return entities.size(); }
       bool ValidEntity(EntityID entity);
       void Each(std::function<void(EntityID)> function);
 

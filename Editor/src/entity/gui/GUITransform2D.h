@@ -28,16 +28,10 @@ class GUITransform2D
     void GUITextBoxTranslationY(Greet::Component* component,
                                 const std::string& before,
                                 const std::string& after);
-    void GUITextBoxTranslationZ(Greet::Component* component,
-                                const std::string& before,
-                                const std::string& after);
     void GUITextBoxScalingX(Greet::Component* component,
                             const std::string& before,
                             const std::string& after);
     void GUITextBoxScalingY(Greet::Component* component,
-                            const std::string& before,
-                            const std::string& after);
-    void GUITextBoxScalingZ(Greet::Component* component,
                             const std::string& before,
                             const std::string& after);
     void GUITextBoxRotationX(Greet::Component* component,

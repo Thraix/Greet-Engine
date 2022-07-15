@@ -8,7 +8,7 @@
 #include <input/Input.h>
 #include <math/Plane.h>
 
-class CameraControllerScript : public Greet::NativeScript
+class Camera3DControllerScript : public Greet::NativeScript
 {
   struct Controller
   {
@@ -31,7 +31,7 @@ class CameraControllerScript : public Greet::NativeScript
     Greet::Vec3f pressLinePos;
     Greet::Vec3f pressPos;
   public:
-    CameraControllerScript(const Greet::Vec3f& pos = {}, const Greet::Vec3f& rot = {})
+    Camera3DControllerScript(const Greet::Vec3f& pos = {}, const Greet::Vec3f& rot = {})
       : pos{pos}, rot{rot}, vel{}, rotVel{}, distance{5}
     {
     }
@@ -40,7 +40,7 @@ class CameraControllerScript : public Greet::NativeScript
     {
       if(!entity.HasComponent<Greet::Camera3DComponent>())
       {
-        Greet::Log::Warning("CameraController entity does not contain a Camera3DComponent");
+        Greet::Log::Warning("Camera3DController entity does not contain a Camera3DComponent");
         entity.AddComponent<Greet::Camera3DComponent>(Greet::Mat4::Identity(), 90.0f, 0.01f, 100.0f, true);
       };
     }
@@ -116,5 +116,3 @@ class CameraControllerScript : public Greet::NativeScript
       return Greet::Mat4::Translate(0, 0, -distance) * Greet::Mat4::RotateX(rot.x) * Greet::Mat4::RotateY(rot.y) * Greet::Mat4::Translate(pos);
     }
 };
-
-REGISTER_NATIVE_SCRIPT(CameraControllerScript)

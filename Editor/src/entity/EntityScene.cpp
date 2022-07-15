@@ -1,16 +1,23 @@
 #include "EntityScene.h"
 
 #include "EntityManager.h"
+#include "EntityGUI.h"
 #include "EntityRendering.h"
 #include "gui/GUITransform3D.h"
+#include "../scripts/Camera2DControllerScript.cpp"
+#include "../scripts/Camera3DControllerScript.cpp"
 
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>
 #include <ecs/components/MaterialComponent.h>
 #include <ecs/components/MeshComponent.h>
 #include <ecs/components/NativeScriptComponent.h>
+#include <ecs/components/Transform2DComponent.h>
 #include <ecs/components/Transform3DComponent.h>
+#include <ecs/components/Environment2DComponent.h>
+#include <ecs/components/Environment3DComponent.h>
 #include <ecs/components/UUIDComponent.h>
+#include <ecs/components/TagComponent.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <graphics/textures/TextureManager.h>
 #include <input/InputDefines.h>
@@ -23,10 +30,29 @@ const UUID CAMERA_2D_UUID{"a4396de6-dbd9-6dc4-1e1d-3e662b62ddab"};
 const UUID CAMERA_3D_UUID{"862f1b54-649c-3775-a53d-5834a7e1135b"};
 
 EntityScene::EntityScene(EntityManager* entityManager)
-  : ECSScene{entityManager->GetECS(), "res/scenes/editor_scene.meta"}, entityManager{entityManager}
+  : ECSScene{entityManager->GetECS(), "res/scenes/game.meta"}, entityManager{entityManager}
 {
   ASSERT(manager.get() != nullptr, "ECSManager was not initialized");
   entityRendering = Greet::NewRef<EntityRendering>(manager.get());
+
+  manager->Each<TagComponent>([&](EntityID entity, TagComponent& tag)
+  {
+    entityManager->GetEntityGUI()->CreateEntity(tag.tag);
+  });
+
+  Entity camera2D = Entity{manager.get(), manager->CreateEntity()};
+  camera2D.AddComponent<UUIDComponent>(CAMERA_2D_UUID);
+  camera2D.AddComponent<TagComponent>("EditorCamera2D");
+  camera2D.AddComponent<Camera2DComponent>(Vec2f{0, 0}, Vec2f{1, 1}, 0, false);
+  camera2D.AddComponent<Environment2DComponent>(ShaderFactory::Shader2D());
+  camera2D.AddComponent<NativeScriptComponent>(NewRef<NativeScriptHandler>(new Camera2DControllerScript{}));
+
+  Entity camera3D = Entity{manager.get(), manager->CreateEntity()};
+  camera3D.AddComponent<UUIDComponent>(CAMERA_3D_UUID);
+  camera3D.AddComponent<TagComponent>("EditorCamera3D");
+  camera3D.AddComponent<Camera3DComponent>(Mat4::Identity(), 90, 0.001, 1000.0f, false);
+  camera3D.AddComponent<Environment3DComponent>(ShaderFactory::ShaderSkybox(), TextureManager::LoadCubeMap("res/textures/skybox.meta"));
+  camera3D.AddComponent<NativeScriptComponent>(NewRef<NativeScriptHandler>(new Camera3DControllerScript{}));
 }
 
 void EntityScene::Render() const
@@ -89,7 +115,7 @@ void EntityScene::OnEvent3D(Greet::Event& event)
 
   if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
   {
-    MousePressEvent e = static_cast<MousePressEvent&>(event);
+    MousePressEvent& e = static_cast<MousePressEvent&>(event);
     if(e.GetButton() != GREET_MOUSE_1)
       return;
 
@@ -146,8 +172,7 @@ Entity EntityScene::GetCamera2DEntity() const
       return uuid.uuid == CAMERA_2D_UUID;
     });
 
-  if(!camera)
-    Log::Warning("Editor Camera2D not found in scene");
+  ASSERT(camera, "Editor Camera2D not found in scene");
   return camera;
 }
 
@@ -160,9 +185,34 @@ Entity EntityScene::GetCamera3DEntity() const
       return uuid.uuid == CAMERA_3D_UUID;
     });
 
-  if(!camera)
-    Log::Warning("Editor Camera3D not found in scene");
+  ASSERT(camera, "Editor Camera3D not found in scene");
   return camera;
+}
+
+Entity EntityScene::GetEnvironment2DEntity() const
+{
+  Entity environment{manager.get()};
+  environment = manager->Find<Environment2DComponent, UUIDComponent>(
+    [&](EntityID id, Environment2DComponent& cam, UUIDComponent& uuid)
+    {
+      return uuid.uuid == CAMERA_2D_UUID;
+    });
+
+  ASSERT(environment, "Editor Environment2D not found in scene");
+  return environment;
+}
+
+Entity EntityScene::GetEnvironment3DEntity() const
+{
+  Entity environment{manager.get()};
+  environment = manager->Find<Environment3DComponent, UUIDComponent>(
+    [&](EntityID id, Environment3DComponent& cam, UUIDComponent& uuid)
+    {
+      return uuid.uuid == CAMERA_3D_UUID;
+    });
+
+  ASSERT(environment, "Editor Environment3D not found in scene");
+  return environment;
 }
 
 Entity EntityScene::GetNearestRaycastedEntity(Camera3DComponent& cameraComponent, const Vec2f& pos, float farDistance)

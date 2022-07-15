@@ -16,7 +16,7 @@ namespace Greet
   MetaFile& operator<<(MetaFile& metaFile, const ColorComponent& component)
   {
     MetaFileClass meta;
-    meta.AddValue("color", LogUtils::DecToHex(component.color));
+    meta.AddValue("color", "#" + LogUtils::DecToHex(component.color));
     metaFile.AddMetaClass("ColorComponent", meta);
     return metaFile;
   }

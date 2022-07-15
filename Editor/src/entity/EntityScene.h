@@ -32,8 +32,10 @@ class EntityScene : public Greet::ECSScene
     void UpdateSelectedTransform2D();
     void UpdateSelectedTransform3D();
 
-    Greet::Entity GetCamera3DEntity() const override;
     Greet::Entity GetCamera2DEntity() const override;
+    Greet::Entity GetCamera3DEntity() const override;
+    Greet::Entity GetEnvironment2DEntity() const override;
+    Greet::Entity GetEnvironment3DEntity() const override;
 
   private:
     Greet::Entity GetNearestRaycastedEntity(Greet::Camera3DComponent& cameraComponent, const Greet::Vec2f& pos, float farDistance = 100);
