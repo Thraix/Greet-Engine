@@ -19,6 +19,7 @@ namespace Greet
       Transform2DComponent(const MetaFileClass& metaClass);
 
       Mat3 GetTransform() const;
+      Mat3 GetInverseTransform() const;
 
       friend MetaFile& operator<<(MetaFile& metaFile, const Transform2DComponent& component);
   };

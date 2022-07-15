@@ -84,6 +84,28 @@ void EntityScene::OnEvent(Event& event)
 
 void EntityScene::OnEvent2D(Greet::Event& event)
 {
+  if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+  {
+    MousePressEvent& e = static_cast<MousePressEvent&>(event);
+    if(e.GetButton() == GREET_MOUSE_LEFT)
+    {
+      Camera2DComponent& cam = GetCamera2DEntity().GetComponent<Camera2DComponent>();
+      Vec2f mousePos = cam.GetInversePVMatrix() * e.GetPosition();
+      Entity pressedEntity{manager.get()};
+      manager->Each<Transform2DComponent>([&](EntityID entity, Transform2DComponent& transform)
+      {
+        Vec2f mousePosRelativeToEntity = transform.GetInverseTransform() * mousePos;
+        if(mousePosRelativeToEntity > -0.5 && mousePosRelativeToEntity < 0.5)
+        {
+          pressedEntity = entity;
+        }
+      });
+      if(pressedEntity != entityManager->GetSelectedEntity())
+      {
+        entityManager->SelectEntity(pressedEntity);
+      }
+    }
+  }
 }
 
 void EntityScene::OnEvent3D(Greet::Event& event)

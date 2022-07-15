@@ -19,6 +19,11 @@ namespace Greet
     return Mat3::TransformationMatrix(position, scale, rotation);
   }
 
+  Mat3 Transform2DComponent::GetInverseTransform() const
+  {
+    return Mat3::InverseTransformationMatrix(position, scale, rotation);
+  }
+
   MetaFile& operator<<(MetaFile& metaFile, const Transform2DComponent& component)
   {
     MetaFileClass meta;

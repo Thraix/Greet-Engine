@@ -20,7 +20,21 @@ namespace Greet
   {
     return Mat3::InverseTransformationMatrix(position, scale, rotation);
   }
-  const Mat3& Camera2DComponent::GetProjectionMatrix() const { return projectionMatrix; }
+
+  const Mat3& Camera2DComponent::GetProjectionMatrix() const
+  {
+    return projectionMatrix;
+  }
+
+  Mat3 Camera2DComponent::GetPVMatrix() const
+  {
+    return projectionMatrix * GetViewMatrix();
+  }
+
+  Mat3 Camera2DComponent::GetInversePVMatrix() const
+  {
+    return ~(projectionMatrix * GetViewMatrix());
+  }
 
   void Camera2DComponent::SetProjectionMatrix(const Mat3& amProjectionMatrix)
   {

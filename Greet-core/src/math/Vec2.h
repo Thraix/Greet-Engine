@@ -310,6 +310,26 @@ namespace Greet{
         return x >= other.x;
       }
 
+      bool operator<(const T& other) const
+      {
+        return x < other && y < other;
+      }
+
+      bool operator>(const T& other) const
+      {
+        return x > other && y > other;
+      }
+
+      bool operator<=(const T& other) const
+      {
+        return x <= other && y <= other;
+      }
+
+      bool operator>=(const T& other) const
+      {
+        return x >= other && y >= other;
+      }
+
       friend std::ostream& operator<<(std::ostream& stream, const Vec2& vec)
       {
         return stream << "(" << vec.x << ", " << vec.y << ")";

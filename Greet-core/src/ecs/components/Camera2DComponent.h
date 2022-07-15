@@ -26,8 +26,9 @@ namespace Greet
 
       Mat3 GetViewMatrix() const;
       const Mat3& GetProjectionMatrix() const;
+      Mat3 GetPVMatrix() const;
+      Mat3 GetInversePVMatrix() const;
       void SetProjectionMatrix(const Mat3& amProjectionMatrix);
-      void SetViewMatrix(const Mat3& amViewMatrix);
       void SetShaderUniforms(const Ref<Shader>& shader) const;
       void ViewportResize(ViewportResizeEvent& event);
 
