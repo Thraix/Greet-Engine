@@ -94,6 +94,12 @@ namespace Greet
         return (HasComponent<Components>(entity) && ...);
       }
 
+      template <typename... Components>
+      bool HasAnyComponent(EntityID entity)
+      {
+        return (HasComponent<Components>(entity) || ...);
+      }
+
       template <typename Component, typename... Components, typename Func>
       void Each(Func function)
       {

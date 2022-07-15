@@ -9,15 +9,17 @@
 
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>
+#include <ecs/components/ColorComponent.h>
+#include <ecs/components/Environment2DComponent.h>
+#include <ecs/components/Environment3DComponent.h>
 #include <ecs/components/MaterialComponent.h>
 #include <ecs/components/MeshComponent.h>
 #include <ecs/components/NativeScriptComponent.h>
+#include <ecs/components/SpriteComponent.h>
+#include <ecs/components/TagComponent.h>
 #include <ecs/components/Transform2DComponent.h>
 #include <ecs/components/Transform3DComponent.h>
-#include <ecs/components/Environment2DComponent.h>
-#include <ecs/components/Environment3DComponent.h>
 #include <ecs/components/UUIDComponent.h>
-#include <ecs/components/TagComponent.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <graphics/textures/TextureManager.h>
 #include <input/InputDefines.h>
@@ -94,10 +96,13 @@ void EntityScene::OnEvent2D(Greet::Event& event)
       Entity pressedEntity{manager.get()};
       manager->Each<Transform2DComponent>([&](EntityID entity, Transform2DComponent& transform)
       {
-        Vec2f mousePosRelativeToEntity = transform.GetInverseTransform() * mousePos;
-        if(mousePosRelativeToEntity > -0.5 && mousePosRelativeToEntity < 0.5)
+        if(manager->HasAnyComponent<SpriteComponent, ColorComponent>(entity))
         {
-          pressedEntity = entity;
+          Vec2f mousePosRelativeToEntity = transform.GetInverseTransform() * mousePos;
+          if(mousePosRelativeToEntity > -0.5 && mousePosRelativeToEntity < 0.5)
+          {
+            pressedEntity = entity;
+          }
         }
       });
       if(pressedEntity != entityManager->GetSelectedEntity())

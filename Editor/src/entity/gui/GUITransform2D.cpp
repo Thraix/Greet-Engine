@@ -121,7 +121,7 @@ void GUITransform2D::GUITextBoxRotation(Greet::Component* component,
     return;
   ASSERT(e.HasComponent<Transform2DComponent>(), "Entity does not contain Transform2DComponent");
 
-  e.GetComponent<Transform2DComponent>().rotation = GUIHelper::StringToFloat(after);
+  e.GetComponent<Transform2DComponent>().rotation = Math::ToRadians(GUIHelper::StringToFloat(after));
 
   entityManager->UpdateSelectedTransform2D(NotifyOrigin::GUI);
 }

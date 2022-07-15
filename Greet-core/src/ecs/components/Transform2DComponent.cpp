@@ -1,4 +1,5 @@
 #include "Transform2DComponent.h"
+#include "math/MathFunc.h"
 
 #include <utils/MetaFileLoading.h>
 
@@ -29,7 +30,7 @@ namespace Greet
     MetaFileClass meta;
     meta.AddValue("position", std::to_string(component.position.x) + " " + std::to_string(component.position.y));
     meta.AddValue("scale", std::to_string(component.scale.x) + " " + std::to_string(component.scale.y));
-    meta.AddValue("rotation", std::to_string(component.rotation));
+    meta.AddValue("rotation", std::to_string(Math::ToDegrees(component.rotation)));
     metaFile.AddMetaClass("Transform2DComponent", meta);
     return metaFile;
   }
