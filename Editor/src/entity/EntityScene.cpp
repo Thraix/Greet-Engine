@@ -39,9 +39,9 @@ EntityScene::EntityScene(EntityManager* entityManager)
   ASSERT(manager.get() != nullptr, "ECSManager was not initialized");
   entityRendering = Greet::NewRef<EntityRendering>(manager.get());
 
-  manager->Each<TagComponent>([&](EntityID entity, TagComponent& tag)
+  manager->Each<TagComponent, UUIDComponent>([&](EntityID entity, TagComponent& tag, UUIDComponent& uuid)
   {
-    entityManager->GetEntityGUI()->CreateEntity(tag.tag);
+    entityManager->GetEntityGUI()->CreateEntity(Entity{manager.get(), entity});
   });
 
   Entity camera2D = Entity{manager.get(), manager->CreateEntity()};

@@ -3,12 +3,15 @@
 #include "EntityManager.h"
 #include "gui/GUITransform3D.h"
 #include "gui/GUITransform2D.h"
+#include "gui/GUISprite.h"
 
 #include <graphics/gui/Button.h>
 #include <graphics/gui/DropDownMenu.h>
 #include <graphics/gui/TextBox.h>
 #include <graphics/gui/ColorPicker.h>
 #include <ecs/components/TagComponent.h>
+#include <ecs/components/SpriteComponent.h>
+#include <ecs/components/UUIDComponent.h>
 #include <ecs/components/MeshComponent.h>
 #include <ecs/components/ColorComponent.h>
 #include <utils/MetaFileLoading.h>
@@ -38,12 +41,16 @@ EntityGUI::EntityGUI(EntityManager* entityManager, Frame* frame) :
   addEntity3DButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity3D));
   guiTransform2D = NewRef<GUITransform2D>(entityManager, settingsContainer);
   guiTransform3D = NewRef<GUITransform3D>(entityManager, settingsContainer);
+  guiSprite = NewRef<GUISprite>(entityManager, settingsContainer);
 
   guiTagComponent = ComponentFactory::GetComponent("res/guis/TagComponent.xml", settingsContainer);
   guiTagComponent->GetComponentByName<TextBox>("tag")->SetOnTextChangedCallback(BIND_MEMBER_FUNC(GUITextBoxTagName));
 
   guiColorComponent = ComponentFactory::GetComponent("res/guis/ColorComponent.xml", settingsContainer);
   guiColorComponent->GetComponentByName<ColorPicker>("color")->SetOnColorChangeCallback(BIND_MEMBER_FUNC(GUIColorPickerColor));
+
+  guiAddComponent = static_cast<DropDownMenu*>(ComponentFactory::GetComponent("res/guis/AddComponent.xml", settingsContainer));
+  guiAddComponent->SetOnSelectionChangeCallback(BIND_MEMBER_FUNC(GUIDropDownMenuAddComponent));
 
   guiMeshComponent = ComponentFactory::GetComponent("res/guis/MeshComponent.xml", settingsContainer);
   guiMeshComponent->GetComponentByName<DropDownMenu>("meshType")->SetOnSelectionChangeCallback(BIND_MEMBER_FUNC(GUIDropDownMenuMeshType));
@@ -78,34 +85,52 @@ void EntityGUI::UpdateSelectedTransform2D()
   }
 }
 
-void EntityGUI::CreateEntity(const std::string& name)
+void EntityGUI::CreateEntity(Entity entity)
 {
   TreeNode* selected = treeNode;
   if(treeView->HasSelectedNode())
     selected = treeView->GetSelectedNode();
-  selected->AddChildNode(TreeNode{name});
+  selected->AddChildNode(TreeNode{entity.GetComponent<TagComponent>().tag, entity.GetComponent<UUIDComponent>().uuid});
 }
 
-void EntityGUI::SelectEntity(Entity entity)
+void EntityGUI::ReloadEntitySettings(Entity entity)
 {
-  // TODO: select the entity in the TreeView
-
   settingsContainer->RemoveAllComponents();
   if(!entity)
     return;
+  settingsContainer->AddComponent(guiAddComponent);
 
   settingsContainer->AddComponent(guiTagComponent);
   guiTagComponent->GetComponentByName<TextBox>("tag")->SetText(entity.GetComponent<TagComponent>().tag);
 
+  std::vector<std::string> addComponents;
+
   if(entity.HasComponent<Transform2DComponent>())
   {
     guiTransform2D->AttachTo(settingsContainer, entity.GetComponent<Transform2DComponent>());
+  }
+  else
+  {
+    addComponents.emplace_back("Transform 2D Component");
   }
 
   if(entity.HasComponent<ColorComponent>())
   {
     settingsContainer->AddComponent(guiColorComponent);
     guiColorComponent->GetComponentByName<ColorPicker>("color")->SetColor(entity.GetComponent<ColorComponent>().color);
+  }
+  else
+  {
+    addComponents.emplace_back("Color component");
+  }
+
+  if(entity.HasComponent<SpriteComponent>())
+  {
+    guiSprite->AttachTo(settingsContainer, entity.GetComponent<SpriteComponent>());
+  }
+  else
+  {
+    addComponents.emplace_back("Sprite Component");
   }
 
   if(entity.HasComponent<Transform3DComponent>())
@@ -117,6 +142,25 @@ void EntityGUI::SelectEntity(Entity entity)
   {
     settingsContainer->AddComponent(guiMeshComponent);
   }
+  guiAddComponent->SetDropDownItems(addComponents);
+  if(addComponents.empty())
+  {
+    settingsContainer->RemoveComponent(guiAddComponent);
+  }
+}
+
+void EntityGUI::SelectEntity(Entity entity)
+{
+  if(entity)
+  {
+    TreeNode* treeNode = treeView->GetTreeNode(entity.GetComponent<UUIDComponent>().uuid);
+    treeView->SelectTreeNode(treeNode);
+  }
+  else
+  {
+    treeView->SelectTreeNode(nullptr);
+  }
+  ReloadEntitySettings(entity);
 }
 
 void EntityGUI::GUITreeViewEntitySelected(TreeView* view, TreeNode* node, bool selected)
@@ -124,14 +168,14 @@ void EntityGUI::GUITreeViewEntitySelected(TreeView* view, TreeNode* node, bool s
   Entity entity{entityManager->GetECS().get()};
   if(selected)
   {
-    entity = entityManager->GetECS()->Find<TagComponent>(
-      [node](EntityID entity, TagComponent& tagComponent)
+    entity = entityManager->GetECS()->Find<UUIDComponent>(
+      [node](EntityID entity, UUIDComponent& uuid)
       {
-        return tagComponent.tag == node->GetName();
+        return uuid.uuid == node->GetUUID();
       });
     ASSERT(entity, "Selected node does not exist in ECSManager %s", node->GetName());
+    entityManager->SelectEntity(entity);
   }
-  entityManager->SelectEntity(entity);
 }
 
 void EntityGUI::GUIButtonCreateEntity2D(Component* component)
@@ -158,6 +202,20 @@ void EntityGUI::GUIDropDownMenuMeshType(Greet::Component* component, const std::
       Ref<Mesh> mesh = MetaFileLoading::LoadMesh(meta, "mesh");
       entityManager->UpdateSelectedMesh(mesh);
     }
+  }
+}
+
+void EntityGUI::GUIDropDownMenuAddComponent(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)
+{
+  if(entityManager->GetSelectedEntity())
+  {
+    if(newLabel == "Transform 2D Component")
+      entityManager->GetSelectedEntity().AddComponent<Transform2DComponent>();
+    else if(newLabel == "Color Component")
+      entityManager->GetSelectedEntity().AddComponent<ColorComponent>();
+    else if(newLabel == "Sprite Component")
+      entityManager->GetSelectedEntity().AddComponent<SpriteComponent>();
+    ReloadEntitySettings(entityManager->GetSelectedEntity());
   }
 }
 

@@ -77,7 +77,17 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::OrthographicViewport(float width)
+  Mat3 Mat3::OrthographicViewportCenter()
+  {
+    Mat3 result(1.0f);
+
+    result.elements[0] = 2.0f / (RenderCommand::GetViewportWidth());
+    result.elements[4] = 2.0f / (RenderCommand::GetViewportHeight());
+
+    return result;
+  }
+
+  Mat3 Mat3::OrthographicViewportCenter(float width)
   {
     Mat3 result(1.0f);
 
@@ -87,17 +97,6 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::OrthographicViewportCenter()
-  {
-    Mat3 result(1.0f);
-
-    result.elements[0] = 1.0f / (RenderCommand::GetViewportWidth());
-    result.elements[4] = 1.0f / (-RenderCommand::GetViewportHeight());
-    result.elements[6] = 0;
-    result.elements[7] = 0;
-
-    return result;
-  }
 
   Mat3 Mat3::TransformationMatrix(const Vec2f& pos, const Vec2f& scale, float rot)
   {

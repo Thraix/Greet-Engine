@@ -1,0 +1,3 @@
+<DropDownMenu name="meshType" width="fill_parent">
+  <DropDownLabel>Add Component</DropDownLabel>
+</DropDownMenu>

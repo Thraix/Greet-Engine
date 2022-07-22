@@ -1,4 +1,4 @@
-<Container name="Transformation3D" width="1w" vertical="true" padding="10" spacing="5">
+<Container name="Transformation3D" width="1w" vertical="true" spacing="5">
   <Label name="transformation3DLabel" width="1w">Transformation 3D</Label>
   <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
     <Label name="translationLabel" width="1w">Translation</Label>

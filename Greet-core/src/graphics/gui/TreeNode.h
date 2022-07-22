@@ -2,6 +2,7 @@
 
 #include <graphics/renderers/GUIRenderer.h>
 #include <graphics/gui/TLBR.h>
+#include <utils/UUID.h>
 
 #include <functional>
 #include <vector>
@@ -31,6 +32,7 @@ namespace Greet
     private:
       std::vector<TreeNode> childNodes;
       TreeNode* parent = nullptr;
+      UUID uuid;
       std::string name;
       bool open = true;
       bool selected = false;
@@ -43,7 +45,9 @@ namespace Greet
     public:
 
       TreeNode(const std::string& name, bool open = true);
+      TreeNode(const std::string& name, const UUID& uuid, bool open = true);
       TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes, bool open = true);
+      TreeNode(const std::string& name, const UUID& uuid, const std::initializer_list<TreeNode>& nodes, bool open = true);
 
       TreeNode(const TreeNode& node);
       TreeNode(TreeNode&& node);
@@ -70,9 +74,13 @@ namespace Greet
       const std::string& GetName() const { return name; }
       void SetName(const std::string& asName) { name = asName; }
 
+      const UUID& GetUUID() const { return uuid; }
+      void SetUUID(const UUID& uuid) { this->uuid = uuid; }
+
       TreeNode* GetParent() const { return parent; }
       TreeNode* GetChildNode(const std::string& name);
       TreeNode* GetChildNode(std::function<bool(const TreeNode& node)> compare);
+      TreeNode* GetChildNode(const UUID& uuid);
 
       void ToggleOpen(TreeView& view);
       void SetHovered(bool hover, const TreeView& view, bool hoverFlowController);
@@ -82,6 +90,8 @@ namespace Greet
       std::vector<TreeNode>::iterator end() { return childNodes.end(); }
       std::vector<TreeNode>::const_iterator begin() const { return childNodes.cbegin(); }
       std::vector<TreeNode>::const_iterator end() const { return childNodes.cend(); }
+
+      friend bool operator==(const TreeNode& lhs, const TreeNode& rhs) { return lhs.uuid == rhs.uuid; }
 
     private:
       void Render(GUIRenderer* renderer, float& offset, int indent, const TreeView& view) const;

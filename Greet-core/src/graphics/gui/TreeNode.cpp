@@ -7,25 +7,33 @@
 namespace Greet
 {
   TreeNode::TreeNode(const std::string& name, bool open)
-    : name{name}, open{open}
+    : TreeNode{name, UUID{}, open}
   {}
 
   TreeNode::TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes, bool open)
-    : name{name}, childNodes{nodes}, open{open}
+    : TreeNode{name, uuid, nodes, open}
+  {}
+
+  TreeNode::TreeNode(const std::string& name, const UUID& uuid, bool open)
+    : name{name}, open{open}, uuid{uuid}
+  {}
+
+  TreeNode::TreeNode(const std::string& name, const UUID& uuid, const std::initializer_list<TreeNode>& nodes, bool open)
+    : name{name}, childNodes{nodes}, open{open}, uuid{uuid}
   {
     for(auto&& node : childNodes)
       node.parent = this;
   }
 
   TreeNode::TreeNode(const TreeNode& node)
-    : childNodes{node.childNodes}, parent{node.parent}, name{node.name}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, styling{node.styling}
+    : childNodes{node.childNodes}, parent{node.parent}, name{node.name}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, styling{node.styling}, uuid{node.uuid}
   {
     for(auto&& node : childNodes)
       node.parent = this;
   }
 
   TreeNode::TreeNode(TreeNode&& node)
-    : childNodes{std::move(node.childNodes)}, parent{node.parent}, name{std::move(node.name)}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, styling{std::move(node.styling)}
+    : childNodes{std::move(node.childNodes)}, parent{node.parent}, name{std::move(node.name)}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, styling{std::move(node.styling)}, uuid{node.uuid}
   {
     for(auto&& node : childNodes)
       node.parent = this;
@@ -41,6 +49,7 @@ namespace Greet
     hovered = node.hovered;
     dirty = node.dirty;
     styling = node.styling;
+    uuid = node.uuid;
 
     for(auto&& node : childNodes)
       node.parent = this;
@@ -58,6 +67,7 @@ namespace Greet
     hovered = node.hovered;
     dirty = node.dirty;
     styling = std::move(node.styling);
+    uuid = node.uuid;
 
     for(auto&& node : childNodes)
       node.parent = this;
@@ -237,6 +247,16 @@ namespace Greet
     for(auto& child : childNodes)
     {
       if(child.name == name)
+        return &child;
+    }
+    return nullptr;
+  }
+
+  TreeNode* TreeNode::GetChildNode(const UUID& uuid)
+  {
+    for(auto& child : childNodes)
+    {
+      if(child.uuid == uuid)
         return &child;
     }
     return nullptr;

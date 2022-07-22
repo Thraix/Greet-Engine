@@ -1,0 +1,27 @@
+<Container name="Sprite" width="1w" vertical="true" spacing="5">
+  <Label name="spriteLabel" width="1w">Sprite</Label>
+  <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
+    <Label name="texturePathLabel" width="1w">Texture path</Label>
+    <Container width="1w" vertical="false">
+      <Label name="pathLabel" height="1w" align="center">Path</Label>
+      <TextBox name="texturePath" width="1w"/>
+    </Container>
+
+    <Label name="spritePosLabel" width="1w">Sprite Position</Label>
+    <Container width="1w" vertical="false">
+      <Label name="spritePosXLabel" height="1w" align="center">X</Label>
+      <TextBox name="spritePosX" width="1w"/>
+      <Label name="spritePosYLabel" height="1w" align="center">Y</Label>
+      <TextBox name="spritePosY" width="1w"/>
+    </Container>
+
+    <Label name="spriteSizeLabel" width="1w">Sprite Sizeition</Label>
+    <Container width="1w" vertical="false">
+      <Label name="spriteSizeXLabel" height="1w" align="center">X</Label>
+      <TextBox name="spriteSizeX" width="1w"/>
+      <Label name="spriteSizeYLabel" height="1w" align="center">Y</Label>
+      <TextBox name="spriteSizeY" width="1w"/>
+    </Container>
+
+  </Container>
+</Container>

@@ -112,7 +112,12 @@ namespace Greet{
     if(texture)
       return texture;
 
-    Log::Error("No texture found in meta file: ", metaFile);
+    // If the filename is empty, we consider it a normal case to not be able to read the texture.
+    // So no error is logged
+    if(!metaFile.empty())
+    {
+      Log::Error("No texture found in meta file: ", metaFile);
+    }
     uint width, height;
     ImageData imageData = ImageFactory::GetCantReadImage();
     static Ref<Texture2D> invalid{Texture2D::Create(imageData)};
@@ -125,9 +130,14 @@ namespace Greet{
     if(cubeMap)
       return cubeMap;
 
+    // If the filename is empty, we consider it a normal case to not be able to read the texture.
+    // So no error is logged
+    if(!metaFile.empty())
+    {
+      Log::Error("No texture found in meta file: ", metaFile);
+    }
     uint width, height;
     ImageData imageData = ImageFactory::GetCantReadImage();
-    Log::Error("No texture found in meta file: ", metaFile);
     static Ref<CubeMap> invalid{NewRef<CubeMap>(imageData)};
     return invalid;
   }

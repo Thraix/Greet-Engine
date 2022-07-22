@@ -31,6 +31,12 @@ namespace Greet
     return Vec2f{1 / (float)spriteSheetSize.x, 1 / (float)spriteSheetSize.y};
   }
 
+  void SpriteComponent::SetTexture(const std::string& texturePath)
+  {
+    this->texturePath = texturePath;
+    texture = TextureManager::LoadTexture2D(texturePath);
+  }
+
   MetaFile& operator<<(MetaFile& metaFile, const SpriteComponent& component)
   {
     MetaFileClass meta;

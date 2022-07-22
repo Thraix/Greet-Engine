@@ -17,6 +17,7 @@ namespace Greet {
       Color dropBorderColor{0, 0, 0};
       TLBR dropBorder{0, 0, 0, 0};
       TLBR dropPadding{0, 0, 0, 0};
+      std::string label;
 
       typedef std::function<void(Component* component, const std::string& oldSelection, const std::string& newSelection)> OnSelectionChanged;
       OnSelectionChanged selectionChangedCallback;

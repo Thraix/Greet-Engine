@@ -25,7 +25,7 @@
     </DockerContainer>
     <DockerContainer weight="0.45">
       <DockerTab title="Settings">
-        <Container name="settings" width="fill_parent" height="fill_parent"/>
+        <Container name="settings" width="fill_parent" height="fill_parent" padding="10"/>
       </DockerTab>
     </DockerContainer>
   </DockerSplit>

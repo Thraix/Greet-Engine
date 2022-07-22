@@ -38,6 +38,8 @@ EntityManager::~EntityManager()
 
 void EntityManager::SelectEntity(Entity entity)
 {
+  if(selectedEntity == entity)
+    return;
   selectedEntity = entity.GetID();
   scene->SelectEntity(entity);
   gui->SelectEntity(entity);
@@ -53,7 +55,6 @@ void EntityManager::CreateEntity2D()
   Entity entity = Entity::Create(ecs.get());
   std::string name = "Entity#" + std::to_string(ecs->GetEntityCount() - 2);
 
-  gui->CreateEntity(name);
 
   entity.AddComponent<UUIDComponent>(UUID{});
   entity.AddComponent<TagComponent>(name);
@@ -62,6 +63,8 @@ void EntityManager::CreateEntity2D()
   Camera2DComponent& camera = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>();
   entity.AddComponent<Transform2DComponent>(~(camera.GetProjectionMatrix() * camera.GetViewMatrix()) * Vec2f{0, 0}, Vec2f{100,100}, 0);
   entity.AddComponent<ColorComponent>(0xffffffff);
+
+  gui->CreateEntity(entity);
 }
 
 void EntityManager::CreateEntity3D()
@@ -69,7 +72,6 @@ void EntityManager::CreateEntity3D()
   Entity entity = Entity::Create(ecs.get());
   std::string name = "Entity#" + std::to_string(ecs->GetEntityCount() - 2);
 
-  gui->CreateEntity(name);
 
   entity.AddComponent<UUIDComponent>(UUID{});
   entity.AddComponent<TagComponent>(name);
@@ -78,6 +80,8 @@ void EntityManager::CreateEntity3D()
   MeshData data = MeshFactory::Cube({0,0,0}, {1,2,1.5});
   entity.AddComponent<MeshComponent>(NewRef<Mesh>(data));
   entity.AddComponent<MaterialComponent>(Material{ShaderFactory::Shader3D()});
+
+  gui->CreateEntity(entity);
 }
 
 void EntityManager::UpdateSelectedTransform3D(NotifyOrigin notifyOrigin)

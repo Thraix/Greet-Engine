@@ -38,6 +38,10 @@ namespace Greet
       {
         items.emplace_back(item.GetText());
       }
+      else if(item.GetName() == "DropDownLabel")
+      {
+        label = item.GetText();
+      }
     }
     if(items.empty())
       this->items.emplace_back("No items");
@@ -49,7 +53,10 @@ namespace Greet
   void DropDownMenu::Render(GUIRenderer* renderer) const
   {
     Text txt = text;
-    txt.str = items[selectedIndex];
+    if(!label.empty())
+      txt.str = label;
+    else
+      txt.str = items[selectedIndex];
     renderer->PushTranslation(pos + GetTotalPadding());
     txt.Render(renderer, GetContentSize());
     renderer->PopTranslation();
@@ -98,7 +105,9 @@ namespace Greet
     if(selectedIndex >= items.size())
       selectedIndex = 0;
     this->items = items;
-    frame->SetDropDownItems(items);
+    if(items.empty())
+      this->items.emplace_back("No items");
+    frame->SetDropDownItems(this->items);
     return *this;
   }
 

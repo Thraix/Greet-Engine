@@ -1,4 +1,4 @@
-<Container name="ColorCommponent" width="1w" vertical="true" padding="10" spacing="5">
+<Container name="ColorCommponent" width="1w" vertical="true" spacing="5">
   <Label name="colorLabel">Color</Label>
   <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
     <Container width="1w" vertical="false">

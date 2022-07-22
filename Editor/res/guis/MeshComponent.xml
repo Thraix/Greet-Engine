@@ -1,4 +1,4 @@
-<Container name="Mesh" width="1w" vertical="true" padding="10" spacing="5">
+<Container name="Mesh" width="1w" vertical="true" spacing="5">
   <Label name="meshComponentLabel" width="1w">Mesh</Label>
   <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
     <Label name="meshLabel" width="1w">Mesh Type</Label>

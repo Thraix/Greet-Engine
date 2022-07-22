@@ -1,4 +1,4 @@
-<Container name="Transformation2D" width="1w" vertical="true" padding="10" spacing="5">
+<Container name="Transformation2D" width="1w" vertical="true" spacing="5">
   <Label name="transformation2DLabel" width="1w">Transformation 2D</Label>
   <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
 

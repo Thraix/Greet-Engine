@@ -101,10 +101,7 @@ namespace Greet
           {
             if(selected != hovered)
             {
-              if(selected)
-                selected->SetSelected(false, *this);
-              selected = hovered;
-              selected->SetSelected(true, *this);
+              SelectTreeNode(hovered);
             }
           }
         }
@@ -151,6 +148,20 @@ namespace Greet
   TreeNode* TreeView::GetSelectedNode() const
   {
     return selected;
+  }
+
+  TreeNode* TreeView::GetTreeNode(const UUID& uuid) const
+  {
+    return tree->GetChildNode(uuid);
+  }
+
+  void TreeView::SelectTreeNode(TreeNode* treeNode)
+  {
+    if(selected)
+      selected->SetSelected(false, *this);
+    selected = treeNode;
+    if(selected)
+      selected->SetSelected(true, *this);
   }
 
   void TreeView::SetOnNodeSelectedCallback(OnNodeSelected callback)
