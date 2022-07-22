@@ -92,8 +92,6 @@ void EntityManager::UpdateSelectedTransform2D(NotifyOrigin notifyOrigin)
 {
   if(notifyOrigin != NotifyOrigin::GUI)
     gui->UpdateSelectedTransform2D();
-  if(notifyOrigin != NotifyOrigin::Scene)
-    scene->UpdateSelectedTransform2D();
 }
 
 void EntityManager::UpdateSelectedMesh(const Ref<Mesh>& mesh)

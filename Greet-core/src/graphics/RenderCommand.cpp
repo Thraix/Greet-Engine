@@ -183,5 +183,15 @@ namespace Greet
   {
     EnableDepthTest(true);
   }
+
+  void RenderCommand::SetLineWidth(int lineWidth)
+  {
+    glLineWidth(lineWidth);
+  }
+
+  void RenderCommand::ResetLineWidth()
+  {
+    glLineWidth(1);
+  }
 }
 

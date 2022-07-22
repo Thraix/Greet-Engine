@@ -7,7 +7,6 @@
 #include <graphics/RenderCommand.h>
 #include <graphics/models/Mesh.h>
 #include <graphics/shaders/Shader.h>
-#include <internal/GreetGL.h>
 
 using namespace Greet;
 
@@ -33,7 +32,7 @@ EntityRendering::EntityRendering(ECSManager* manager)
 
 void EntityRendering::RenderOutlines(const Camera3DComponent& cameraComponent, Entity selectedEntity)
 {
-  glLineWidth(3);
+  RenderCommand::SetLineWidth(3);
   lineShader->Enable();
   cameraComponent.SetShaderUniforms(lineShader);
   lineMesh->Bind();
@@ -49,7 +48,7 @@ void EntityRendering::RenderOutlines(const Camera3DComponent& cameraComponent, E
     });
   lineMesh->Unbind();
   lineShader->Disable();
-  glLineWidth(1);
+  RenderCommand::ResetLineWidth();
 }
 
 void EntityRendering::RenderGizmo(const Camera3DComponent& cameraComponent, Entity selectedEntity)

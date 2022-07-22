@@ -32,7 +32,9 @@ const UUID CAMERA_2D_UUID{"a4396de6-dbd9-6dc4-1e1d-3e662b62ddab"};
 const UUID CAMERA_3D_UUID{"862f1b54-649c-3775-a53d-5834a7e1135b"};
 
 EntityScene::EntityScene(EntityManager* entityManager)
-  : ECSScene{entityManager->GetECS(), "res/scenes/game.meta"}, entityManager{entityManager}
+  : ECSScene{entityManager->GetECS(), "res/scenes/game.meta"},
+    entityManager{entityManager},
+    entity2DManager{NewRef<Entity2DManager>(entityManager, this)}
 {
   ASSERT(manager.get() != nullptr, "ECSManager was not initialized");
   entityRendering = Greet::NewRef<EntityRendering>(manager.get());
@@ -61,9 +63,15 @@ void EntityScene::Render() const
 {
   switch(activeScene)
   {
-    case ActiveScene::_2D: ECSScene::Render2D(); break;
+    case ActiveScene::_2D: Render2D(); break;
     case ActiveScene::_3D: ECSScene::Render3DScene(); break;
   }
+}
+
+void EntityScene::Render2D() const
+{
+  ECSScene::Render2D();
+  entity2DManager->Render();
 }
 
 void EntityScene::Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const
@@ -79,37 +87,8 @@ void EntityScene::OnEvent(Event& event)
   ECSScene::OnEvent(event);
   switch(activeScene)
   {
-    case ActiveScene::_2D: OnEvent2D(event); break;
+    case ActiveScene::_2D: entity2DManager->OnEvent(event); break;
     case ActiveScene::_3D: OnEvent3D(event); break;
-  }
-}
-
-void EntityScene::OnEvent2D(Greet::Event& event)
-{
-  if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
-  {
-    MousePressEvent& e = static_cast<MousePressEvent&>(event);
-    if(e.GetButton() == GREET_MOUSE_LEFT)
-    {
-      Camera2DComponent& cam = GetCamera2DEntity().GetComponent<Camera2DComponent>();
-      Vec2f mousePos = cam.GetInversePVMatrix() * e.GetPosition();
-      Entity pressedEntity{manager.get()};
-      manager->Each<Transform2DComponent>([&](EntityID entity, Transform2DComponent& transform)
-      {
-        if(manager->HasAnyComponent<SpriteComponent, ColorComponent>(entity))
-        {
-          Vec2f mousePosRelativeToEntity = transform.GetInverseTransform() * mousePos;
-          if(mousePosRelativeToEntity > -0.5 && mousePosRelativeToEntity < 0.5)
-          {
-            pressedEntity = entity;
-          }
-        }
-      });
-      if(pressedEntity != entityManager->GetSelectedEntity())
-      {
-        entityManager->SelectEntity(pressedEntity);
-      }
-    }
   }
 }
 
@@ -165,14 +144,6 @@ void EntityScene::SelectEntity(Greet::Entity entity)
     gizmo.position = transform.GetPosition();
     gizmo.scale = transform.GetScale();
     gizmo.rotation = transform.GetRotation();
-  }
-}
-
-void EntityScene::UpdateSelectedTransform2D()
-{
-  if(entityManager->GetSelectedEntity().HasComponent<Transform3DComponent>())
-  {
-    // TODO: Update gizmos when they are implemented
   }
 }
 

@@ -19,7 +19,7 @@ namespace Greet{
     Mat3(float diagonal);
     Mat3(float* elem);
 
-    const Vec3f& getColumn(int index)
+    const Vec3f& GetColumn(int index) const
     {
       return columns[index];
     }

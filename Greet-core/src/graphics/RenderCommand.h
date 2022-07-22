@@ -52,6 +52,9 @@ namespace Greet
 
       static void EnableDepthTest(bool enabled);
       static void ResetDepthTest();
+
+      static void SetLineWidth(int lineWidth);
+      static void ResetLineWidth();
   };
 }
 

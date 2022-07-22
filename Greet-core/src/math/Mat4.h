@@ -4,6 +4,7 @@
 #include <math/Vec4.h>
 
 namespace Greet {
+
   struct Mat4
   {
     union
@@ -19,9 +20,14 @@ namespace Greet {
     Mat4(float diagonal);
     Mat4(float* elem);
 
-    const Vec4f& GetColumn(int index)
+    const Vec4f& GetColumn(int index) const
     {
       return columns[index];
+    }
+
+    void SetColumn(int index, const Vec4f& column)
+    {
+      columns[index] = column;
     }
 
     static Mat4 Identity();

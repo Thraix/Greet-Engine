@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ecs/ECSScene.h>
+#include "Entity2DManager.h"
 
 class EntityRendering;
 class EntityManager;
@@ -13,6 +14,7 @@ enum class ActiveScene
 class EntityScene : public Greet::ECSScene
 {
   EntityManager* entityManager;
+  Greet::Ref<Entity2DManager> entity2DManager;
 
   Greet::Ref<EntityRendering> entityRendering;
   ActiveScene activeScene = ActiveScene::_2D;
@@ -22,14 +24,13 @@ class EntityScene : public Greet::ECSScene
     EntityScene(EntityManager* entityManager);
 
     void OnEvent(Greet::Event& event) override;
-    void OnEvent2D(Greet::Event& event);
     void OnEvent3D(Greet::Event& event);
 
     void Render() const override;
+    void Render2D() const override;
     void Render3D(const Greet::Camera3DComponent& cam, const Greet::Environment3DComponent& env) const override;
 
     void SelectEntity(Greet::Entity entity);
-    void UpdateSelectedTransform2D();
     void UpdateSelectedTransform3D();
 
     Greet::Entity GetCamera2DEntity() const override;
