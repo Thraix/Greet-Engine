@@ -20,7 +20,7 @@ void main()
   {
     gl_Position = uPVMatrix3D * vec4(aPosition, 1.0f);
   }
-	vColor = aColor;
+	vColor = vec4(aColor.z, aColor.y, aColor.x, aColor.w);
 }
 
 //fragment

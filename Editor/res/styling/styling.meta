@@ -19,13 +19,13 @@ backgroundColor=$gray-1
 [Docker]
 width=fill_parent
 height=fill_parent
-backgroundColor=#323232
-edgeColor=#323232
+backgroundColor=$gray-1
+edgeColor=$gray-1
 edgeSize=10
-edgeBorder=2
-edgeBorderColor=#626262
-border=2
-borderColor=#626262
+edgeBorder=1
+edgeBorderColor=$gray-4
+border=1
+borderColor=$gray-4
 
 [Container]
 backgroundColor=$gray-2

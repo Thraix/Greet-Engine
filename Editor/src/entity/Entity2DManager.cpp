@@ -6,6 +6,7 @@ using namespace Greet;
 
 #include <input/Input.h>
 #include <event/MouseEvent.h>
+#include <graphics/RenderCommand.h>
 
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Environment2DComponent.h>
@@ -85,13 +86,48 @@ void Entity2DManager::OnEvent(Greet::Event& event)
   }
 }
 
-void Entity2DManager::Render() const
+void Entity2DManager::RenderPre() const
 {
+  const float MIN_GRID_SIZE = 20;
+  Mat3 invPVMatrix = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>().GetInversePVMatrix();
+  Vec2f worldCoordMin = invPVMatrix * Vec2f{-1, -1};
+  Vec2f worldCoordMax = invPVMatrix * Vec2f{1, 1};
+  Vec2f worldCoordSize = (worldCoordMax - worldCoordMin).Abs();
+
+  Vec2f viewportSize = Vec2f{RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight()};
+  float gridCount = viewportSize.x / MIN_GRID_SIZE;
+  float distanceWorldCoord = pow(10, ceil(log10(worldCoordSize.x / gridCount)));
+  Vec2f center = invPVMatrix * Vec2f{0, 0};
+  Vec2f gridCenter = Vec2f{ceil(center.x / distanceWorldCoord) * distanceWorldCoord, ceil(center.y / distanceWorldCoord) * distanceWorldCoord};
+
+  lineBatchRenderer->SetLineWidth(1);
+  lineBatchRenderer->Begin();
+  lineBatchRenderer->SetPVMatrix(scene->GetCamera2DEntity().GetComponent<Camera2DComponent>().GetPVMatrix());
+
+  for(int i = -floor(gridCount); i < ceil(gridCount); i++)
+  {
+    lineBatchRenderer->DrawLine(Vec2f{gridCenter.x + distanceWorldCoord * i, worldCoordMin.y},
+                                Vec2f{gridCenter.x + distanceWorldCoord * i, worldCoordMax.y},
+                                Color{0xff323232});
+    lineBatchRenderer->DrawLine(Vec2f{worldCoordMin.x, gridCenter.y + distanceWorldCoord * i},
+                                Vec2f{worldCoordMax.x, gridCenter.y + distanceWorldCoord * i},
+                                Color{0xff323232});
+  }
+
+  lineBatchRenderer->DrawLine(Vec2f{worldCoordMin.x, 0}, Vec2f{worldCoordMax.x, 0}, Color{0.9, 0.1, 0.1});
+  lineBatchRenderer->DrawLine(Vec2f{0, worldCoordMin.y}, Vec2f{0, worldCoordMax.y}, Color{0.1, 0.9, 0.1});
+  lineBatchRenderer->End();
+
+}
+
+void Entity2DManager::RenderPost() const
+{
+  lineBatchRenderer->SetLineWidth(3);
   lineBatchRenderer->Begin();
   lineBatchRenderer->SetPVMatrix(scene->GetCamera2DEntity().GetComponent<Camera2DComponent>().GetPVMatrix());
   if(entityManager->GetSelectedEntity().HasComponent<Transform2DComponent>())
   {
-    lineBatchRenderer->DrawRectangle(entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().GetTransform(), Color{0.8, 0.2, 0.8});
+    lineBatchRenderer->DrawRectangle(entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().GetTransform(), Color{0.9, 0.5, 0.1});
   }
   lineBatchRenderer->End();
 }

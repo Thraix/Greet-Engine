@@ -5,7 +5,7 @@
 std::string GUIHelper::FloatToString(float f)
 {
   std::stringstream ss;
-  ss << std::setprecision(3) << f;
+  ss << std::fixed << std::setprecision(3) << f;
   return ss.str();
 }
 

@@ -113,7 +113,7 @@ namespace Greet
     vbo->UnmapBuffer();
     vbo->Disable();
 
-    RenderCommand::SetLineWidth(3);
+    RenderCommand::SetLineWidth(lineWidth);
     RenderCommand::EnableDepthTest(false);
     RenderCommand::EnableCulling(false);
 
@@ -139,5 +139,10 @@ namespace Greet
       vbo->Disable();
     }
     shader->Disable();
+  }
+
+  void LineBatchRenderer::SetLineWidth(int lineWidth)
+  {
+    this->lineWidth = lineWidth;
   }
 }

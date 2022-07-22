@@ -70,8 +70,9 @@ void EntityScene::Render() const
 
 void EntityScene::Render2D() const
 {
+  entity2DManager->RenderPre();
   ECSScene::Render2D();
-  entity2DManager->Render();
+  entity2DManager->RenderPost();
 }
 
 void EntityScene::Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const

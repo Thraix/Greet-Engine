@@ -28,5 +28,6 @@ class Entity2DManager
     Entity2DManager(EntityManager* entityManager, Greet::ECSScene* scene);
 
     void OnEvent(Greet::Event& event);
-    void Render() const;
+    void RenderPre() const;
+    void RenderPost() const;
 };

@@ -30,6 +30,8 @@ namespace Greet
       std::vector<uint32_t> indices;
       LineVertexData* buffer;
 
+      int lineWidth = 3;
+
       Ref<Shader> shader;
     public:
       LineBatchRenderer(int maxAmountOfLines = 10000);
@@ -46,5 +48,7 @@ namespace Greet
       void Begin();
       void End();
       void Draw();
+
+      void SetLineWidth(int lineWidth);
   };
 }

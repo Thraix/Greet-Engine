@@ -5,7 +5,7 @@ tag=Entity#1
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=275.956390 94.366394
+position=236.429077 56.070274
 [UUIDComponent]
 uuid=5f6b45f3-79cf-3b5b-0f87-1fc9a2539e52
 ---
@@ -16,7 +16,7 @@ tag=Entity#2
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=312.553284 285.424377
+position=202.553268 355.424316
 [UUIDComponent]
 uuid=f8074a31-6d16-975b-0cc5-3da39f8eca82
 ---
@@ -38,7 +38,7 @@ tag=Entity#4
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=-11.217255 343.269318
+position=-107.217262 413.269287
 [UUIDComponent]
 uuid=b163ddde-e16a-029b-ba0a-0c22eb203722
 ---
@@ -49,7 +49,7 @@ tag=Entity#5
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=394.564758 449.698120
+position=-95.385765 177.554764
 [UUIDComponent]
 uuid=8f21ffbe-c5b5-0892-f515-fe21196a2611
 ---
@@ -60,7 +60,7 @@ tag=Entity#6
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=32.499985 545.500000
+position=-130.500000 611.500000
 [UUIDComponent]
 uuid=dd1bfba0-3bdd-512f-542c-469a7ceed518
 ---
@@ -71,7 +71,7 @@ tag=Entity#7
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=-27.884781 186.604233
+position=1.797654 1.876266
 [UUIDComponent]
 uuid=82727e91-4bdf-1a42-ced1-a0a20dceb975
 ---
@@ -93,7 +93,7 @@ tag=Entity#9
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=252.511017 468.336731
+position=7.007263 -130.025284
 [UUIDComponent]
 uuid=8a4ea1de-b791-ff39-327a-812a4782ccdc
 ---
@@ -104,18 +104,18 @@ tag=Entity#10
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=493.395660 282.206329
+position=270.395630 406.206299
 [UUIDComponent]
 uuid=16c3e079-507d-689f-6f44-d28ae1a3b78e
 ---
 [ColorComponent]
-color=#ff646b9a
+color=#ff7c6738
 [TagComponent]
 tag=Entity#11
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=10.000000
-position=438.108246 118.028351
+position=171.108246 232.028290
 [UUIDComponent]
 uuid=36075480-de5d-2b01-4abf-010158bb6233
 ---
@@ -126,7 +126,7 @@ tag=Entity#12
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=10.000000
-position=119.519241 189.583862
+position=438.354706 152.115723
 [UUIDComponent]
 uuid=45eb7427-3280-d696-94c4-eee6472f6645
 ---

@@ -5,7 +5,7 @@
 namespace Greet
 {
   Camera2DComponent::Camera2DComponent(const Vec2f& pos, const Vec2f& scale, float rotation, bool active)
-    : active{active}, projectionMatrix{Mat3::OrthographicViewport()}, position{pos}, scale{scale}, rotation{rotation}
+    : active{active}, projectionMatrix{Mat3::OrthographicViewportCenter()}, position{pos}, scale{scale}, rotation{rotation}
   {}
 
   Camera2DComponent::Camera2DComponent(const MetaFileClass& metaClass)
@@ -50,7 +50,7 @@ namespace Greet
 
   void Camera2DComponent::ViewportResize(ViewportResizeEvent& event)
   {
-    SetProjectionMatrix(Mat3::OrthographicViewport());
+    SetProjectionMatrix(Mat3::OrthographicViewportCenter());
   }
 
   MetaFile& operator<<(MetaFile& metaFile, const Camera2DComponent& component)
