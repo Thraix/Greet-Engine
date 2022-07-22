@@ -3,6 +3,20 @@ This is a game engine which is developed in C++ with OpenGL. This engine contain
 
 The future goal of the project is to have a full blown game editor, like Unity or Godot, which is able to create games without interfacing with C++.
 
+## Editor
+The Editor is currently under construction and at the time of writing supports adding entities to the scene, moving them around and changing their color.
+Below is an example image of the current state of the editor.
+
+![Editor](readme-data/editor.png)
+
+## Runtime
+Currently not implemented. 
+The idea is to have a runtime executable which can load Greet-Engine project files to run them as a normal game.
+The interface will probably be something like `greet-runtime <project-file-name>`, but will probably be changed in the future.
+Not entirely sure if this will be the goto way to run the games created in the engine.
+In the future the games might be run through their own executable without the need for the runtime executable.
+But still unsure how that will be done.
+
 ## GUI system
 Demo image of the in-house GUI system, with radiobuttons, text-fields, treeview, color-pickers, tab-docking, and much more. The entire GUI is customizable using a layout file and a styling file, much like HTML and CSS. This demo can be found within `examples/GUIPlayground` where the layout and styling files are inside `res/gui` and `res/styling`. Note that this image might be out of date of the current state of the example. 
 ![GUI-system](readme-data/gui-example.png)
