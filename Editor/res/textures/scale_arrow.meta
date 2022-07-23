@@ -1,0 +1,3 @@
+[texture2d]
+filepath=res/textures/scale_arrow.png
+wrap=clampEdge

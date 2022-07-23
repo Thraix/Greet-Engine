@@ -97,6 +97,18 @@ namespace Greet
         return manager->HasComponent<Component>(id);
       }
 
+      template <typename... Components>
+      inline bool HasComponents() const
+      {
+        return manager->HasComponents<Components...>(id);
+      }
+
+      template <typename... Components>
+      inline bool HasAnyComponent() const
+      {
+        return manager->HasAnyComponent<Components...>(id);
+      }
+
       void SetID(EntityID aId)
       {
         id = aId;

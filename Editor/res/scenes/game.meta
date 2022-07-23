@@ -1,15 +1,15 @@
 [ColorComponent]
-color=#ffff0000
+color=#ffffffff
 [SpriteComponent]
 spritesheet-size=1 1
 spritesheet-pos=0 0
-texture=res/textures/translation_arrow.meta
+texture=res/textures/example.meta
 [TagComponent]
 tag=Entity#1
 [Transform2DComponent]
 scale=128.000000 128.000000
-rotation=-89.999992
-position=71.000000 0.000000
+rotation=0.000000
+position=64.000000 -164.000000
 [UUIDComponent]
 uuid=5f6b45f3-79cf-3b5b-0f87-1fc9a2539e52
 ---
@@ -53,7 +53,7 @@ tag=Entity
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=-207.385773 -76.445175
+position=0.000000 0.000000
 [UUIDComponent]
 uuid=8f21ffbe-c5b5-0892-f515-fe21196a2611
 ---
@@ -91,17 +91,17 @@ position=281.317596 647.756531
 uuid=789aedb2-a46d-12b2-2ae9-337dbcc2ca16
 ---
 [ColorComponent]
-color=#ff3cc824
+color=#ffffffff
 [SpriteComponent]
 spritesheet-size=1 1
 spritesheet-pos=0 0
-texture=res/textures/translation_arrow.meta
+texture=res/textures/example.meta
 [TagComponent]
 tag=Entity#9
 [Transform2DComponent]
-scale=128.000000 128.000000
+scale=200.000000 200.000000
 rotation=0.000000
-position=0.000000 71.000000
+position=-100.000000 -200.000000
 [UUIDComponent]
 uuid=8a4ea1de-b791-ff39-327a-812a4782ccdc
 ---
@@ -112,7 +112,7 @@ tag=Entity#10
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=270.395630 406.206299
+position=386.395630 -29.793865
 [UUIDComponent]
 uuid=16c3e079-507d-689f-6f44-d28ae1a3b78e
 ---

@@ -7,6 +7,8 @@ using namespace Greet;
 #include <input/Input.h>
 #include <event/MouseEvent.h>
 #include <graphics/RenderCommand.h>
+#include <graphics/textures/TextureManager.h>
+#include <graphics/shaders/ShaderFactory.h>
 
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Environment2DComponent.h>
@@ -16,7 +18,10 @@ using namespace Greet;
 
 
 Entity2DManager::Entity2DManager(EntityManager* entityManager, ECSScene* scene)
-  : entityManager{entityManager}, scene{scene}, lineBatchRenderer{NewRef<LineBatchRenderer>()}
+  : entityManager{entityManager}, scene{scene},
+    lineBatchRenderer{NewRef<LineBatchRenderer>()},
+    gizmoRenderer{NewRef<BatchRenderer>(ShaderFactory::Shader2D())},
+    translationGizmo{TextureManager::LoadTexture2D("res/textures/translation_arrow.meta")}
 {}
 
 void Entity2DManager::OnEvent(Greet::Event& event)
@@ -122,12 +127,28 @@ void Entity2DManager::RenderPre() const
 
 void Entity2DManager::RenderPost() const
 {
+  Camera2DComponent& camera = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>();
+  Entity selectedEntity = entityManager->GetSelectedEntity();
   lineBatchRenderer->SetLineWidth(3);
   lineBatchRenderer->Begin();
-  lineBatchRenderer->SetPVMatrix(scene->GetCamera2DEntity().GetComponent<Camera2DComponent>().GetPVMatrix());
-  if(entityManager->GetSelectedEntity().HasComponent<Transform2DComponent>())
+  lineBatchRenderer->SetPVMatrix(camera.GetPVMatrix());
+  if(selectedEntity.HasComponent<Transform2DComponent>())
   {
     lineBatchRenderer->DrawRectangle(entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().GetTransform(), Color{0.9, 0.5, 0.1});
   }
   lineBatchRenderer->End();
+  if(selectedEntity.HasComponent<Transform2DComponent>() && (selectedEntity.HasAnyComponent<SpriteComponent, ColorComponent>()))
+  {
+    Mat3 entityTransform = selectedEntity.GetComponent<Transform2DComponent>().GetTransform();
+    Mat3 orthographic = Mat3::OrthographicViewport() * Mat3::Scale(Vec2f{1, -1});
+    Vec2f pos = camera.GetPVMatrix() * entityTransform * Vec2f{0, 0};
+    Vec2f size = orthographic * Vec2f{(float)translationGizmo->GetWidth() , (float)translationGizmo->GetHeight()} - orthographic * Vec2f{0, 0};
+
+    gizmoRenderer->Begin();
+
+    gizmoRenderer->DrawRect(pos - size * 0.5, size, translationGizmo, Vec2f{0, 0}, Vec2f{1, 1}, 0xaaffffff);
+
+    gizmoRenderer->End();
+    gizmoRenderer->Flush();
+  }
 }

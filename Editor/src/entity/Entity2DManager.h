@@ -5,6 +5,7 @@
 
 #include <event/Event.h>
 #include <ecs/ECSScene.h>
+#include <graphics/renderers/BatchRenderer.h>
 
 class EntityManager;
 
@@ -23,6 +24,11 @@ class Entity2DManager
   Greet::ECSScene* scene;
   EntityHolder entityHolder;
   Greet::Ref<Greet::LineBatchRenderer> lineBatchRenderer;
+
+
+  // Gizmo
+  Greet::Ref<Greet::BatchRenderer> gizmoRenderer;
+  Greet::Ref<Greet::Texture2D> translationGizmo;
 
   public:
     Entity2DManager(EntityManager* entityManager, Greet::ECSScene* scene);
