@@ -26,7 +26,7 @@ namespace Greet
       Ref<VertexBuffer> vbo;
       Ref<VertexArray> vao;
       Ref<Buffer> ibo;
-      uint32_t iboSize;
+      uint32_t iboSize = 0;
       std::vector<uint32_t> indices;
       LineVertexData* buffer;
 
@@ -47,8 +47,10 @@ namespace Greet
       void DrawCuboid(const Vec3f& pos, const Vec3f& size, const Color& color);
       void Begin();
       void End();
+      void SetLineWidth(int lineWidth);
+
+    private:
       void Draw();
 
-      void SetLineWidth(int lineWidth);
   };
 }

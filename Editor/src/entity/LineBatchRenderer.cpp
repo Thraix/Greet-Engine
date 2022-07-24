@@ -110,9 +110,6 @@ namespace Greet
 
   void LineBatchRenderer::Draw()
   {
-    vbo->UnmapBuffer();
-    vbo->Disable();
-
     RenderCommand::SetLineWidth(lineWidth);
     RenderCommand::EnableDepthTest(false);
     RenderCommand::EnableCulling(false);
@@ -129,15 +126,11 @@ namespace Greet
 
   void LineBatchRenderer::End()
   {
+    vbo->UnmapBuffer();
+    vbo->Disable();
+
     if(iboSize > 0)
-    {
       Draw();
-    }
-    else
-    {
-      vbo->UnmapBuffer();
-      vbo->Disable();
-    }
     shader->Disable();
   }
 

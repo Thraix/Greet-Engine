@@ -50,7 +50,7 @@ namespace Greet {
 
   void VertexArray::Render(DrawType type, uint32_t count)
   {
-    GLCall(glDrawElements((uint32_t)type, count * sizeof(uint32_t), GL_UNSIGNED_INT, nullptr));
+    GLCall(glDrawElements((uint32_t)type, count, GL_UNSIGNED_INT, nullptr));
   }
 
   void VertexArray::Disable()

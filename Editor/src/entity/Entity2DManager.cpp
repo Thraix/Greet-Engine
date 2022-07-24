@@ -6,6 +6,7 @@ using namespace Greet;
 
 #include <input/Input.h>
 #include <event/MouseEvent.h>
+#include <event/KeyEvent.h>
 #include <graphics/RenderCommand.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/shaders/ShaderFactory.h>
@@ -19,9 +20,7 @@ using namespace Greet;
 
 Entity2DManager::Entity2DManager(EntityManager* entityManager, ECSScene* scene)
   : entityManager{entityManager}, scene{scene},
-    lineBatchRenderer{NewRef<LineBatchRenderer>()},
-    gizmoRenderer{NewRef<BatchRenderer>(ShaderFactory::Shader2D())},
-    translationGizmo{TextureManager::LoadTexture2D("res/textures/translation_arrow.meta")}
+    lineBatchRenderer{NewRef<LineBatchRenderer>()}
 {}
 
 void Entity2DManager::OnEvent(Greet::Event& event)
@@ -46,6 +45,7 @@ void Entity2DManager::OnEvent(Greet::Event& event)
         }
       });
       entityHolder.holding = false;
+      entityHolder.movable = false;
       if(pressedEntity != entityManager->GetSelectedEntity())
       {
         entityManager->SelectEntity(pressedEntity);
@@ -53,7 +53,7 @@ void Entity2DManager::OnEvent(Greet::Event& event)
       if(pressedEntity)
       {
         entityHolder.holding = true;
-        entityHolder.threshold = false;
+        entityHolder.movable = false;
         entityHolder.entityPressPos = pressedEntity.GetComponent<Transform2DComponent>().position;
         entityHolder.pressPos = e.GetPosition();
       }
@@ -62,6 +62,7 @@ void Entity2DManager::OnEvent(Greet::Event& event)
   else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
   {
     entityHolder.holding = false;
+    entityHolder.movable = false;
   }
   else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
   {
@@ -69,26 +70,61 @@ void Entity2DManager::OnEvent(Greet::Event& event)
     {
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
       Camera2DComponent& cam = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>();
-      if(!entityHolder.threshold)
+      if(!entityHolder.movable)
       {
         Mat3 invViewportMatrix = ~Mat3::OrthographicViewport();
         Vec2f oldMousePos = invViewportMatrix * entityHolder.pressPos;
         Vec2f newMousePos = invViewportMatrix * e.GetPosition();
         if((newMousePos - oldMousePos).LengthSQ() > 10 * 10)
         {
-          entityHolder.threshold = true;
+          entityHolder.movable = true;
         }
       }
       else
       {
-        Vec2f oldMousePos = cam.GetInversePVMatrix() * entityHolder.pressPos;
-        Vec2f newMousePos = cam.GetInversePVMatrix() * e.GetPosition();
-        Vec2f entityPos = entityHolder.entityPressPos + (newMousePos - oldMousePos);
-        entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position = entityPos;
-        entityManager->UpdateSelectedTransform2D(NotifyOrigin::Scene);
+        UpdateEntityPosition(entityManager->GetSelectedEntity(), e.GetPosition());
       }
     }
   }
+  else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+  {
+    KeyPressEvent& e = static_cast<KeyPressEvent&>(event);
+    if(e.GetButton() == GREET_KEY_LEFT_CONTROL && entityHolder.movable)
+    {
+      UpdateEntityPosition(entityManager->GetSelectedEntity(), Input::GetMousePos());
+    }
+  }
+  else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
+  {
+    KeyReleaseEvent& e = static_cast<KeyReleaseEvent&>(event);
+    if(e.GetButton() == GREET_KEY_LEFT_CONTROL && entityHolder.movable)
+    {
+      UpdateEntityPosition(entityManager->GetSelectedEntity(), Input::GetMousePos());
+    }
+  }
+}
+void Entity2DManager::UpdateEntityPosition(Greet::Entity entity, const Greet::Vec2f& mousePos)
+{
+  Camera2DComponent& cam = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>();
+  Vec2f diff = cam.GetInversePVMatrix() * mousePos - cam.GetInversePVMatrix() * entityHolder.pressPos;
+  if(Input::IsKeyDown(GREET_KEY_LEFT_CONTROL))
+  {
+    if(std::abs(diff.x) > std::abs(diff.y))
+    {
+      entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position.x = entityHolder.entityPressPos.x + diff.x;
+      entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position.y = entityHolder.entityPressPos.y;
+    }
+    else
+    {
+      entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position.x = entityHolder.entityPressPos.x;
+      entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position.y = entityHolder.entityPressPos.y + diff.y;
+    }
+  }
+  else
+  {
+    entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position = entityHolder.entityPressPos + diff;
+  }
+  entityManager->UpdateSelectedTransform2D(NotifyOrigin::Scene);
 }
 
 void Entity2DManager::RenderPre() const
@@ -121,6 +157,13 @@ void Entity2DManager::RenderPre() const
 
   lineBatchRenderer->DrawLine(Vec2f{worldCoordMin.x, 0}, Vec2f{worldCoordMax.x, 0}, Color{0.9, 0.1, 0.1});
   lineBatchRenderer->DrawLine(Vec2f{0, worldCoordMin.y}, Vec2f{0, worldCoordMax.y}, Color{0.1, 0.9, 0.1});
+
+  if(entityHolder.movable && Input::IsKeyDown(GREET_KEY_LEFT_CONTROL))
+  {
+    lineBatchRenderer->DrawLine(Vec2f{worldCoordMin.x, entityHolder.entityPressPos.y}, Vec2f{worldCoordMax.x, entityHolder.entityPressPos.y}, Color{0.9, 0.9, 0.9});
+    lineBatchRenderer->DrawLine(Vec2f{entityHolder.entityPressPos.x, worldCoordMin.y}, Vec2f{entityHolder.entityPressPos.x, worldCoordMax.y}, Color{0.9, 0.9, 0.9});
+  }
+
   lineBatchRenderer->End();
 
 }
@@ -129,6 +172,7 @@ void Entity2DManager::RenderPost() const
 {
   Camera2DComponent& camera = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>();
   Entity selectedEntity = entityManager->GetSelectedEntity();
+
   lineBatchRenderer->SetLineWidth(3);
   lineBatchRenderer->Begin();
   lineBatchRenderer->SetPVMatrix(camera.GetPVMatrix());
@@ -137,18 +181,4 @@ void Entity2DManager::RenderPost() const
     lineBatchRenderer->DrawRectangle(entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().GetTransform(), Color{0.9, 0.5, 0.1});
   }
   lineBatchRenderer->End();
-  if(selectedEntity.HasComponent<Transform2DComponent>() && (selectedEntity.HasAnyComponent<SpriteComponent, ColorComponent>()))
-  {
-    Mat3 entityTransform = selectedEntity.GetComponent<Transform2DComponent>().GetTransform();
-    Mat3 orthographic = Mat3::OrthographicViewport() * Mat3::Scale(Vec2f{1, -1});
-    Vec2f pos = camera.GetPVMatrix() * entityTransform * Vec2f{0, 0};
-    Vec2f size = orthographic * Vec2f{(float)translationGizmo->GetWidth() , (float)translationGizmo->GetHeight()} - orthographic * Vec2f{0, 0};
-
-    gizmoRenderer->Begin();
-
-    gizmoRenderer->DrawRect(pos - size * 0.5, size, translationGizmo, Vec2f{0, 0}, Vec2f{1, 1}, 0xaaffffff);
-
-    gizmoRenderer->End();
-    gizmoRenderer->Flush();
-  }
 }

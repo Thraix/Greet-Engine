@@ -53,7 +53,7 @@ tag=Entity
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=0.000000 0.000000
+position=71.999847 99.899704
 [UUIDComponent]
 uuid=8f21ffbe-c5b5-0892-f515-fe21196a2611
 ---
@@ -75,7 +75,7 @@ tag=Entity#7
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=-219.202286 164.876251
+position=-101.999924 69697.554688
 [UUIDComponent]
 uuid=82727e91-4bdf-1a42-ced1-a0a20dceb975
 ---
