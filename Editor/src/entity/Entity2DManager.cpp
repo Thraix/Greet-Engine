@@ -89,7 +89,7 @@ void Entity2DManager::OnEvent(Greet::Event& event)
   else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
   {
     KeyPressEvent& e = static_cast<KeyPressEvent&>(event);
-    if(e.GetButton() == GREET_KEY_LEFT_CONTROL && entityHolder.movable)
+    if((e.GetButton() == GREET_KEY_LEFT_CONTROL || e.GetButton() == GREET_KEY_LEFT_SHIFT) && entityHolder.movable)
     {
       UpdateEntityPosition(entityManager->GetSelectedEntity(), Input::GetMousePos());
     }
@@ -97,7 +97,7 @@ void Entity2DManager::OnEvent(Greet::Event& event)
   else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
   {
     KeyReleaseEvent& e = static_cast<KeyReleaseEvent&>(event);
-    if(e.GetButton() == GREET_KEY_LEFT_CONTROL && entityHolder.movable)
+    if((e.GetButton() == GREET_KEY_LEFT_CONTROL || e.GetButton() == GREET_KEY_LEFT_SHIFT) && entityHolder.movable)
     {
       UpdateEntityPosition(entityManager->GetSelectedEntity(), Input::GetMousePos());
     }
@@ -120,6 +120,12 @@ void Entity2DManager::UpdateEntityPosition(Greet::Entity entity, const Greet::Ve
       entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position.y = entityHolder.entityPressPos.y + diff.y;
     }
   }
+  else if(Input::IsKeyDown(GREET_KEY_LEFT_SHIFT))
+  {
+    Grid grid{scene->GetCamera2DEntity().GetComponent<Camera2DComponent>()};
+    Vec2f pos = Vec::Round((entityHolder.entityPressPos + diff) / grid.size) * grid.size;
+    entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position = pos;
+  }
   else
   {
     entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().position = entityHolder.entityPressPos + diff;
@@ -129,43 +135,32 @@ void Entity2DManager::UpdateEntityPosition(Greet::Entity entity, const Greet::Ve
 
 void Entity2DManager::RenderPre() const
 {
-  const float MIN_GRID_SIZE = 20;
-  Mat3 invPVMatrix = scene->GetCamera2DEntity().GetComponent<Camera2DComponent>().GetInversePVMatrix();
-  Vec2f worldCoordMin = invPVMatrix * Vec2f{-1, -1};
-  Vec2f worldCoordMax = invPVMatrix * Vec2f{1, 1};
-  Vec2f worldCoordSize = (worldCoordMax - worldCoordMin).Abs();
-
-  Vec2f viewportSize = Vec2f{RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight()};
-  float gridCount = viewportSize.x / MIN_GRID_SIZE;
-  float distanceWorldCoord = pow(10, ceil(log10(worldCoordSize.x / gridCount)));
-  Vec2f center = invPVMatrix * Vec2f{0, 0};
-  Vec2f gridCenter = Vec2f{ceil(center.x / distanceWorldCoord) * distanceWorldCoord, ceil(center.y / distanceWorldCoord) * distanceWorldCoord};
+  Grid grid{scene->GetCamera2DEntity().GetComponent<Camera2DComponent>()};
 
   lineBatchRenderer->SetLineWidth(1);
   lineBatchRenderer->Begin();
   lineBatchRenderer->SetPVMatrix(scene->GetCamera2DEntity().GetComponent<Camera2DComponent>().GetPVMatrix());
 
-  for(int i = -floor(gridCount); i < ceil(gridCount); i++)
+  for(int i = -grid.count; i < grid.count; i++)
   {
-    lineBatchRenderer->DrawLine(Vec2f{gridCenter.x + distanceWorldCoord * i, worldCoordMin.y},
-                                Vec2f{gridCenter.x + distanceWorldCoord * i, worldCoordMax.y},
+    lineBatchRenderer->DrawLine(Vec2f{grid.center.x + grid.size * i, grid.boundsMin.y},
+                                Vec2f{grid.center.x + grid.size * i, grid.boundsMax.y},
                                 Color{0xff323232});
-    lineBatchRenderer->DrawLine(Vec2f{worldCoordMin.x, gridCenter.y + distanceWorldCoord * i},
-                                Vec2f{worldCoordMax.x, gridCenter.y + distanceWorldCoord * i},
+    lineBatchRenderer->DrawLine(Vec2f{grid.boundsMin.x, grid.center.y + grid.size * i},
+                                Vec2f{grid.boundsMax.x, grid.center.y + grid.size * i},
                                 Color{0xff323232});
   }
 
-  lineBatchRenderer->DrawLine(Vec2f{worldCoordMin.x, 0}, Vec2f{worldCoordMax.x, 0}, Color{0.9, 0.1, 0.1});
-  lineBatchRenderer->DrawLine(Vec2f{0, worldCoordMin.y}, Vec2f{0, worldCoordMax.y}, Color{0.1, 0.9, 0.1});
+  lineBatchRenderer->DrawLine(Vec2f{grid.boundsMin.x, 0}, Vec2f{grid.boundsMax.x, 0}, Color{0.9, 0.1, 0.1});
+  lineBatchRenderer->DrawLine(Vec2f{0, grid.boundsMin.y}, Vec2f{0, grid.boundsMax.y}, Color{0.1, 0.9, 0.1});
 
-  if(entityHolder.movable && Input::IsKeyDown(GREET_KEY_LEFT_CONTROL))
+  if(entityHolder.movable)
   {
-    lineBatchRenderer->DrawLine(Vec2f{worldCoordMin.x, entityHolder.entityPressPos.y}, Vec2f{worldCoordMax.x, entityHolder.entityPressPos.y}, Color{0.9, 0.9, 0.9});
-    lineBatchRenderer->DrawLine(Vec2f{entityHolder.entityPressPos.x, worldCoordMin.y}, Vec2f{entityHolder.entityPressPos.x, worldCoordMax.y}, Color{0.9, 0.9, 0.9});
+    lineBatchRenderer->DrawLine(Vec2f{grid.boundsMin.x, entityHolder.entityPressPos.y}, Vec2f{grid.boundsMax.x, entityHolder.entityPressPos.y}, Color{0.9, 0.9, 0.9});
+    lineBatchRenderer->DrawLine(Vec2f{entityHolder.entityPressPos.x, grid.boundsMin.y}, Vec2f{entityHolder.entityPressPos.x, grid.boundsMax.y}, Color{0.9, 0.9, 0.9});
   }
 
   lineBatchRenderer->End();
-
 }
 
 void Entity2DManager::RenderPost() const

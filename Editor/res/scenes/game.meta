@@ -20,7 +20,7 @@ tag=Entity#2
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=134.635086 361.163879
+position=200.000000 -0.000000
 [UUIDComponent]
 uuid=f8074a31-6d16-975b-0cc5-3da39f8eca82
 ---
@@ -31,7 +31,7 @@ tag=Entity
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=417.336426 340.746979
+position=500.000000 0.000000
 [UUIDComponent]
 uuid=9e6b47d2-b0c6-2a08-f149-d6c008401d22
 ---
@@ -42,7 +42,7 @@ tag=Entity#4
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=-107.217262 413.269287
+position=200.000000 103.999954
 [UUIDComponent]
 uuid=b163ddde-e16a-029b-ba0a-0c22eb203722
 ---
@@ -53,7 +53,7 @@ tag=Entity
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=71.999847 99.899704
+position=-0.000000 -0.000000
 [UUIDComponent]
 uuid=8f21ffbe-c5b5-0892-f515-fe21196a2611
 ---
@@ -64,7 +64,7 @@ tag=Entity#6
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=-130.500000 611.500000
+position=-200.000000 -0.000000
 [UUIDComponent]
 uuid=dd1bfba0-3bdd-512f-542c-469a7ceed518
 ---
@@ -86,7 +86,7 @@ tag=Entity#8
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=281.317596 647.756531
+position=-300.000000 -0.000000
 [UUIDComponent]
 uuid=789aedb2-a46d-12b2-2ae9-337dbcc2ca16
 ---
@@ -112,7 +112,7 @@ tag=Entity#10
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=386.395630 -29.793865
+position=300.000000 0.000000
 [UUIDComponent]
 uuid=16c3e079-507d-689f-6f44-d28ae1a3b78e
 ---
@@ -122,8 +122,8 @@ color=#ff32518c
 tag=Entity#11
 [Transform2DComponent]
 scale=100.000000 100.000000
-rotation=10.000000
-position=171.108246 232.028290
+rotation=-0.000000
+position=100.000000 -0.000000
 [UUIDComponent]
 uuid=36075480-de5d-2b01-4abf-010158bb6233
 ---
@@ -133,8 +133,8 @@ color=#ff377337
 tag=Entity#12
 [Transform2DComponent]
 scale=100.000000 100.000000
-rotation=10.000000
-position=438.354706 152.115723
+rotation=0.000000
+position=400.000000 -0.000000
 [UUIDComponent]
 uuid=45eb7427-3280-d696-94c4-eee6472f6645
 ---

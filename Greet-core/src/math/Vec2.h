@@ -336,6 +336,27 @@ namespace Greet{
       }
   };
 
+  namespace Vec
+  {
+    template <typename T>
+    static Vec2<T> Floor(const Vec2<T>& vec)
+    {
+      return Vec2<T>{std::floor(vec.x), std::floor(vec.y)};
+    }
+
+    template <typename T>
+    static Vec2<T> Ceil(const Vec2<T>& vec)
+    {
+      return Vec2<T>{std::ceil(vec.x), std::ceil(vec.y)};
+    }
+
+    template <typename T>
+    static Vec2<T> Round(const Vec2<T>& vec)
+    {
+      return Vec2<T>{std::round(vec.x), std::round(vec.y)};
+    }
+  };
+
   typedef Vec2<float> Vec2f;
   typedef Vec2<int> Vec2i;
 }
