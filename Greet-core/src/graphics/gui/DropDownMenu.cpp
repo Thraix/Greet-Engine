@@ -76,20 +76,20 @@ namespace Greet
     }
   }
 
-  void DropDownMenu::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos)
+  void DropDownMenu::OnEvent(Event& event, const Vec2f& componentPos)
   {
-    if(pressed && IsMouseInside(event.GetPosition() - componentPos))
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      if(frame->IsFocused())
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if(pressed && IsMouseInside(e.GetPosition() - componentPos))
       {
-        guiScene->RequestFocusQueued(nullptr);
-      }
-      else
-      {
-        frame->SetPosition(componentPos + Vec2f{0, GetHeight()});
-        frame->SetWidth(GetWidth());
-        guiScene->AddFrameQueued(frame);
-        guiScene->RequestFocusQueued(frame);
+        if(!frame->IsFocused())
+        {
+          frame->SetPosition(componentPos + Vec2f{0, GetHeight()});
+          frame->SetWidth(GetWidth());
+          guiScene->AddFrameQueued(frame);
+          guiScene->RequestFocusQueued(frame);
+        }
       }
     }
   }

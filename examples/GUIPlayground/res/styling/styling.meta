@@ -19,25 +19,21 @@ backgroundColor=$gray-1
 [Docker]
 width=fill_parent
 height=fill_parent
-backgroundColor=#323232
-edgeColor=#323232
+backgroundColor=$gray-1
+edgeColor=$gray-1
 edgeSize=10
-edgeBorder=2
-edgeBorderColor=#626262
-border=2
-borderColor=#626262
+edgeBorder=1
+edgeBorderColor=$gray-4
+border=1
+borderColor=$gray-4
 
 [Container]
 backgroundColor=$gray-2
+borderColor=$gray-3
 
 [Label]
 font=noto:12
 textColor=$textPrimaryColor
-
-[Image]
-imageColor=$textPrimaryColor
-hover-imageColor=#D0D0D0
-backgroundColor=$primaryColor
 
 [TreeView]
 width=fill_parent
@@ -144,3 +140,36 @@ width=16
 height=16
 backgroundColor=$primaryColor
 radius=8
+
+[SceneView]
+width=fill_parent
+height=fill_parent
+backgroundColor=$gray-2
+
+[DropDownMenu]
+width=200
+height=30
+backgroundColor=$primaryColor
+borderColor=$darkPrimaryColor
+hover-backgroundColor=$darkPrimaryColor
+hover-borderColor=$darkerPrimaryColor
+border=2
+font=noto:16
+textColor=$textPrimaryColor
+padding=0 10 0 0
+
+dropBorder=0 0 0 0
+dropPadding=0 12 0 0
+dropBackgroundColor=$gray-4
+dropBorderColor=$gray-3
+dropTextColor=$textPrimaryColor
+dropFont=noto:16
+dropHeight=30
+
+hover-dropBorder=0 2 0 0
+hover-dropBackgroundColor=$gray-3
+hover-dropBorderColor=$primaryColor
+
+press-dropBorder=0 2 0 0
+press-dropBackgroundColor=$gray-2
+press-dropBorderColor=$primaryColor

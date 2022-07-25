@@ -170,41 +170,36 @@ namespace Greet {
     }
   }
 
-  void Frame::OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos)
+  void Frame::OnEvent(Event& event, const Vec2f& componentPos)
   {
-    Vec2f translatedPos = event.GetPosition() - componentPos;
-    if (event.GetButton() == GREET_MOUSE_1)
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      if(IsHoverResize(translatedPos))
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      Vec2f translatedPos = e.GetPosition() - componentPos;
+      if (e.GetButton() == GREET_MOUSE_1)
       {
-        m_posOrigin = pos;
-        m_sizeOrigin = {width.size, height.size};
-        m_clickPos = translatedPos;
-        SetResizeFlags(translatedPos);
-        Component::OnMousePressEventHandler(event, componentPos);
-      }
-      else
-      {
-        Container::OnMousePressEventHandler(event, componentPos);
+        if(IsHoverResize(translatedPos))
+        {
+          m_posOrigin = pos;
+          m_sizeOrigin = {width.size, height.size};
+          m_clickPos = translatedPos;
+          SetResizeFlags(translatedPos);
+        }
       }
     }
-    else
-      Container::OnMousePressEventHandler(event, componentPos);
-  }
-
-  void Frame::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos)
-  {
-    if (event.GetButton() == GREET_MOUSE_1)
-      m_resizing = false;
-    Container::OnMouseReleaseEventHandler(event, componentPos);
-  }
-
-  void Frame::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos)
-  {
-    if (m_resizing)
-      Resize(event.GetPosition() - m_posOrigin);
-    else if(!IsHoverResize(event.GetPosition() - componentPos))
-      Container::OnMouseMoveEventHandler(event, componentPos);
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+    {
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if (e.GetButton() == GREET_MOUSE_1)
+        m_resizing = false;
+    }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+      if (m_resizing)
+        Resize(e.GetPosition() - m_posOrigin);
+    }
+    Container::OnEvent(event, componentPos);
   }
 
   void Frame::SetGUIMouseListener(GUIMouseListener* listener)

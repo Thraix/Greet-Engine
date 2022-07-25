@@ -54,8 +54,7 @@ namespace Greet {
       virtual float GetWrapWidth() const override;
       virtual float GetWrapHeight() const override;
 
-      void OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos) override;
-      void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos) override;
+      void OnEvent(Event& event, const Vec2f& componentPos) override;
 
       virtual void SetGUIScene(GUIScene* scene) override;
 

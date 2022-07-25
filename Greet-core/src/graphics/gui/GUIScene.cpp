@@ -53,7 +53,7 @@ namespace Greet {
         OnMouseReleaseEventHandler((MouseReleaseEvent&)event);
       else if(focused)
       {
-        focused->OnEventHandler(event, focused->GetPosition());
+        focused->OnEventBase(event, focused->GetPosition());
         event.AddFlag(EVENT_HANDLED);
       }
     }
@@ -68,8 +68,13 @@ namespace Greet {
     {
       if((*it)->IsMouseInside(transformedEvent.GetPosition() - (*it)->GetMargin().LeftTop() - (*it)->GetPosition()))
       {
-        (*it)->OnEventHandler(transformedEvent, (*it)->GetPosition());
+        (*it)->OnEventBase(transformedEvent, (*it)->GetPosition());
+        if(it != frames.rbegin())
+        {
+          RequestFocus(nullptr);
+        }
         frames.splice(frames.end(), frames, std::next(it).base());
+
         event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
         return;
       }
@@ -86,14 +91,14 @@ namespace Greet {
 
     if (focused && focused->UsingMouse())
     {
-      focused->OnEventHandler(transformedEvent, focused->GetRealPosition());
+      focused->OnEventBase(transformedEvent, focused->GetRealPosition());
       event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
       return;
     }
 
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      (*it)->OnEventHandler(transformedEvent, (*it)->GetPosition());
+      (*it)->OnEventBase(transformedEvent, (*it)->GetPosition());
     }
   }
 
@@ -103,7 +108,7 @@ namespace Greet {
     MouseReleaseEvent transformedEvent{mousePos, event.GetButton()};
     if (focused)
     {
-      focused->OnEventHandler(transformedEvent, focused->GetRealPosition());
+      focused->OnEventBase(transformedEvent, focused->GetRealPosition());
       event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
     }
   }

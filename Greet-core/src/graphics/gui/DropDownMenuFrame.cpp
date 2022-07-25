@@ -79,31 +79,33 @@ namespace Greet
     renderer->PopTranslation();
   }
 
-  void DropDownMenuFrame::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos)
+  void DropDownMenuFrame::OnEvent(Event& event, const Vec2f& componentPos)
   {
-    if(pressed && IsMouseInside(event.GetPosition() - componentPos))
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      int index = (event.GetY() - componentPos.y) / dropHeight;
-      if(pressPos == index)
-      {
-        ASSERT(index >= 0 && index < items.size(), "DropDownMenu index is out of bounds (index=%s, size=%s)", index, items.size());
-        CallOnSelectionChanged(index);
-      }
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      pressPos = floor((e.GetY() - componentPos.y) / dropHeight);
     }
-    pressPos = -1;
-    Frame::OnMouseReleaseEventHandler(event, componentPos);
-  }
-
-  void DropDownMenuFrame::OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos)
-  {
-    pressPos = (event.GetY() - componentPos.y) / dropHeight;
-    Frame::OnMousePressEventHandler(event, componentPos);
-  }
-
-  void DropDownMenuFrame::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos)
-  {
-    hoverPos = (event.GetY() - componentPos.y) / dropHeight;
-    Frame::OnMouseMoveEventHandler(event, componentPos);
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+    {
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if(pressed && IsMouseInside(e.GetPosition() - componentPos))
+      {
+        int index = floor((e.GetY() - componentPos.y) / dropHeight);
+        if(pressPos == index)
+        {
+          ASSERT(index >= 0 && index < items.size(), "DropDownMenu index is out of bounds (index=%s, size=%s)", index, items.size());
+          CallOnSelectionChanged(index);
+        }
+      }
+      pressPos = -1;
+    }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+      hoverPos = floor((e.GetY() - componentPos.y) / dropHeight);
+    }
+    Frame::OnEvent(event, componentPos);
   }
 
   void DropDownMenuFrame::Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill)

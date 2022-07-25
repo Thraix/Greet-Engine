@@ -20,7 +20,7 @@ namespace Greet
   }
 
   Container::Container(const std::string& name, Component* parent)
-    : Component{name, parent}, vertical{true}, spacing{10}
+    : Component{name, parent, false}, vertical{true}, spacing{10}
   {
     AddStyleVariables(
       StylingVariables
@@ -32,7 +32,7 @@ namespace Greet
   }
 
   Container::Container(const XMLObject& object, Component* parent)
-    : Component(object, parent), vertical(true)
+    : Component(object, parent, false), vertical(true)
   {
     AddStyleVariables(
       StylingVariables
@@ -419,28 +419,26 @@ namespace Greet
     guiScene = scene;
   }
 
-  void Container::OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos)
+  void Container::OnEvent(Event& event, const Vec2f& componentPos)
   {
-    for(auto it = m_components.rbegin(); it != m_components.rend();++it)
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      Component* c{*it};
-      if(c->IsMouseInside(event.GetPosition() - (componentPos + GetTotalPadding() + c->GetMargin().LeftTop() + c->GetPosition())))
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      for(auto it = m_components.rbegin(); it != m_components.rend();++it)
       {
-        c->OnEventHandler(event, componentPos + GetTotalPadding() + c->GetMargin().LeftTop() + c->GetPosition());
-        return;
+        Component* c{*it};
+        if(c->IsMouseInside(e.GetPosition() - (componentPos + GetTotalPadding() + c->GetMargin().LeftTop() + c->GetPosition())))
+        {
+          c->OnEventBase(event, componentPos + GetTotalPadding() + c->GetMargin().LeftTop() + c->GetPosition());
+          return;
+        }
       }
     }
-    Component::OnMousePressEventHandler(event, componentPos);
-  }
-
-  void Container::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos)
-  {
-    Component::OnMouseMoveEventHandler(event, componentPos);
-    if(!UsingMouse())
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
       for(auto it = m_components.rbegin(); it != m_components.rend();++it)
       {
-        (*it)->OnEventHandler(event, componentPos + GetTotalPadding() + (*it)->GetMargin().LeftTop() + (*it)->GetPosition());
+        (*it)->OnEventBase(event, componentPos + GetTotalPadding() + (*it)->GetMargin().LeftTop() + (*it)->GetPosition());
       }
     }
   }

@@ -53,9 +53,7 @@ namespace Greet {
       // Clamp the container inside window after resizing it.
       void ResizeScreenClamp();
 
-      void OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos) override;
-      void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos) override;
-      void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos) override;
+      void OnEvent(Event& event, const Vec2f& componentPos) override;
 
       // Getters and setters
       virtual Vec2f GetComponentPosition() const { return Vec2f(margin.left + border.left, margin.top + border.top); };

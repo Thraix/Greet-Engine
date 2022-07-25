@@ -30,7 +30,7 @@ namespace Greet {
     public:
       DropDownMenu(const XMLObject& object, Component* parent);
       void Render(GUIRenderer* renderer) const override;
-      void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos) override;
+      void OnEvent(Event& event, const Vec2f& componentPos) override;
       void LoadFrameStyle(const MetaFile& metaFile) override;
 
       DropDownMenu& SetDropDownItems(const std::vector<std::string>& items);

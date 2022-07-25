@@ -14,8 +14,8 @@ namespace Greet
 
   REGISTER_COMPONENT_DEFINITION(Component);
 
-  Component::Component(const std::string& name, Component* parent, const std::string& componentType)
-    : parent{parent}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}, componentType{componentType}
+  Component::Component(const std::string& name, Component* parent, const std::string& componentType, bool isFocusable)
+    : parent{parent}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}, componentType{componentType}, isFocusable{isFocusable}
   {
     AddStyleVariables({
       .colors=
@@ -53,8 +53,8 @@ namespace Greet
   }
 
 
-  Component::Component(const XMLObject& xmlObject, Component* parent)
-    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + UUID{}.GetString()), parent, xmlObject.GetName()}
+  Component::Component(const XMLObject& xmlObject, Component* parent, bool isFocusable)
+    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + UUID{}.GetString()), parent, xmlObject.GetName(), isFocusable}
   {
     LoadStyles(xmlObject);
   }
@@ -132,29 +132,22 @@ namespace Greet
     Update(timeElapsed);
   }
 
-  void Component::OnEventHandler(Event& event, const Vec2f& componentPos)
+  void Component::OnEventBase(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
-      OnMousePressEventHandler(static_cast<MousePressEvent&>(event), componentPos);
+      HandlePressed(static_cast<MousePressEvent&>(event), componentPos);
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
-      OnMouseMoveEventHandler(static_cast<MouseMoveEvent&>(event), componentPos);
-    else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
-      OnMouseReleaseEventHandler(static_cast<MouseReleaseEvent&>(event), componentPos);
-    else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
-      OnEvent(event, componentPos);
-    else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
-      OnEvent(event, componentPos);
-    else if(EVENT_IS_TYPE(event, EventType::KEY_TYPE))
-      OnEvent(event, componentPos);
-    else
-      OnEvent(event, componentPos);
+      HandleHover(static_cast<MouseMoveEvent&>(event), componentPos);
+    OnEvent(event, componentPos);
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+      HandleReleased(static_cast<MouseReleaseEvent&>(event), componentPos);
   }
 
-  void Component::OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos)
+  void Component::HandlePressed(MousePressEvent& event, const Vec2f& componentPos)
   {
     if(!guiScene)
       Log::Error("GuiScene not initialized");
-    if(!IsFocused())
+    if(!IsFocused() && IsFocusable())
       guiScene->RequestFocusQueued(this);
     if(event.GetButton() == GREET_MOUSE_1)
     {
@@ -163,10 +156,9 @@ namespace Greet
         SetCurrentStyle("press");
       CallOnPressCallback();
     }
-    OnEvent(event, componentPos);
   }
 
-  void Component::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos)
+  void Component::HandleHover(MouseMoveEvent& event, const Vec2f& componentPos)
   {
     if(IsMouseInside(event.GetPosition() - componentPos) || UsingMouse())
     {
@@ -177,7 +169,6 @@ namespace Greet
         isHovered = true;
         MouseEntered();
       }
-      OnEvent(event, componentPos);
     }
     else if(isHovered)
     {
@@ -188,7 +179,7 @@ namespace Greet
     }
   }
 
-  void Component::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos)
+  void Component::HandleReleased(MouseReleaseEvent& event, const Vec2f& componentPos)
   {
     if(event.GetButton() == GREET_MOUSE_1)
     {
@@ -203,7 +194,6 @@ namespace Greet
         else if(currentStyle == "press")
           SetCurrentStyle("normal");
         CallOnReleaseCallback();
-        OnEvent(event, componentPos);
         pressed = false;
       }
     }

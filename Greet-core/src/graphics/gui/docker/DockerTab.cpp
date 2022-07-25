@@ -56,7 +56,7 @@ namespace Greet
 
   void DockerTab::OnEvent(Event& event, const Vec2f& componentPos)
   {
-    component->OnEventHandler(event, componentPos + Vec2f{0.0f, 0.0f});
+    component->OnEventBase(event, componentPos + Vec2f{0.0f, 0.0f});
   }
 
   Component* DockerTab::GetComponentByNameNoCast(const std::string& name)

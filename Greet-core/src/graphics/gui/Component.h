@@ -60,6 +60,7 @@ namespace Greet
       Vec2f pos;
 
       bool isFocused;
+      bool isFocusable = true;
       bool isHovered;
       bool pressed;
 
@@ -69,8 +70,8 @@ namespace Greet
       OnReleaseCallback onReleaseCallback;
 
     public:
-      Component(const std::string& name, Component* parent, const std::string& componentType);
-      Component(const XMLObject& object, Component* parent);
+      Component(const std::string& name, Component* parent, const std::string& componentType, bool isFocusable = true);
+      Component(const XMLObject& object, Component* parent, bool isFocusable = true);
       virtual ~Component() = default;
 
       virtual void PostConstruction(){}
@@ -98,15 +99,12 @@ namespace Greet
       virtual void UpdateHandle(float timeElapsed);
       virtual void Update(float timeElapsed){}
 
-      // These methods generally handle internal stuff and shouldn't be overriden if
-      // not necessary use their non EventHandler counterparts instead.
-      virtual void OnEventHandler(Event& event, const Vec2f& componentPos);
-      virtual void OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos);
-      virtual void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos);
-      virtual void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos);
+      void OnEventBase(Event& event, const Vec2f& componentPos);
+      void HandlePressed(MousePressEvent& event, const Vec2f& componentPos);
+      void HandleHover(MouseMoveEvent& event, const Vec2f& componentPos);
+      void HandleReleased(MouseReleaseEvent& event, const Vec2f& componentPos);
 
       virtual void OnEvent(Event& event, const Vec2f& componentPos) {}
-
 
       // Callbacks
       void SetOnClickCallback(OnClickCallback callback);
@@ -163,6 +161,7 @@ namespace Greet
       virtual void MouseEntered(){}
       virtual void MouseExited(){}
       bool IsFocused() const { return isFocused; }
+      bool IsFocusable() const { return isFocusable; }
 
       virtual void ChildChangedFocus(bool focused) {}
 

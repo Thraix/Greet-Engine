@@ -30,9 +30,7 @@ namespace Greet
 
       void Render(GUIRenderer* renderer) const override;
       void RenderItem(GUIRenderer* renderer, const Text& text, int i, const std::string& styling) const;
-      void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos) override;
-      void OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos) override;
-      void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos) override;
+      void OnEvent(Event& event, const Vec2f& componentPos) override;
       void Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill) override;
 
       void SetDropDownItems(const std::vector<std::string>& items);

@@ -9,7 +9,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Docker);
 
   Docker::Docker(const XMLObject& object, Component* parent)
-    : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{nullptr}, splitIcon{nullptr}
+    : Component(object, parent, false), split{nullptr}, grabbedTab{nullptr}, tabButton{nullptr}, splitIcon{nullptr}
   {
     AddStyleVariables(StylingVariables{
       .colors = {{"edgeColor", &edgeColor}, {"edgeBorderColor", &edgeBorderColor}},
@@ -79,6 +79,7 @@ namespace Greet
   {
     grabbedDistance = 0;
     grabbedTab = tab;
+    guiScene->RequestFocusQueued(this);
   }
 
   Button* Docker::GetTabButton() const

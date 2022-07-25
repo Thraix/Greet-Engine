@@ -42,7 +42,7 @@ tag=Entity#4
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=200.000000 103.999954
+position=-100.000000 -0.000000
 [UUIDComponent]
 uuid=b163ddde-e16a-029b-ba0a-0c22eb203722
 ---
@@ -117,7 +117,7 @@ position=300.000000 0.000000
 uuid=16c3e079-507d-689f-6f44-d28ae1a3b78e
 ---
 [ColorComponent]
-color=#ff32518c
+color=#ff536fa5
 [TagComponent]
 tag=Entity#11
 [Transform2DComponent]
@@ -137,4 +137,15 @@ rotation=0.000000
 position=400.000000 -0.000000
 [UUIDComponent]
 uuid=45eb7427-3280-d696-94c4-eee6472f6645
+---
+[ColorComponent]
+color=#ffffffff
+[TagComponent]
+tag=Entity#13
+[Transform2DComponent]
+scale=100.000000 100.000000
+rotation=0.000000
+position=162.963058 104.938293
+[UUIDComponent]
+uuid=dbb03f17-b13e-f6c5-c687-69892e28f8ba
 ---

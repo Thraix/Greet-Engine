@@ -14,7 +14,7 @@ namespace Greet
   {
     AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}, {"reverse", &reverse}}});
 
-    sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator"};
+    sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator", false};
 
     minValue = 0;
     maxValue = 100;
@@ -60,7 +60,7 @@ namespace Greet
     }
     else
     {
-      sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator"};
+      sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator", false};
     }
 
     // Default defaultValue should be in the middle
