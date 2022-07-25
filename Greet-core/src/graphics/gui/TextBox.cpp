@@ -81,18 +81,21 @@ namespace Greet
         // TODO: In the future we probably want to do some smart, average character length
         // to determain around where the cursor should be.
         std::vector<uint32_t> widths{text.font.GetPartialWidths(str)};
-        auto it{widths.begin()};
         float w = -textOffset + GetTotalPadding().w;
-        uint32_t index = 0;
-        while(it != widths.end() && w+*it <= translatedPos.x)
+        int i;
+        for(i = 0; i < widths.size(); i++)
         {
-          ++it;
-          index++;
+          if(w + widths[i] > translatedPos.x)
+          {
+            break;
+          }
         }
-        // The cursor should be at the cursor behind
-        // Maybe change to the nearest cursor?
-        index--;
-        MoveCursor(index - cursorPos);
+        if(i > 0 && i < widths.size())
+        {
+          if(widths[i] - translatedPos.x > translatedPos.x - widths[i-1])
+            i--;
+        }
+        MoveCursor(i - cursorPos);
         cursorBlinkTimer = 0;
       }
     }
