@@ -14,6 +14,7 @@ class EntityManager;
 class GUITransform2D;
 class GUITransform3D;
 class GUISprite;
+class GUIAnimation;
 
 class EntityGUI
 {
@@ -29,6 +30,7 @@ class EntityGUI
     Greet::Ref<GUITransform2D> guiTransform2D;
     Greet::Ref<GUITransform3D> guiTransform3D;
     Greet::Ref<GUISprite> guiSprite;
+    Greet::Ref<GUIAnimation> guiAnimation;
     Greet::Component* guiTagComponent;
     Greet::Component* guiMeshComponent;
     Greet::Component* guiColorComponent;

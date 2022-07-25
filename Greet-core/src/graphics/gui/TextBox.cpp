@@ -78,8 +78,6 @@ namespace Greet
       if(e.GetButton() == GREET_MOUSE_1)
       {
         Vec2f translatedPos = e.GetPosition() - componentPos;
-        // TODO: In the future we probably want to do some smart, average character length
-        // to determain around where the cursor should be.
         std::vector<uint32_t> widths{text.font.GetPartialWidths(str)};
         float w = -textOffset + GetTotalPadding().w;
         int i;

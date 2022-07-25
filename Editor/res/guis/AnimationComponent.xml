@@ -1,0 +1,12 @@
+<Container name="Animation" width="1w" vertical="true" spacing="5">
+  <Label name="animationLabel" width="1w">Animation</Label>
+  <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
+
+    <Label name="spritesLabel"  width="50" align="left">Sprites</Label>
+    <TextBox name="sprites" width="1w"/>
+
+    <Label name="keytimeLabel" width="50" align="left">Keytime</Label>
+    <TextBox name="keytime" width="1w"/>
+
+  </Container>
+</Container>

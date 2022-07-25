@@ -2,10 +2,7 @@
   <Label name="spriteLabel" width="1w">Sprite</Label>
   <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
     <Label name="texturePathLabel" width="1w">Texture path</Label>
-    <Container width="1w" vertical="false">
-      <Label name="pathLabel" height="1w" align="center">Path</Label>
-      <TextBox name="texturePath" width="1w"/>
-    </Container>
+    <TextBox name="texturePath" width="1w"/>
 
     <Label name="spritePosLabel" width="1w">Sprite Position</Label>
     <Container width="1w" vertical="false">

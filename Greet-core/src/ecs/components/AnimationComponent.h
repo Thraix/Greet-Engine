@@ -15,7 +15,7 @@ namespace Greet
     float timeElapsed = 0.0f;
 
     AnimationComponent(const MetaFileClass& metaClass);
-    AnimationComponent(int animationCount, float keytime);
+    AnimationComponent(int animationCount = 1, float keytime = 1.0f);
 
     friend MetaFile& operator<<(MetaFile& metaFile, const AnimationComponent& animationComponent);
   };

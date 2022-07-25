@@ -4,16 +4,18 @@
 #include "gui/GUITransform3D.h"
 #include "gui/GUITransform2D.h"
 #include "gui/GUISprite.h"
+#include "gui/GUIAnimation.h"
 
+#include <ecs/components/AnimationComponent.h>
+#include <ecs/components/ColorComponent.h>
+#include <ecs/components/MeshComponent.h>
+#include <ecs/components/SpriteComponent.h>
+#include <ecs/components/TagComponent.h>
+#include <ecs/components/UUIDComponent.h>
 #include <graphics/gui/Button.h>
+#include <graphics/gui/ColorPicker.h>
 #include <graphics/gui/DropDownMenu.h>
 #include <graphics/gui/TextBox.h>
-#include <graphics/gui/ColorPicker.h>
-#include <ecs/components/TagComponent.h>
-#include <ecs/components/SpriteComponent.h>
-#include <ecs/components/UUIDComponent.h>
-#include <ecs/components/MeshComponent.h>
-#include <ecs/components/ColorComponent.h>
 #include <utils/MetaFileLoading.h>
 
 #include <fstream>
@@ -42,6 +44,7 @@ EntityGUI::EntityGUI(EntityManager* entityManager, Frame* frame) :
   guiTransform2D = NewRef<GUITransform2D>(entityManager, settingsContainer);
   guiTransform3D = NewRef<GUITransform3D>(entityManager, settingsContainer);
   guiSprite = NewRef<GUISprite>(entityManager, settingsContainer);
+  guiAnimation = NewRef<GUIAnimation>(entityManager, settingsContainer);
 
   guiTagComponent = ComponentFactory::GetComponent("res/guis/TagComponent.xml", settingsContainer);
   guiTagComponent->GetComponentByName<TextBox>("tag")->SetOnTextChangedCallback(BIND_MEMBER_FUNC(GUITextBoxTagName));
@@ -133,6 +136,15 @@ void EntityGUI::ReloadEntitySettings(Entity entity)
     addComponents.emplace_back("Sprite Component");
   }
 
+  if(entity.HasComponent<AnimationComponent>())
+  {
+    guiAnimation->AttachTo(settingsContainer, entity.GetComponent<AnimationComponent>());
+  }
+  else
+  {
+    addComponents.emplace_back("Animation Component");
+  }
+
   if(entity.HasComponent<Transform3DComponent>())
   {
     guiTransform3D->AttachTo(settingsContainer, entity.GetComponent<Transform3DComponent>());
@@ -215,6 +227,8 @@ void EntityGUI::GUIDropDownMenuAddComponent(Greet::Component* component, const s
       entityManager->GetSelectedEntity().AddComponent<ColorComponent>();
     else if(newLabel == "Sprite Component")
       entityManager->GetSelectedEntity().AddComponent<SpriteComponent>();
+    else if(newLabel == "Animation Component")
+      entityManager->GetSelectedEntity().AddComponent<AnimationComponent>();
     ReloadEntitySettings(entityManager->GetSelectedEntity());
   }
 }
