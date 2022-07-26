@@ -2,6 +2,7 @@
 
 int main()
 {
-  Editor editor;
+  Greet::Editor editor;
   editor.Start();
+  return 0;
 }

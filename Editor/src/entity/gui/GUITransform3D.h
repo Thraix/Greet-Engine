@@ -1,52 +1,56 @@
 #pragma once
 
-#include <graphics/gui/Container.h>
+#include <common/Memory.h>
 #include <ecs/components/Transform3DComponent.h>
-#include <functional>
 
-class EntityManager;
-
-class GUITransform3D
+namespace Greet
 {
-  EntityManager* entityManager;
+  class Component;
+  class Container;
+  class EntityManager;
 
-  Greet::Component* transform3D;
+  class GUITransform3D
+  {
+    DELETE_COPY_AND_MOVE(GUITransform3D);
 
-  DELETE_COPY_AND_MOVE(GUITransform3D);
+    EntityManager* entityManager;
+    Component* transform3D;
 
-  public:
-    GUITransform3D(EntityManager* entityManager, Greet::Container* parent);
-    virtual ~GUITransform3D();
 
-    void Update(const Greet::Transform3DComponent& transform);
-    void AttachTo(Greet::Container* container, Greet::Transform3DComponent& transform);
+    public:
+      GUITransform3D(EntityManager* entityManager, Container* parent);
+      virtual ~GUITransform3D();
 
-  private:
-    void GUITextBoxTranslation3DX(Greet::Component* component,
-                                  const std::string& before,
-                                  const std::string& after);
-    void GUITextBoxTranslation3DY(Greet::Component* component,
-                                  const std::string& before,
-                                  const std::string& after);
-    void GUITextBoxTranslation3DZ(Greet::Component* component,
-                                  const std::string& before,
-                                  const std::string& after);
-    void GUITextBoxScaling3DX(Greet::Component* component,
-                              const std::string& before,
-                              const std::string& after);
-    void GUITextBoxScaling3DY(Greet::Component* component,
-                              const std::string& before,
-                              const std::string& after);
-    void GUITextBoxScaling3DZ(Greet::Component* component,
-                              const std::string& before,
-                              const std::string& after);
-    void GUITextBoxRotation3DX(Greet::Component* component,
-                               const std::string& before,
-                               const std::string& after);
-    void GUITextBoxRotation3DY(Greet::Component* component,
-                               const std::string& before,
-                               const std::string& after);
-    void GUITextBoxRotation3DZ(Greet::Component* component,
-                               const std::string& before,
-                               const std::string& after);
-};
+      void Update(const Transform3DComponent& transform);
+      void AttachTo(Container* container, Transform3DComponent& transform);
+
+    private:
+      void GUITextBoxTranslation3DX(Component* component,
+                                    const std::string& before,
+                                    const std::string& after);
+      void GUITextBoxTranslation3DY(Component* component,
+                                    const std::string& before,
+                                    const std::string& after);
+      void GUITextBoxTranslation3DZ(Component* component,
+                                    const std::string& before,
+                                    const std::string& after);
+      void GUITextBoxScaling3DX(Component* component,
+                                const std::string& before,
+                                const std::string& after);
+      void GUITextBoxScaling3DY(Component* component,
+                                const std::string& before,
+                                const std::string& after);
+      void GUITextBoxScaling3DZ(Component* component,
+                                const std::string& before,
+                                const std::string& after);
+      void GUITextBoxRotation3DX(Component* component,
+                                 const std::string& before,
+                                 const std::string& after);
+      void GUITextBoxRotation3DY(Component* component,
+                                 const std::string& before,
+                                 const std::string& after);
+      void GUITextBoxRotation3DZ(Component* component,
+                                 const std::string& before,
+                                 const std::string& after);
+  };
+}

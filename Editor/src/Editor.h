@@ -4,26 +4,25 @@
 
 namespace Greet
 {
+  class EntityManager;
   class GUIScene;
-};
 
-class EntityManager;
+  class Editor : public App
+  {
+    private:
+      Ref<GUIScene> gui;
+      Ref<EntityManager> entityManager;
+    public:
+      Editor();
 
-class Editor : public Greet::App
-{
-  private:
-    Greet::Ref<Greet::GUIScene> gui;
-    Greet::Ref<EntityManager> entityManager;
-  public:
-    Editor();
+      ~Editor();
 
-    ~Editor();
+      void Init() override;
+      void Destruct() override;
 
-    void Init() override;
-    void Destruct() override;
-
-    void Tick() override;
-    void Update(float timeElapsed) override;
-    void Render() override;
-    void OnEvent(Greet::Event& event) override;
-};
+      void Tick() override;
+      void Update(float timeElapsed) override;
+      void Render() override;
+      void OnEvent(Event& event) override;
+  };
+}

@@ -12,7 +12,7 @@
       <TextBox name="spritePosY" width="1w"/>
     </Container>
 
-    <Label name="spriteSizeLabel" width="1w">Sprite Sizeition</Label>
+    <Label name="spriteSizeLabel" width="1w">Sprite Size</Label>
     <Container width="1w" vertical="false">
       <Label name="spriteSizeXLabel" height="1w" align="center">X</Label>
       <TextBox name="spriteSizeX" width="1w"/>

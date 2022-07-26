@@ -1,43 +1,46 @@
 #pragma once
 
 #include <ecs/ECSScene.h>
-#include "Entity2DManager.h"
 
-class EntityRendering;
-class EntityManager;
-
-enum class ActiveScene
+namespace Greet
 {
-  _2D, _3D
-};
+  class EntityRendering;
+  class EntityManager;
+  class Entity2DManager;
 
-class EntityScene : public Greet::ECSScene
-{
-  EntityManager* entityManager;
-  Greet::Ref<Entity2DManager> entity2DManager;
+  enum class ActiveScene
+  {
+    _2D, _3D, Runtime
+  };
 
-  Greet::Ref<EntityRendering> entityRendering;
-  ActiveScene activeScene = ActiveScene::_2D;
+  class EntityScene : public ECSScene
+  {
+    EntityManager* entityManager;
+    Ref<Entity2DManager> entity2DManager;
+
+    Ref<EntityRendering> entityRendering;
+    ActiveScene activeScene = ActiveScene::_2D;
 
 
-  public:
-    EntityScene(EntityManager* entityManager);
+    public:
+      EntityScene(EntityManager* entityManager);
 
-    void OnEvent(Greet::Event& event) override;
-    void OnEvent3D(Greet::Event& event);
+      void OnEvent(Event& event) override;
+      void OnEvent3D(Event& event);
 
-    void Render() const override;
-    void Render2D() const override;
-    void Render3D(const Greet::Camera3DComponent& cam, const Greet::Environment3DComponent& env) const override;
+      void Render() const override;
+      void Render2D() const override;
+      void Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const override;
 
-    void SelectEntity(Greet::Entity entity);
-    void UpdateSelectedTransform3D();
+      void SelectEntity(Entity entity);
+      void UpdateSelectedTransform3D();
 
-    Greet::Entity GetCamera2DEntity() const override;
-    Greet::Entity GetCamera3DEntity() const override;
-    Greet::Entity GetEnvironment2DEntity() const override;
-    Greet::Entity GetEnvironment3DEntity() const override;
+      Entity GetCamera2DEntity() const override;
+      Entity GetCamera3DEntity() const override;
+      Entity GetEnvironment2DEntity() const override;
+      Entity GetEnvironment3DEntity() const override;
 
-  private:
-    Greet::Entity GetNearestRaycastedEntity(Greet::Camera3DComponent& cameraComponent, const Greet::Vec2f& pos, float farDistance = 100);
-};
+    private:
+      Entity GetNearestRaycastedEntity(Camera3DComponent& cameraComponent, const Vec2f& pos, float farDistance = 100);
+  };
+}

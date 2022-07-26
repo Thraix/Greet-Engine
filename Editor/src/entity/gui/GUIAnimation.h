@@ -1,32 +1,34 @@
 #pragma once
 
-#include "ecs/components/AnimationComponent.h"
-#include <graphics/gui/Container.h>
-#include <ecs/components/SpriteComponent.h>
-#include <functional>
+#include <common/Memory.h>
+#include <ecs/components/AnimationComponent.h>
 
-class EntityManager;
-
-class GUIAnimation
+namespace Greet
 {
-  EntityManager* entityManager;
+  class Component;
+  class Container;
+  class EntityManager;
 
-  Greet::Component* guiAnimation;
+  class GUIAnimation
+  {
+    DELETE_COPY_AND_MOVE(GUIAnimation);
 
-  DELETE_COPY_AND_MOVE(GUIAnimation);
+    EntityManager* entityManager;
+    Component* guiAnimation;
 
-  public:
-    GUIAnimation(EntityManager* entityManager, Greet::Container* parent);
-    virtual ~GUIAnimation();
+    public:
+      GUIAnimation(EntityManager* entityManager, Container* parent);
+      virtual ~GUIAnimation();
 
-    void Update(const Greet::AnimationComponent& animationComponent);
-    void AttachTo(Greet::Container* container, Greet::AnimationComponent& animationComponent);
+      void Update(const AnimationComponent& animationComponent);
+      void AttachTo(Container* container, AnimationComponent& animationComponent);
 
-  private:
-    void GUITextBoxSprites(Greet::Component* component,
-                           const std::string& before,
-                           const std::string& after);
-    void GUITextBoxKeytime(Greet::Component* component,
-                           const std::string& before,
-                           const std::string& after);
-};
+    private:
+      void GUITextBoxSprites(Component* component,
+                             const std::string& before,
+                             const std::string& after);
+      void GUITextBoxKeytime(Component* component,
+                             const std::string& before,
+                             const std::string& after);
+  };
+}

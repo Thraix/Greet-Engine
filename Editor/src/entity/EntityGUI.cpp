@@ -15,260 +15,252 @@
 #include <graphics/gui/Button.h>
 #include <graphics/gui/ColorPicker.h>
 #include <graphics/gui/DropDownMenu.h>
+#include <graphics/gui/TreeView.h>
 #include <graphics/gui/TextBox.h>
 #include <utils/MetaFileLoading.h>
 
 #include <fstream>
 
-using namespace Greet;
-
-EntityGUI::EntityGUI(EntityManager* entityManager, Frame* frame) :
-  entityManager{entityManager}
+namespace Greet
 {
-  settingsContainer = frame->GetComponentByName<Container>("settings");
-
-  treeView = frame->GetComponentByName<TreeView>("treeView");
-  Button* addEntity2DButton = frame->GetComponentByName<Button>("addEntity2DButton");
-  Button* addEntity3DButton = frame->GetComponentByName<Button>("addEntity3DButton");
-
-  ASSERT(treeView, "Could not load Scene TreeView");
-  ASSERT(addEntity2DButton, "Could not load Add Entity Button");
-  ASSERT(addEntity3DButton, "Could not load Add Entity Button");
-
-  treeNode = new TreeNode({});
-  treeView->SetTreeNode(treeNode);
-
-  treeView->SetOnNodeSelectedCallback(BIND_MEMBER_FUNC(GUITreeViewEntitySelected));
-  addEntity2DButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity2D));
-  addEntity3DButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity3D));
-  guiTransform2D = NewRef<GUITransform2D>(entityManager, settingsContainer);
-  guiTransform3D = NewRef<GUITransform3D>(entityManager, settingsContainer);
-  guiSprite = NewRef<GUISprite>(entityManager, settingsContainer);
-  guiAnimation = NewRef<GUIAnimation>(entityManager, settingsContainer);
-
-  guiTagComponent = ComponentFactory::GetComponent("res/guis/TagComponent.xml", settingsContainer);
-  guiTagComponent->GetComponentByName<TextBox>("tag")->SetOnTextChangedCallback(BIND_MEMBER_FUNC(GUITextBoxTagName));
-
-  guiColorComponent = ComponentFactory::GetComponent("res/guis/ColorComponent.xml", settingsContainer);
-  guiColorComponent->GetComponentByName<ColorPicker>("color")->SetOnColorChangeCallback(BIND_MEMBER_FUNC(GUIColorPickerColor));
-
-  guiAddComponent = static_cast<DropDownMenu*>(ComponentFactory::GetComponent("res/guis/AddComponent.xml", settingsContainer));
-  guiAddComponent->SetOnSelectionChangeCallback(BIND_MEMBER_FUNC(GUIDropDownMenuAddComponent));
-
-  guiMeshComponent = ComponentFactory::GetComponent("res/guis/MeshComponent.xml", settingsContainer);
-  guiMeshComponent->GetComponentByName<DropDownMenu>("meshType")->SetOnSelectionChangeCallback(BIND_MEMBER_FUNC(GUIDropDownMenuMeshType));
-  guiMeshComponent->GetComponentByName<TextBox>("meshPath")->SetOnTextChangedCallback(BIND_MEMBER_FUNC(GUITextBoxMeshPath));
-}
-
-EntityGUI::~EntityGUI()
-{
-  settingsContainer->RemoveAllComponents();
-  delete guiTagComponent;
-  delete guiColorComponent;
-  delete guiMeshComponent;
-}
-
-void EntityGUI::UpdateSelectedTransform3D()
-{
-  Entity entity = entityManager->GetSelectedEntity();
-  if(entity.HasComponent<Transform3DComponent>())
+  template<typename Component, typename GUI>
+  void AddComponentGUI(Entity entity, GUI* gui, Container* container, const std::string& componentText, std::vector<std::string>& addComponent)
   {
-    Transform3DComponent& component = entity.GetComponent<Transform3DComponent>();
-    guiTransform3D->Update(component);
-  }
-}
-
-void EntityGUI::UpdateSelectedTransform2D()
-{
-  Entity entity = entityManager->GetSelectedEntity();
-  if(entity.HasComponent<Transform2DComponent>())
-  {
-    Transform2DComponent& component = entity.GetComponent<Transform2DComponent>();
-    guiTransform2D->Update(component);
-  }
-}
-
-void EntityGUI::CreateEntity(Entity entity)
-{
-  TreeNode* selected = treeNode;
-  if(treeView->HasSelectedNode())
-    selected = treeView->GetSelectedNode();
-  selected->AddChildNode(TreeNode{entity.GetComponent<TagComponent>().tag, entity.GetComponent<UUIDComponent>().uuid});
-}
-
-void EntityGUI::ReloadEntitySettings(Entity entity)
-{
-  settingsContainer->RemoveAllComponents();
-  if(!entity)
-    return;
-  settingsContainer->AddComponent(guiAddComponent);
-
-  settingsContainer->AddComponent(guiTagComponent);
-  guiTagComponent->GetComponentByName<TextBox>("tag")->SetText(entity.GetComponent<TagComponent>().tag);
-
-  std::vector<std::string> addComponents;
-
-  if(entity.HasComponent<Transform2DComponent>())
-  {
-    guiTransform2D->AttachTo(settingsContainer, entity.GetComponent<Transform2DComponent>());
-  }
-  else
-  {
-    addComponents.emplace_back("Transform 2D Component");
+    if(entity.HasComponent<Component>())
+    {
+      gui->AttachTo(container, entity.GetComponent<Component>());
+    }
+    else
+    {
+      addComponent.emplace_back(componentText);
+    }
   }
 
-  if(entity.HasComponent<ColorComponent>())
+  EntityGUI::EntityGUI(EntityManager* entityManager, Frame* frame) :
+    entityManager{entityManager}
   {
-    settingsContainer->AddComponent(guiColorComponent);
-    guiColorComponent->GetComponentByName<ColorPicker>("color")->SetColor(entity.GetComponent<ColorComponent>().color);
-  }
-  else
-  {
-    addComponents.emplace_back("Color component");
+    settingsContainer = frame->GetComponentByName<Container>("settings");
+
+    treeView = frame->GetComponentByName<TreeView>("treeView");
+    Button* addEntity2DButton = frame->GetComponentByName<Button>("addEntity2DButton");
+    Button* addEntity3DButton = frame->GetComponentByName<Button>("addEntity3DButton");
+
+    ASSERT(treeView, "Could not load Scene TreeView");
+    ASSERT(addEntity2DButton, "Could not load Add Entity Button");
+    ASSERT(addEntity3DButton, "Could not load Add Entity Button");
+
+    treeNode = new TreeNode({});
+    treeView->SetTreeNode(treeNode);
+
+    treeView->SetOnNodeSelectedCallback(BIND_MEMBER_FUNC(GUITreeViewEntitySelected));
+    addEntity2DButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity2D));
+    addEntity3DButton->SetOnPressCallback(BIND_MEMBER_FUNC(GUIButtonCreateEntity3D));
+    guiTransform2D = NewRef<GUITransform2D>(entityManager, settingsContainer);
+    guiTransform3D = NewRef<GUITransform3D>(entityManager, settingsContainer);
+    guiSprite = NewRef<GUISprite>(entityManager, settingsContainer);
+    guiAnimation = NewRef<GUIAnimation>(entityManager, settingsContainer);
+
+    guiTagComponent = ComponentFactory::GetComponent("res/guis/TagComponent.xml", settingsContainer);
+    guiTagComponent->GetComponentByName<TextBox>("tag")->SetOnTextChangedCallback(BIND_MEMBER_FUNC(GUITextBoxTagName));
+
+    guiColorComponent = ComponentFactory::GetComponent("res/guis/ColorComponent.xml", settingsContainer);
+    guiColorComponent->GetComponentByName<ColorPicker>("color")->SetOnColorChangeCallback(BIND_MEMBER_FUNC(GUIColorPickerColor));
+
+    guiAddComponent = static_cast<DropDownMenu*>(ComponentFactory::GetComponent("res/guis/AddComponent.xml", settingsContainer));
+    guiAddComponent->SetOnSelectionChangeCallback(BIND_MEMBER_FUNC(GUIDropDownMenuAddComponent));
+
+    guiMeshComponent = ComponentFactory::GetComponent("res/guis/MeshComponent.xml", settingsContainer);
+    guiMeshComponent->GetComponentByName<DropDownMenu>("meshType")->SetOnSelectionChangeCallback(BIND_MEMBER_FUNC(GUIDropDownMenuMeshType));
+    guiMeshComponent->GetComponentByName<TextBox>("meshPath")->SetOnTextChangedCallback(BIND_MEMBER_FUNC(GUITextBoxMeshPath));
   }
 
-  if(entity.HasComponent<SpriteComponent>())
+  EntityGUI::~EntityGUI()
   {
-    guiSprite->AttachTo(settingsContainer, entity.GetComponent<SpriteComponent>());
-  }
-  else
-  {
-    addComponents.emplace_back("Sprite Component");
-  }
-
-  if(entity.HasComponent<AnimationComponent>())
-  {
-    guiAnimation->AttachTo(settingsContainer, entity.GetComponent<AnimationComponent>());
-  }
-  else
-  {
-    addComponents.emplace_back("Animation Component");
+    settingsContainer->RemoveAllComponents();
+    delete guiTagComponent;
+    delete guiColorComponent;
+    delete guiMeshComponent;
   }
 
-  if(entity.HasComponent<Transform3DComponent>())
+  void EntityGUI::UpdateSelectedTransform3D()
   {
-    guiTransform3D->AttachTo(settingsContainer, entity.GetComponent<Transform3DComponent>());
+    Entity entity = entityManager->GetSelectedEntity();
+    if(entity.HasComponent<Transform3DComponent>())
+    {
+      Transform3DComponent& component = entity.GetComponent<Transform3DComponent>();
+      guiTransform3D->Update(component);
+    }
   }
 
-  if(entity.HasComponent<MeshComponent>())
+  void EntityGUI::UpdateSelectedTransform2D()
   {
-    settingsContainer->AddComponent(guiMeshComponent);
+    Entity entity = entityManager->GetSelectedEntity();
+    if(entity.HasComponent<Transform2DComponent>())
+    {
+      Transform2DComponent& component = entity.GetComponent<Transform2DComponent>();
+      guiTransform2D->Update(component);
+    }
   }
-  guiAddComponent->SetDropDownItems(addComponents);
-  if(addComponents.empty())
-  {
-    settingsContainer->RemoveComponent(guiAddComponent);
-  }
-}
 
-void EntityGUI::SelectEntity(Entity entity)
-{
-  if(entity)
+  void EntityGUI::CreateEntity(Entity entity)
   {
-    TreeNode* treeNode = treeView->GetTreeNode(entity.GetComponent<UUIDComponent>().uuid);
-    treeView->SelectTreeNode(treeNode);
+    TreeNode* selected = treeNode;
+    if(treeView->HasSelectedNode())
+      selected = treeView->GetSelectedNode();
+    selected->AddChildNode(TreeNode{entity.GetComponent<TagComponent>().tag, entity.GetComponent<UUIDComponent>().uuid});
   }
-  else
-  {
-    treeView->SelectTreeNode(nullptr);
-  }
-  ReloadEntitySettings(entity);
-}
 
-void EntityGUI::GUITreeViewEntitySelected(TreeView* view, TreeNode* node, bool selected)
-{
-  Entity entity{entityManager->GetECS().get()};
-  if(selected)
+  void EntityGUI::ReloadEntitySettings(Entity entity)
   {
-    entity = entityManager->GetECS()->Find<UUIDComponent>(
-      [node](EntityID entity, UUIDComponent& uuid)
+    settingsContainer->RemoveAllComponents();
+    if(!entity)
+      return;
+    settingsContainer->AddComponent(guiAddComponent);
+
+    settingsContainer->AddComponent(guiTagComponent);
+    guiTagComponent->GetComponentByName<TextBox>("tag")->SetText(entity.GetComponent<TagComponent>().tag);
+
+    std::vector<std::string> addComponents;
+
+    AddComponentGUI<Transform2DComponent>(entity, guiTransform2D.get(), settingsContainer, "Transform 2D Component", addComponents);
+    AddComponentGUI<SpriteComponent>(entity, guiSprite.get(), settingsContainer, "Sprite Component", addComponents);
+    AddComponentGUI<AnimationComponent>(entity, guiAnimation.get(), settingsContainer, "Animation Component", addComponents);
+
+    if(entity.HasComponent<ColorComponent>())
+    {
+      settingsContainer->AddComponent(guiColorComponent);
+      guiColorComponent->GetComponentByName<ColorPicker>("color")->SetColor(entity.GetComponent<ColorComponent>().color);
+    }
+    else
+    {
+      addComponents.emplace_back("Color component");
+    }
+
+    if(entity.HasComponent<Transform3DComponent>())
+    {
+      guiTransform3D->AttachTo(settingsContainer, entity.GetComponent<Transform3DComponent>());
+    }
+
+    if(entity.HasComponent<MeshComponent>())
+    {
+      settingsContainer->AddComponent(guiMeshComponent);
+    }
+    guiAddComponent->SetDropDownItems(addComponents);
+    if(addComponents.empty())
+    {
+      settingsContainer->RemoveComponent(guiAddComponent);
+    }
+  }
+
+  void EntityGUI::SelectEntity(Entity entity)
+  {
+    if(entity)
+    {
+      TreeNode* treeNode = treeView->GetTreeNode(entity.GetComponent<UUIDComponent>().uuid);
+      treeView->SelectTreeNode(treeNode);
+    }
+    else
+    {
+      treeView->SelectTreeNode(nullptr);
+    }
+    ReloadEntitySettings(entity);
+  }
+
+  void EntityGUI::GUITreeViewEntitySelected(TreeView* view, TreeNode* node, bool selected)
+  {
+    Entity entity{entityManager->GetECS().get()};
+    if(selected)
+    {
+      entity = entityManager->GetECS()->Find<UUIDComponent>(
+        [node](EntityID entity, UUIDComponent& uuid)
+        {
+          return uuid.uuid == node->GetUUID();
+        });
+      ASSERT(entity, "Selected node does not exist in ECSManager %s", node->GetName());
+      entityManager->SelectEntity(entity);
+    }
+  }
+
+  void EntityGUI::GUIButtonCreateEntity2D(Component* component)
+  {
+    entityManager->CreateEntity2D();
+  }
+
+  void EntityGUI::GUIButtonCreateEntity3D(Component* component)
+  {
+    entityManager->CreateEntity3D();
+  }
+
+  void EntityGUI::GUIDropDownMenuMeshType(Component* component, const std::string& oldLabel, const std::string& newLabel)
+  {
+    meshType = newLabel;
+    if(meshType != "model" || FileUtils::FileExist(newLabel))
+    {
+      if(entityManager->GetSelectedEntity())
       {
-        return uuid.uuid == node->GetUUID();
-      });
-    ASSERT(entity, "Selected node does not exist in ECSManager %s", node->GetName());
-    entityManager->SelectEntity(entity);
+        MetaFileClass meta{
+          {{"mesh", meshType},
+           {"mesh-path", meshPath}}
+        };
+        Ref<Mesh> mesh = MetaFileLoading::LoadMesh(meta, "mesh");
+        entityManager->UpdateSelectedMesh(mesh);
+      }
+    }
   }
-}
 
-void EntityGUI::GUIButtonCreateEntity2D(Component* component)
-{
-  entityManager->CreateEntity2D();
-}
-
-void EntityGUI::GUIButtonCreateEntity3D(Component* component)
-{
-  entityManager->CreateEntity3D();
-}
-
-void EntityGUI::GUIDropDownMenuMeshType(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)
-{
-  meshType = newLabel;
-  if(meshType != "model" || FileUtils::FileExist(newLabel))
+  void EntityGUI::GUIDropDownMenuAddComponent(Component* component, const std::string& oldLabel, const std::string& newLabel)
   {
     if(entityManager->GetSelectedEntity())
     {
-      MetaFileClass meta{
-        {{"mesh", meshType},
-         {"mesh-path", meshPath}}
-      };
-      Ref<Mesh> mesh = MetaFileLoading::LoadMesh(meta, "mesh");
-      entityManager->UpdateSelectedMesh(mesh);
+      if(newLabel == "Transform 2D Component")
+        entityManager->GetSelectedEntity().AddComponent<Transform2DComponent>();
+      else if(newLabel == "Color Component")
+        entityManager->GetSelectedEntity().AddComponent<ColorComponent>();
+      else if(newLabel == "Sprite Component")
+        entityManager->GetSelectedEntity().AddComponent<SpriteComponent>();
+      else if(newLabel == "Animation Component")
+        entityManager->GetSelectedEntity().AddComponent<AnimationComponent>();
+      ReloadEntitySettings(entityManager->GetSelectedEntity());
     }
   }
-}
 
-void EntityGUI::GUIDropDownMenuAddComponent(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)
-{
-  if(entityManager->GetSelectedEntity())
+  void EntityGUI::GUITextBoxMeshPath(Component* component, const std::string& oldLabel, const std::string& newLabel)
   {
-    if(newLabel == "Transform 2D Component")
-      entityManager->GetSelectedEntity().AddComponent<Transform2DComponent>();
-    else if(newLabel == "Color Component")
-      entityManager->GetSelectedEntity().AddComponent<ColorComponent>();
-    else if(newLabel == "Sprite Component")
-      entityManager->GetSelectedEntity().AddComponent<SpriteComponent>();
-    else if(newLabel == "Animation Component")
-      entityManager->GetSelectedEntity().AddComponent<AnimationComponent>();
-    ReloadEntitySettings(entityManager->GetSelectedEntity());
-  }
-}
-
-void EntityGUI::GUITextBoxMeshPath(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)
-{
-  meshPath = newLabel;
-  if(meshType != "model" || FileUtils::FileExist(newLabel))
-  {
-    if(entityManager->GetSelectedEntity())
+    meshPath = newLabel;
+    if(meshType != "model" || FileUtils::FileExist(newLabel))
     {
-      MetaFileClass meta{
-        {{"mesh", meshType},
-         {"mesh-path", meshPath}}
-      };
-      Ref<Mesh> mesh = MetaFileLoading::LoadMesh(meta, "mesh");
-      entityManager->UpdateSelectedMesh(mesh);
+      if(entityManager->GetSelectedEntity())
+      {
+        MetaFileClass meta{
+          {{"mesh", meshType},
+           {"mesh-path", meshPath}}
+        };
+        Ref<Mesh> mesh = MetaFileLoading::LoadMesh(meta, "mesh");
+        entityManager->UpdateSelectedMesh(mesh);
+      }
     }
   }
-}
 
-void EntityGUI::GUITextBoxTagName(Greet::Component* component, const std::string& oldLabel, const std::string& newLabel)
-{
-  Entity selectedEntity = entityManager->GetSelectedEntity();
-  if(selectedEntity)
+  void EntityGUI::GUITextBoxTagName(Component* component, const std::string& oldLabel, const std::string& newLabel)
   {
-    ASSERT(selectedEntity.HasComponent<TagComponent>(), "Selected entity does not have a TagComponent");
-    ASSERT(treeView->HasSelectedNode(), "No TreeView node is selected");
+    Entity selectedEntity = entityManager->GetSelectedEntity();
+    if(selectedEntity)
+    {
+      ASSERT(selectedEntity.HasComponent<TagComponent>(), "Selected entity does not have a TagComponent");
+      ASSERT(treeView->HasSelectedNode(), "No TreeView node is selected");
 
-    selectedEntity.GetComponent<TagComponent>().tag = newLabel;
-    treeView->GetSelectedNode()->SetName(newLabel);
+      selectedEntity.GetComponent<TagComponent>().tag = newLabel;
+      treeView->GetSelectedNode()->SetName(newLabel);
+    }
   }
-}
 
-void EntityGUI::GUIColorPickerColor(Greet::Component* component, const Color& oldColor, const Color& newColor)
-{
-  Entity selectedEntity = entityManager->GetSelectedEntity();
-  if(selectedEntity)
+  void EntityGUI::GUIColorPickerColor(Component* component, const Color& oldColor, const Color& newColor)
   {
-    ASSERT(selectedEntity.HasComponent<ColorComponent>(), "Selected entity does not have a ColorComponent");
-    selectedEntity.GetComponent<ColorComponent>().color = newColor.AsUInt();
+    Entity selectedEntity = entityManager->GetSelectedEntity();
+    if(selectedEntity)
+    {
+      ASSERT(selectedEntity.HasComponent<ColorComponent>(), "Selected entity does not have a ColorComponent");
+      selectedEntity.GetComponent<ColorComponent>().color = newColor.AsUInt();
+    }
   }
 }

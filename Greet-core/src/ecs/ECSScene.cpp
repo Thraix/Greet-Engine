@@ -312,7 +312,7 @@ namespace Greet
     });
     manager->Each<AnimationComponent, SpriteComponent>([&](EntityID id, AnimationComponent& animation, SpriteComponent& sprite) {
       animation.timeElapsed += timeElapsed;
-      if(animation.timeElapsed > animation.keytime)
+      if(animation.timeElapsed > animation.keytime && animation.animationCount > 1)
       {
         animation.timeElapsed -= animation.keytime;
         animation.aminationIndex++;

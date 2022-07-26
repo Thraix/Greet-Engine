@@ -1,40 +1,42 @@
 #pragma once
 
-#include <graphics/gui/Container.h>
 #include <ecs/components/SpriteComponent.h>
-#include <functional>
 
-class EntityManager;
-
-class GUISprite
+namespace Greet
 {
-  EntityManager* entityManager;
+  class EntityManager;
+  class Component;
+  class Container;
 
-  Greet::Component* guiSprite;
+  class GUISprite
+  {
+    DELETE_COPY_AND_MOVE(GUISprite);
 
-  DELETE_COPY_AND_MOVE(GUISprite);
+    EntityManager* entityManager;
+    Component* guiSprite;
 
-  public:
-    GUISprite(EntityManager* entityManager, Greet::Container* parent);
-    virtual ~GUISprite();
+    public:
+      GUISprite(EntityManager* entityManager, Container* parent);
+      virtual ~GUISprite();
 
-    void Update(const Greet::SpriteComponent& spriteComponent);
-    void AttachTo(Greet::Container* container, Greet::SpriteComponent& spriteComponent);
+      void Update(const SpriteComponent& spriteComponent);
+      void AttachTo(Container* container, SpriteComponent& spriteComponent);
 
-  private:
-    void GUITextBoxTexturePath(Greet::Component* component,
-                               const std::string& before,
-                               const std::string& after);
-    void GUITextBoxSpritePosX(Greet::Component* component,
-                              const std::string& before,
-                              const std::string& after);
-    void GUITextBoxSpritePosY(Greet::Component* component,
-                              const std::string& before,
-                              const std::string& after);
-    void GUITextBoxSpriteSizeX(Greet::Component* component,
-                               const std::string& before,
-                               const std::string& after);
-    void GUITextBoxSpriteSizeY(Greet::Component* component,
-                               const std::string& before,
-                               const std::string& after);
-};
+    private:
+      void GUITextBoxTexturePath(Component* component,
+                                 const std::string& before,
+                                 const std::string& after);
+      void GUITextBoxSpritePosX(Component* component,
+                                const std::string& before,
+                                const std::string& after);
+      void GUITextBoxSpritePosY(Component* component,
+                                const std::string& before,
+                                const std::string& after);
+      void GUITextBoxSpriteSizeX(Component* component,
+                                 const std::string& before,
+                                 const std::string& after);
+      void GUITextBoxSpriteSizeY(Component* component,
+                                 const std::string& before,
+                                 const std::string& after);
+  };
+}

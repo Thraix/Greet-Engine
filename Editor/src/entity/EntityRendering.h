@@ -1,29 +1,30 @@
 #pragma once
 
-#include "../gizmos/ScaleGizmo.h"
-#include "../gizmos/TranslationGizmo.h"
 #include <ecs/Entity.h>
+#include <common/Memory.h>
+#include "../gizmos/TranslationGizmo.h"
 
 namespace Greet
 {
   class ECSManager;
   class Mesh;
   class Shader;
-};
+  class Camera3DComponent;
 
-class EntityManager;
+  class EntityManager;
 
-class EntityRendering
-{
-  TranslationGizmo scaleGizmo;
-  Greet::Ref<Greet::Shader> lineShader;
-  Greet::Ref<Greet::Mesh> lineMesh;
-  Greet::ECSManager* manager;
+  class EntityRendering
+  {
+    TranslationGizmo scaleGizmo;
+    Ref<Shader> lineShader;
+    Ref<Mesh> lineMesh;
+    ECSManager* manager;
 
-  public:
-    EntityRendering(Greet::ECSManager* manager);
-    void RenderOutlines(const Greet::Camera3DComponent& cameraComponent, Greet::Entity selectedEntity);
-    void RenderGizmo(const Greet::Camera3DComponent& cameraComponent, Greet::Entity selectedEntity);
+    public:
+      EntityRendering(ECSManager* manager);
+      void RenderOutlines(const Camera3DComponent& cameraComponent, Entity selectedEntity);
+      void RenderGizmo(const Camera3DComponent& cameraComponent, Entity selectedEntity);
 
-    TransformGizmo& GetTransformGizmo();
-};
+      TransformGizmo& GetTransformGizmo();
+  };
+}

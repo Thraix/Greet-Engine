@@ -1,62 +1,66 @@
 #pragma once
 
 
-#include "LineBatchRenderer.h"
-
 #include <event/Event.h>
-#include <ecs/ECSScene.h>
-#include <graphics/renderers/BatchRenderer.h>
 #include <graphics/RenderCommand.h>
 #include <ecs/components/Camera2DComponent.h>
+#include <ecs/Entity.h>
 
-class EntityManager;
-
-class Entity2DManager
+namespace Greet
 {
+  class BatchRenderer;
+  class ECSScene;
 
-  struct Grid
+  class EntityManager;
+  class LineBatchRenderer;
+
+  class Entity2DManager
   {
-    Greet::Vec2f boundsMin;
-    Greet::Vec2f boundsMax;
-    int count;
-    Greet::Vec2f center;
-    float size;
-
-    Grid(Greet::Camera2DComponent& camera)
+    struct Grid
     {
-      const float MIN_GRID_SIZE = 20;
-      Greet::Mat3 invPVMatrix = camera.GetInversePVMatrix();
-      boundsMin = invPVMatrix * Greet::Vec2f{-1, -1};
-      boundsMax = invPVMatrix * Greet::Vec2f{1, 1};
-      Greet::Vec2f worldCoordSize = (boundsMin - boundsMax).Abs();
-      Greet::Vec2f worldCoordCenter = invPVMatrix * Greet::Vec2f{0, 0};
+      Vec2f boundsMin;
+      Vec2f boundsMax;
+      int count;
+      Vec2f center;
+      float size;
 
-      Greet::Vec2f viewportSize = Greet::Vec2f{Greet::RenderCommand::GetViewportWidth(), Greet::RenderCommand::GetViewportHeight()};
-      float gridCountF = viewportSize.x / MIN_GRID_SIZE;
-      size = pow(10, ceil(log10(worldCoordSize.x / gridCountF)));
-      center = Greet::Vec2f{ceil(worldCoordCenter.x / size) * size, ceil(worldCoordCenter.y / size) * size};
-      count = ceil(gridCountF);
-    }
+      Grid(Camera2DComponent& camera)
+      {
+        const float MIN_GRID_SIZE = 20;
+        Mat3 invPVMatrix = camera.GetInversePVMatrix();
+        boundsMin = invPVMatrix * Vec2f{-1, -1};
+        boundsMax = invPVMatrix * Vec2f{1, 1};
+        Vec2f worldCoordSize = (boundsMin - boundsMax).Abs();
+        Vec2f worldCoordCenter = invPVMatrix * Vec2f{0, 0};
+
+        Vec2f viewportSize = Vec2f{RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight()};
+        float gridCountF = viewportSize.x / MIN_GRID_SIZE;
+        size = pow(10, ceil(log10(worldCoordSize.x / gridCountF)));
+        center = Vec2f{ceil(worldCoordCenter.x / size) * size, ceil(worldCoordCenter.y / size) * size};
+        count = ceil(gridCountF);
+      }
+    };
+
+    struct EntityHolder
+    {
+      bool holding = false;
+      bool movable = false;
+      Vec2f pressPos;
+      Vec2f entityPressPos;
+    };
+
+    private:
+      EntityManager* entityManager;
+      ECSScene* scene;
+      EntityHolder entityHolder;
+      Ref<LineBatchRenderer> lineBatchRenderer;
+
+    public:
+      Entity2DManager(EntityManager* entityManager, ECSScene* scene);
+
+      void OnEvent(Event& event);
+      void UpdateEntityPosition(Entity entity, const Vec2f& mousePos);
+      void RenderPre() const;
+      void RenderPost() const;
   };
-
-  struct EntityHolder
-  {
-    bool holding = false;
-    bool movable = false;
-    Greet::Vec2f pressPos;
-    Greet::Vec2f entityPressPos;
-  };
-
-  EntityManager* entityManager;
-  Greet::ECSScene* scene;
-  EntityHolder entityHolder;
-  Greet::Ref<Greet::LineBatchRenderer> lineBatchRenderer;
-
-  public:
-    Entity2DManager(EntityManager* entityManager, Greet::ECSScene* scene);
-
-    void OnEvent(Greet::Event& event);
-    void UpdateEntityPosition(Greet::Entity entity, const Greet::Vec2f& mousePos);
-    void RenderPre() const;
-    void RenderPost() const;
-};
+}
