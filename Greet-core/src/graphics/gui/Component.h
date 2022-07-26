@@ -162,6 +162,8 @@ namespace Greet
       virtual void MouseExited(){}
       bool IsFocused() const { return isFocused; }
       bool IsFocusable() const { return isFocusable; }
+      void RequestFocus();
+      void RequestUnfocus();
 
       virtual void ChildChangedFocus(bool focused) {}
 

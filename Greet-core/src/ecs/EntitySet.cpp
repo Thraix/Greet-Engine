@@ -1,7 +1,5 @@
 #include "EntitySet.h"
 
-#include <logging/Log.h>
-
 namespace Greet
 {
   bool EntitySet::Emplace(EntityID entity)

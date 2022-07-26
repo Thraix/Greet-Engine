@@ -17,7 +17,7 @@ namespace Greet
   MetaFile& operator<<(MetaFile& metaFile, const AnimationComponent& animationComponent)
   {
     MetaFileClass meta;
-    meta.AddValue("sprite", std::to_string(animationComponent.animationCount));
+    meta.AddValue("sprites", std::to_string(animationComponent.animationCount));
     meta.AddValue("keytime", std::to_string(animationComponent.keytime));
     metaFile.AddMetaClass("AnimationComponent", meta);
     return metaFile;

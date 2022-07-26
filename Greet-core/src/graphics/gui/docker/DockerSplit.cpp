@@ -104,6 +104,7 @@ namespace Greet
             grabPos = e.GetPosition()[vecIndex] - componentPos[vecIndex];
             grabSize = children[i]->GetSize()[vecIndex];
             event.AddFlag(EVENT_FOCUSED | EVENT_HANDLED);
+            docker->RequestFocus();
             return;
           }
         }

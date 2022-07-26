@@ -64,22 +64,18 @@ namespace Greet {
     Vec2f mousePos = ~projectionMatrix * event.GetPosition();
     MousePressEvent transformedEvent{mousePos, event.GetButton()};
 
+    RequestFocusQueued(nullptr);
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
       if((*it)->IsMouseInside(transformedEvent.GetPosition() - (*it)->GetMargin().LeftTop() - (*it)->GetPosition()))
       {
         (*it)->OnEventBase(transformedEvent, (*it)->GetPosition());
-        if(it != frames.rbegin())
-        {
-          RequestFocus(nullptr);
-        }
         frames.splice(frames.end(), frames, std::next(it).base());
 
         event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
         return;
       }
     }
-    RequestFocus(nullptr);
     event.AddFlag(EVENT_UNFOCUSED);
   }
 
@@ -154,7 +150,6 @@ namespace Greet {
     {
       Frame* frame = addQueue.front();
       frame->Measure(GetSize(), {1, 1});
-      frame->SetGUIScene(this);
       frames.push_back(frame);
       frame->PostConstruction();
       addQueue.pop();
@@ -194,6 +189,8 @@ namespace Greet {
   // Could do checks if a popup is refusing to give request or something
   void GUIScene::RequestFocus(Component* component)
   {
+    if(focused == component)
+      return;
     // Unfocus the currently focused component
     if(focused)
       focused->OnUnfocused();
@@ -244,6 +241,7 @@ namespace Greet {
 
       return;
     }
+    frame->SetGUIScene(this);
     addQueue.push(frame);
   }
 

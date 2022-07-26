@@ -5,7 +5,7 @@
 #include <event/MouseEvent.h>
 #include <graphics/RenderCommand.h>
 #include <input/Input.h>
-#include <input/Input.h>
+#include <logging/Log.h>
 #include <math/Plane.h>
 
 namespace Greet
@@ -16,6 +16,7 @@ namespace Greet
     {
       Vec2f pressPos;
       Vec2f camPressPos;
+      bool isMoving = false;
       bool mouseMiddleDown = false;
       bool mouseRightDown = false;
       bool keyShiftDown = false;
@@ -49,6 +50,15 @@ namespace Greet
           {
             controller.pressPos = e.GetPosition();
             controller.camPressPos = cam.position;
+            controller.isMoving = true;
+          }
+        }
+        else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+        {
+          MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
+          if(e.GetButton() == GREET_MOUSE_MIDDLE)
+          {
+            controller.isMoving = false;
           }
         }
         else if(EVENT_IS_TYPE(event, EventType::MOUSE_SCROLL))
@@ -62,7 +72,7 @@ namespace Greet
         else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
         {
           MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
-          if(Input::IsMouseDown(GREET_MOUSE_MIDDLE))
+          if(controller.isMoving)
           {
             Mat3 viewProjInv = ~(cam.GetViewMatrix() * cam.GetProjectionMatrix());
             Vec2f pos = viewProjInv * e.GetPosition() - viewProjInv * controller.pressPos;

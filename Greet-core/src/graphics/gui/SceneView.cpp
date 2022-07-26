@@ -39,7 +39,6 @@ namespace Greet
     RenderCommand::PushViewportStack(componentPos, GetContentSize());
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      guiScene->RequestFocusQueued(this);
       MousePressEvent transformedEvent{Input::GetMousePos(), static_cast<MousePressEvent&>(event).GetButton()};
       sceneManager.OnEvent(transformedEvent);
     }

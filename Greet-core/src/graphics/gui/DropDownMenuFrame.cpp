@@ -131,6 +131,6 @@ namespace Greet
       callback(index);
 
     // Unfocus this frame to close it
-    guiScene->RequestFocusQueued(nullptr);
+    RequestUnfocus();
   }
 }

@@ -88,7 +88,7 @@ namespace Greet
           frame->SetPosition(componentPos + Vec2f{0, GetHeight()});
           frame->SetWidth(GetWidth());
           guiScene->AddFrameQueued(frame);
-          guiScene->RequestFocusQueued(frame);
+          frame->RequestFocus();
         }
       }
     }

@@ -44,7 +44,7 @@ namespace Greet
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       guiScene->AddFrameQueued(picker);
       picker->SetPosition(e.GetPosition());
-      guiScene->RequestFocusQueued(picker);
+      picker->RequestFocus();
     }
   }
 

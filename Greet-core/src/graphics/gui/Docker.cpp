@@ -79,7 +79,7 @@ namespace Greet
   {
     grabbedDistance = 0;
     grabbedTab = tab;
-    guiScene->RequestFocusQueued(this);
+    RequestFocus();
   }
 
   Button* Docker::GetTabButton() const
@@ -156,7 +156,6 @@ namespace Greet
         grabbedTab = nullptr;
         return;
       }
-      split->OnEvent(event, componentPos + GetTotalPadding());
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {

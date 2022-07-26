@@ -5,8 +5,8 @@
 #include "EntityGUI.h"
 #include "EntityRendering.h"
 #include "gui/GUITransform3D.h"
-#include "../scripts/Camera2DControllerScript.cpp"
-#include "../scripts/Camera3DControllerScript.cpp"
+#include "../scripts/Camera2DControllerScript.h"
+#include "../scripts/Camera3DControllerScript.h"
 
 #include <ecs/components/Camera2DComponent.h>
 #include <ecs/components/Camera3DComponent.h>

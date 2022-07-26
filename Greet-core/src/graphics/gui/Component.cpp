@@ -147,8 +147,8 @@ namespace Greet
   {
     if(!guiScene)
       Log::Error("GuiScene not initialized");
-    if(!IsFocused() && IsFocusable())
-      guiScene->RequestFocusQueued(this);
+    if(IsFocusable())
+      RequestFocus();
     if(event.GetButton() == GREET_MOUSE_1)
     {
       pressed = true;
@@ -335,6 +335,16 @@ namespace Greet
   void Component::SetGUIScene(GUIScene* scene)
   {
     guiScene = scene;
+  }
+
+  void Component::RequestFocus()
+  {
+    guiScene->RequestFocusQueued(this);
+  }
+
+  void Component::RequestUnfocus()
+  {
+    guiScene->RequestFocusQueued(nullptr);
   }
 
   const ComponentStyle& Component::GetStyle(const std::string& stylename) const

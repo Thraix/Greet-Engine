@@ -11,7 +11,8 @@
     <DockerContainer weight="0.35">
       <DockerTab title="Scene Heirarchy">
         <Container width="fill_parent" height="fill_parent" padding="10">
-          <TreeView name="treeView" width="fill_parent" height="fill_parent"/>
+          <TreeView name="treeView" width="fill_parent" height="wrap_content"/>
+          <Component width="fill_parent" height="fill_parent"/>
           <Button name="addEntity2DButton">Add Entity2D</Button>
           <Button name="addEntity3DButton">Add Entity3D</Button>
         </Container>
