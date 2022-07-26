@@ -171,6 +171,12 @@ namespace Greet
     MarkDirty();
   }
 
+  void TreeNode::RemoveChildNode(const UUID& uuid)
+  {
+    childNodes.erase(std::remove_if(childNodes.begin(), childNodes.end(), [&](const TreeNode& node) { return node.uuid == uuid; }));
+    MarkDirty();
+  }
+
   float TreeNode::GetWidth(const TreeView& view) const
   {
     return GetWidth(0, view);

@@ -49,9 +49,9 @@ namespace Greet
 
       bool Erase(EntityID entity)
       {
+        size_t index = entities.Find(entity);
         if(!entities.Erase(entity))
           return false;
-        size_t index = entities.Find(entity);
         components.erase(components.begin() + index);
         return true;
       }

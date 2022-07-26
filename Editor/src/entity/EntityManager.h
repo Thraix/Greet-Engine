@@ -43,6 +43,7 @@ namespace Greet {
 
       void CreateEntity3D();
       void CreateEntity2D();
+      void DeleteEntity(Entity entity);
       Entity GetSelectedEntity() const;
       const Ref<ECSManager>& GetECS() const;
 

@@ -110,6 +110,14 @@ namespace Greet
     selected->AddChildNode(TreeNode{entity.GetComponent<TagComponent>().tag, entity.GetComponent<UUIDComponent>().uuid});
   }
 
+  void EntityGUI::DeleteEntity(Entity entity)
+  {
+    ASSERT(entity, "Deleting invalid entity");
+    ASSERT(entity.HasComponent<UUIDComponent>(), "Deleting entity without UUIDComponent");
+    TreeNode* treeNode = treeView->GetTreeNode(entity.GetComponent<UUIDComponent>().uuid);
+    treeNode->GetParent()->RemoveChildNode(entity.GetComponent<UUIDComponent>().uuid);
+  }
+
   void EntityGUI::ReloadEntitySettings(Entity entity)
   {
     settingsContainer->RemoveAllComponents();

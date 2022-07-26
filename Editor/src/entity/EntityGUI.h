@@ -53,6 +53,7 @@ namespace Greet
       void UpdateSelectedTransform3D();
       void UpdateSelectedTransform2D();
       void CreateEntity(Entity entity);
+      void DeleteEntity(Entity entity);
       void SelectEntity(Entity entity);
       void ReloadEntitySettings(Entity entity);
 

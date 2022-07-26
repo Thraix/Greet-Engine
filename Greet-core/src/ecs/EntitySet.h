@@ -12,7 +12,7 @@ namespace Greet
   {
     private:
       std::vector<EntityID> entitiesList;
-      std::unordered_map<EntityID, size_t> entitiesMap;
+      std::unordered_map<EntityID, size_t> entitiesMap; // Maps the entity id to a component index
     public:
       bool Emplace(EntityID entity);
       bool Erase(EntityID entity);

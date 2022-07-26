@@ -84,6 +84,13 @@ namespace Greet
     gui->CreateEntity(entity);
   }
 
+  void EntityManager::DeleteEntity(Entity entity)
+  {
+    gui->DeleteEntity(entity);
+    ecs->DestroyEntity(entity);
+    SelectEntity(Entity{ecs.get()});
+  }
+
   void EntityManager::UpdateSelectedTransform3D(NotifyOrigin notifyOrigin)
   {
     if(notifyOrigin != NotifyOrigin::GUI)

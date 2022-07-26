@@ -34,6 +34,7 @@ namespace Greet
   void Editor::Destruct()
   {
     GlobalSceneManager::GetSceneManager().Remove2DScene("gui");
+    Log::Info("Saving...");
     entityManager->Serialize("res/scenes/game.meta");
     entityManager.reset();
     gui.reset();

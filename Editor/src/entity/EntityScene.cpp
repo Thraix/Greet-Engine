@@ -88,6 +88,14 @@ namespace Greet
   void EntityScene::OnEvent(Event& event)
   {
     ECSScene::OnEvent(event);
+    if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+    {
+      KeyPressEvent& e = static_cast<KeyPressEvent&>(event);
+      if(e.GetButton() == GREET_KEY_DELETE && entityManager->GetSelectedEntity())
+      {
+        entityManager->DeleteEntity(entityManager->GetSelectedEntity());
+      }
+    }
     switch(activeScene)
     {
       case ActiveScene::_2D: entity2DManager->OnEvent(event); break;

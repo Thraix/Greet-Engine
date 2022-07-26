@@ -58,6 +58,7 @@ namespace Greet
       void Render(GUIRenderer* renderer, const TreeView& view) const;
 
       void AddChildNode(TreeNode&& node);
+      void RemoveChildNode(const UUID& uuid);
 
       std::pair<TreeNode*, bool> GetTreeNodeAt(const Vec2f& position, const TreeView& view);
 

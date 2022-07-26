@@ -20,18 +20,18 @@ tag=Entity#2
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=200.000000 -0.000000
+position=100.000000 200.000000
 [UUIDComponent]
 uuid=f8074a31-6d16-975b-0cc5-3da39f8eca82
 ---
 [ColorComponent]
-color=#ffffffff
+color=#ff4b4ea9
 [TagComponent]
 tag=Entity
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=500.000000 0.000000
+position=200.000000 200.000000
 [UUIDComponent]
 uuid=9e6b47d2-b0c6-2a08-f149-d6c008401d22
 ---
@@ -152,7 +152,7 @@ tag=Entity#13
 [Transform2DComponent]
 scale=100.000000 100.000000
 rotation=0.000000
-position=167.962982 194.938416
+position=200.000000 0.000000
 [UUIDComponent]
 uuid=dbb03f17-b13e-f6c5-c687-69892e28f8ba
 ---

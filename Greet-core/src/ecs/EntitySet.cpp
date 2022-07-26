@@ -1,5 +1,7 @@
 #include "EntitySet.h"
 
+#include <logging/Log.h>
+
 namespace Greet
 {
   bool EntitySet::Emplace(EntityID entity)
@@ -19,8 +21,17 @@ namespace Greet
     auto it = entitiesMap.find(entity);
     if(it == entitiesMap.end())
       return false;
+    size_t componentPos = it->second;
     entitiesMap.erase(it);
     entitiesList.erase(entitiesList.begin() + it->second);
+
+    for(auto&& entityPos : entitiesMap)
+    {
+      if(entityPos.second > componentPos)
+      {
+        entityPos.second--;
+      }
+    }
     return true;
   }
 
