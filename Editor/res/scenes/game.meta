@@ -145,7 +145,7 @@ sprites=2
 color=#ffffffff
 [SpriteComponent]
 spritesheet-size=2 2
-spritesheet-pos=1 1
+spritesheet-pos=0 1
 texture=res/textures/example.meta
 [TagComponent]
 tag=Entity#13

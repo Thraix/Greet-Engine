@@ -1,6 +1,8 @@
 #pragma once
 
 #include <ecs/ECSScene.h>
+#include "../camera/Camera3DController.h"
+#include <utils/UUID.h>
 
 namespace Greet
 {
@@ -15,12 +17,16 @@ namespace Greet
 
   class EntityScene : public ECSScene
   {
-    EntityManager* entityManager;
-    Ref<Entity2DManager> entity2DManager;
+    private:
+      EntityManager* entityManager;
+      Ref<ECSManager> editorEcs;
+      Ref<Entity2DManager> entity2DManager;
 
-    Ref<EntityRendering> entityRendering;
-    ActiveScene activeScene = ActiveScene::_2D;
+      ActiveScene activeScene = ActiveScene::_2D;
 
+      // TODO: Should be moved to Entity3DManager
+      Ref<EntityRendering> entityRendering;
+      Camera3DController camera3DController;
 
     public:
       EntityScene(EntityManager* entityManager);
@@ -28,6 +34,7 @@ namespace Greet
       void OnEvent(Event& event) override;
       void OnEvent3D(Event& event);
 
+      void Update(float timeElapsed) override;
       void Render() const override;
       void Render2D() const override;
       void Render3D(const Camera3DComponent& cam, const Environment3DComponent& env) const override;
@@ -39,6 +46,8 @@ namespace Greet
       Entity GetCamera3DEntity() const override;
       Entity GetEnvironment2DEntity() const override;
       Entity GetEnvironment3DEntity() const override;
+
+      Ref<ECSManager> GetEditorECS();
 
     private:
       Entity GetNearestRaycastedEntity(Camera3DComponent& cameraComponent, const Vec2f& pos, float farDistance = 100);

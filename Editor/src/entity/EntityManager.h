@@ -46,8 +46,5 @@ namespace Greet {
       void DeleteEntity(Entity entity);
       Entity GetSelectedEntity() const;
       const Ref<ECSManager>& GetECS() const;
-
-      const Ref<EntityGUI> GetEntityGUI() const;
-      Ref<EntityGUI> GetEntityGUI();
   };
 }

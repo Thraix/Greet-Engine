@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../camera/Camera2DController.h"
 
 #include <event/Event.h>
 #include <graphics/RenderCommand.h>
@@ -54,10 +55,12 @@ namespace Greet
       ECSScene* scene;
       EntityHolder entityHolder;
       Ref<LineBatchRenderer> lineBatchRenderer;
+      Camera2DController camera2DController;
 
     public:
       Entity2DManager(EntityManager* entityManager, ECSScene* scene);
 
+      Entity GetCameraEntity();
       void OnEvent(Event& event);
       void UpdateEntityPosition(Entity entity, const Vec2f& mousePos);
       void RenderPre() const;

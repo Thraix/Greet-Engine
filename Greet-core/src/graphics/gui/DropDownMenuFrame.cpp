@@ -26,6 +26,7 @@ namespace Greet
       .fonts={{"dropFont", &text.font}},
     });
 
+    isFocusable = true;
     shouldCloseUnfocus = true;
 
     std::string grav = xmlObject.GetAttribute("dropGravity", "center");

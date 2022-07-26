@@ -29,6 +29,11 @@ namespace Greet
     sceneView = frame->GetComponentByName<SceneView>("sceneView");
     ASSERT(sceneView, "Could not load Scene View");
     sceneView->GetSceneManager().Add3DScene(scene, "scene");
+
+    ecs->Each<TagComponent, UUIDComponent, SerializeComponent>([&](EntityID entity, TagComponent& tag, UUIDComponent& uuid, SerializeComponent& serialize)
+    {
+      gui->CreateEntity(Entity{ecs.get(), entity});
+    });
   }
 
   EntityManager::~EntityManager()
@@ -108,16 +113,6 @@ namespace Greet
   void EntityManager::UpdateSelectedMesh(const Ref<Mesh>& mesh)
   {
     selectedEntity.GetComponent<MeshComponent>().mesh = mesh;
-  }
-
-  const Ref<EntityGUI> EntityManager::GetEntityGUI() const
-  {
-    return gui;
-  }
-
-  Ref<EntityGUI> EntityManager::GetEntityGUI()
-  {
-    return gui;
   }
 
   Entity EntityManager::GetSelectedEntity() const

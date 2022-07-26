@@ -20,11 +20,13 @@ namespace Greet
 {
   Entity2DManager::Entity2DManager(EntityManager* entityManager, ECSScene* scene)
     : entityManager{entityManager}, scene{scene},
-      lineBatchRenderer{NewRef<LineBatchRenderer>()}
+      lineBatchRenderer{NewRef<LineBatchRenderer>()},
+      camera2DController{entityManager->GetECS().get()}
   {}
 
   void Entity2DManager::OnEvent(Event& event)
   {
+    camera2DController.OnEvent(event);
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
@@ -177,5 +179,10 @@ namespace Greet
       lineBatchRenderer->DrawRectangle(entityManager->GetSelectedEntity().GetComponent<Transform2DComponent>().GetTransform(), Color{0.9, 0.5, 0.1});
     }
     lineBatchRenderer->End();
+  }
+
+  Entity Entity2DManager::GetCameraEntity()
+  {
+    return camera2DController.entity;
   }
 }

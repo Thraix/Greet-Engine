@@ -4,60 +4,41 @@
 #include "Entity2DManager.h"
 #include "EntityGUI.h"
 #include "EntityRendering.h"
-#include "gui/GUITransform3D.h"
-#include "../scripts/Camera2DControllerScript.h"
-#include "../scripts/Camera3DControllerScript.h"
 
-#include <ecs/components/Camera2DComponent.h>
-#include <ecs/components/Camera3DComponent.h>
 #include <ecs/components/ColorComponent.h>
-#include <ecs/components/Environment2DComponent.h>
-#include <ecs/components/Environment3DComponent.h>
 #include <ecs/components/MaterialComponent.h>
 #include <ecs/components/MeshComponent.h>
-#include <ecs/components/NativeScriptComponent.h>
 #include <ecs/components/SpriteComponent.h>
 #include <ecs/components/TagComponent.h>
 #include <ecs/components/Transform2DComponent.h>
 #include <ecs/components/Transform3DComponent.h>
 #include <ecs/components/UUIDComponent.h>
-#include <graphics/shaders/ShaderFactory.h>
-#include <graphics/textures/TextureManager.h>
+#include <event/KeyEvent.h>
+#include <event/MouseEvent.h>
 #include <input/InputDefines.h>
-#include <scripting/NativeScriptHandler.h>
-#include <utils/UUID.h>
 
 namespace Greet
 {
-  const UUID CAMERA_2D_UUID{"a4396de6-dbd9-6dc4-1e1d-3e662b62ddab"};
-  const UUID CAMERA_3D_UUID{"862f1b54-649c-3775-a53d-5834a7e1135b"};
 
   EntityScene::EntityScene(EntityManager* entityManager)
     : ECSScene{entityManager->GetECS(), "res/scenes/game.meta"},
       entityManager{entityManager},
-      entity2DManager{NewRef<Entity2DManager>(entityManager, this)}
+      editorEcs{NewRef<ECSManager>()},
+      entity2DManager{NewRef<Entity2DManager>(entityManager, this)},
+      camera3DController{entityManager->GetECS().get()}
   {
     ASSERT(manager.get() != nullptr, "ECSManager was not initialized");
     entityRendering = NewRef<EntityRendering>(manager.get());
+  }
 
-    manager->Each<TagComponent, UUIDComponent>([&](EntityID entity, TagComponent& tag, UUIDComponent& uuid)
+  void EntityScene::Update(float timeElapsed)
+  {
+    switch(activeScene)
     {
-      entityManager->GetEntityGUI()->CreateEntity(Entity{manager.get(), entity});
-    });
-
-    Entity camera2D = Entity{manager.get(), manager->CreateEntity()};
-    camera2D.AddComponent<UUIDComponent>(CAMERA_2D_UUID);
-    camera2D.AddComponent<TagComponent>("EditorCamera2D");
-    camera2D.AddComponent<Camera2DComponent>(Vec2f{0, 0}, Vec2f{1, 1}, 0, false);
-    camera2D.AddComponent<Environment2DComponent>(ShaderFactory::Shader2D());
-    camera2D.AddComponent<NativeScriptComponent>(NewRef<NativeScriptHandler>(new Camera2DControllerScript{}));
-
-    Entity camera3D = Entity{manager.get(), manager->CreateEntity()};
-    camera3D.AddComponent<UUIDComponent>(CAMERA_3D_UUID);
-    camera3D.AddComponent<TagComponent>("EditorCamera3D");
-    camera3D.AddComponent<Camera3DComponent>(Mat4::Identity(), 90, 0.001, 1000.0f, false);
-    camera3D.AddComponent<Environment3DComponent>(ShaderFactory::ShaderSkybox(), TextureManager::LoadCubeMap("res/textures/skybox.meta"));
-    camera3D.AddComponent<NativeScriptComponent>(NewRef<NativeScriptHandler>(new Camera3DControllerScript{}));
+      case ActiveScene::_2D: break;
+      case ActiveScene::_3D: camera3DController.OnUpdate(timeElapsed); break;
+      case ActiveScene::Runtime: ECSScene::Update(timeElapsed); break;
+    }
   }
 
   void EntityScene::Render() const
@@ -66,7 +47,7 @@ namespace Greet
     {
       case ActiveScene::_2D: Render2D(); break;
       case ActiveScene::_3D: ECSScene::Render3DScene(); break;
-      case ActiveScene::Runtime: break;
+      case ActiveScene::Runtime: ECSScene::Render(); break;
     }
   }
 
@@ -87,25 +68,32 @@ namespace Greet
 
   void EntityScene::OnEvent(Event& event)
   {
-    ECSScene::OnEvent(event);
-    if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+    if(activeScene == ActiveScene::_2D || activeScene == ActiveScene::_3D)
     {
-      KeyPressEvent& e = static_cast<KeyPressEvent&>(event);
-      if(e.GetButton() == GREET_KEY_DELETE && entityManager->GetSelectedEntity())
+      if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
       {
-        entityManager->DeleteEntity(entityManager->GetSelectedEntity());
+        KeyPressEvent& e = static_cast<KeyPressEvent&>(event);
+        if(e.GetButton() == GREET_KEY_DELETE && entityManager->GetSelectedEntity())
+        {
+          entityManager->DeleteEntity(entityManager->GetSelectedEntity());
+        }
+      }
+      else if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
+      {
+        ECSScene::OnEvent(event);
       }
     }
     switch(activeScene)
     {
       case ActiveScene::_2D: entity2DManager->OnEvent(event); break;
       case ActiveScene::_3D: OnEvent3D(event); break;
-      case ActiveScene::Runtime: break;
+      case ActiveScene::Runtime: ECSScene::OnEvent(event); break;
     }
   }
 
   void EntityScene::OnEvent3D(Event& event)
   {
+    camera3DController.OnEvent(event);
     Entity camera = GetCamera3DEntity();
 
     if(!camera)
@@ -175,54 +163,50 @@ namespace Greet
 
   Entity EntityScene::GetCamera2DEntity() const
   {
-    Entity camera{manager.get()};
-    camera = manager->Find<Camera2DComponent, UUIDComponent>(
-      [&](EntityID id, Camera2DComponent& cam, UUIDComponent& uuid)
-      {
-        return uuid.uuid == CAMERA_2D_UUID;
-      });
-
-    ASSERT(camera, "Editor Camera2D not found in scene");
-    return camera;
+    if(activeScene == ActiveScene::Runtime)
+    {
+      return ECSScene::GetCamera2DEntity();
+    }
+    else
+    {
+      return entity2DManager->GetCameraEntity();
+    }
   }
 
   Entity EntityScene::GetCamera3DEntity() const
   {
-    Entity camera{manager.get()};
-    camera = manager->Find<Camera3DComponent, UUIDComponent>(
-      [&](EntityID id, Camera3DComponent& cam, UUIDComponent& uuid)
-      {
-        return uuid.uuid == CAMERA_3D_UUID;
-      });
-
-    ASSERT(camera, "Editor Camera3D not found in scene");
-    return camera;
+    if(activeScene == ActiveScene::Runtime)
+    {
+      return ECSScene::GetCamera3DEntity();
+    }
+    else
+    {
+      return camera3DController.entity;
+    }
   }
 
   Entity EntityScene::GetEnvironment2DEntity() const
   {
-    Entity environment{manager.get()};
-    environment = manager->Find<Environment2DComponent, UUIDComponent>(
-      [&](EntityID id, Environment2DComponent& cam, UUIDComponent& uuid)
-      {
-        return uuid.uuid == CAMERA_2D_UUID;
-      });
-
-    ASSERT(environment, "Editor Environment2D not found in scene");
-    return environment;
+    if(activeScene == ActiveScene::Runtime)
+    {
+      return ECSScene::GetEnvironment2DEntity();
+    }
+    else
+    {
+      return entity2DManager->GetCameraEntity();
+    }
   }
 
   Entity EntityScene::GetEnvironment3DEntity() const
   {
-    Entity environment{manager.get()};
-    environment = manager->Find<Environment3DComponent, UUIDComponent>(
-      [&](EntityID id, Environment3DComponent& cam, UUIDComponent& uuid)
-      {
-        return uuid.uuid == CAMERA_3D_UUID;
-      });
-
-    ASSERT(environment, "Editor Environment3D not found in scene");
-    return environment;
+    if(activeScene == ActiveScene::Runtime)
+    {
+      return ECSScene::GetEnvironment3DEntity();
+    }
+    else
+    {
+      return camera3DController.entity;
+    }
   }
 
   Entity EntityScene::GetNearestRaycastedEntity(Camera3DComponent& cameraComponent, const Vec2f& pos, float farDistance)
@@ -240,5 +224,10 @@ namespace Greet
         }
       });
     return collisionEntity;
+  }
+
+  Ref<ECSManager> EntityScene::GetEditorECS()
+  {
+    return editorEcs;
   }
 }
